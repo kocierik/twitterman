@@ -18,30 +18,28 @@ type authorize struct {
 	Token string
 }
 
+// Global variables
+var client = &twitter.Client{
+	Authorizer: authorize{
+		Token: *(flag.String("token", os.Getenv("BEARER_TOKEN"), "twitter API token")),
+	},
+	Client: http.DefaultClient,
+	Host:   "https://api.twitter.com",
+}
+
 func (a authorize) Add(req *http.Request) {
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", a.Token))
 }
 
 func getTweetById(c *gin.Context) {
 	id := c.Param("id")
-
-	token := flag.String("token", os.Getenv("BEARER_TOKEN"), "twitter API token")
 	ids := flag.String("ids", id, "twitter ids")
 	flag.Parse()
 
-	client := &twitter.Client{
-		Authorizer: authorize{
-			Token: *token,
-		},
-		Client: http.DefaultClient,
-		Host:   "https://api.twitter.com",
-	}
 	opts := twitter.TweetLookupOpts{
 		Expansions:  []twitter.Expansion{twitter.ExpansionEntitiesMentionsUserName, twitter.ExpansionAuthorID},
 		TweetFields: []twitter.TweetField{twitter.TweetFieldCreatedAt, twitter.TweetFieldConversationID, twitter.TweetFieldAttachments},
 	}
-
-	fmt.Println("Callout to tweet lookup callout")
 
 	tweetDictionary, err := client.TweetLookup(context.Background(), strings.Split(*ids, ","), opts)
 	if err != nil {
