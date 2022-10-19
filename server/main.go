@@ -1,65 +1,61 @@
 package main
 
 import (
-    "net/http"
+	"context"
+	"flag"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"strings"
 
-    "github.com/gin-gonic/gin"
+	twitter "github.com/g8rswimmer/go-twitter/v2"
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
-// album represents data about a record album.
-type album struct {
-    ID     string  `json:"id"`
-    Title  string  `json:"title"`
-    Artist string  `json:"artist"`
-    Price  float64 `json:"price"`
+type authorize struct {
+	Token string
 }
 
-// albums slice to seed record album data.
-var albums = []album{
-    {ID: "1", Title: "Blue Train", Artist: "John Coltrane", Price: 56.99},
-    {ID: "2", Title: "Jeru", Artist: "Gerry Mulligan", Price: 17.99},
-    {ID: "3", Title: "Sarah Vaughan and Clifford Brown", Artist: "Sarah Vaughan", Price: 39.99},
+func (a authorize) Add(req *http.Request) {
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", a.Token))
 }
 
-// getAlbums responds with the list of all albums as JSON.
-func getAlbums(c *gin.Context) {
-    c.IndentedJSON(http.StatusOK, albums)
-}
+func getTweetById(c *gin.Context) {
+	id := c.Param("id")
 
-func getAlbumByID(c *gin.Context) {
-    id := c.Param("id")
+	token := flag.String("token", os.Getenv("BEARER_TOKEN"), "twitter API token")
+	ids := flag.String("ids", id, "twitter ids")
+	flag.Parse()
 
-    // Loop over the list of albums, looking for
-    // an album whose ID value matches the parameter.
-    for _, a := range albums {
-        if a.ID == id {
-            c.IndentedJSON(http.StatusOK, a)
-            return
-        }
-    }
-    c.IndentedJSON(http.StatusNotFound, gin.H{"message": "album not found"})
-}
+	client := &twitter.Client{
+		Authorizer: authorize{
+			Token: *token,
+		},
+		Client: http.DefaultClient,
+		Host:   "https://api.twitter.com",
+	}
+	opts := twitter.TweetLookupOpts{
+		Expansions:  []twitter.Expansion{twitter.ExpansionEntitiesMentionsUserName, twitter.ExpansionAuthorID},
+		TweetFields: []twitter.TweetField{twitter.TweetFieldCreatedAt, twitter.TweetFieldConversationID, twitter.TweetFieldAttachments},
+	}
 
-// postAlbums adds an album from JSON received in the request body.
-func postAlbums(c *gin.Context) {
-    var newAlbum album
+	fmt.Println("Callout to tweet lookup callout")
 
-    // Call BindJSON to bind the received JSON to
-    // newAlbum.
-    if err := c.BindJSON(&newAlbum); err != nil {
-        return
-    }
+	tweetDictionary, err := client.TweetLookup(context.Background(), strings.Split(*ids, ","), opts)
+	if err != nil {
+		log.Panicf("tweet lookup error: %v", err)
+	}
 
-    // Add the new album to the slice.
-    albums = append(albums, newAlbum)
-    c.IndentedJSON(http.StatusCreated, newAlbum)
+	c.IndentedJSON(http.StatusOK, tweetDictionary)
 }
 
 func main() {
-    router := gin.Default()
-    router.GET("/albums", getAlbums)
-    router.GET("/albums/:id", getAlbumByID)
-    router.POST("/albums", postAlbums)
+	godotenv.Load()
+	router := gin.Default()
 
-    router.Run("localhost:8081")
+	router.GET("/tweet/:id", getTweetById)
+
+	router.Run("localhost:8081")
 }

@@ -2,7 +2,12 @@ module git.hjkl.gq/team7/twitterman
 
 go 1.19
 
-require github.com/gin-gonic/gin v1.8.1
+require (
+	github.com/g8rswimmer/go-twitter/v2 v2.1.2
+	github.com/gin-gonic/gin v1.8.1
+)
+
+require github.com/joho/godotenv v1.4.0
 
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
