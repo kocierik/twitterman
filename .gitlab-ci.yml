@@ -1,4 +1,9 @@
+stages:
+  - test
+  - rate
+
 golang-check:
+  stage: test
   image: golang:latest
   script:
     - go vet $(go list ./...)
@@ -9,6 +14,7 @@ golang-check:
     expire_in: 1 day
 
 sonarqube-check:
+  stage: rate
   image: 
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
@@ -24,4 +30,3 @@ sonarqube-check:
   allow_failure: true
   # only:
   #   - main # or the name of your main branch
-  
