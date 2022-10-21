@@ -13,7 +13,7 @@ export const TweetsData = [
         name: 'Fake Guy',
         title: 'Bot Lane',
         timestamp: '2021-11-12 09:16:45',
-        content: "Here's a popular comment",
+        content: 'Commento generalizzato',
         likes: 7,
         isLiked: false,
       },
@@ -78,7 +78,17 @@ export const TweetsData = [
     timestamp: '2021-11-12 07:15:45',
     content: 'This is a post without comments',
     likes: 1,
-    comments: [],
+    comments: [
+      {
+        id: '6544388a-96e2-43b3-9053-985b014a2b19',
+        name: 'Fake Guy',
+        title: 'Bot Lane',
+        timestamp: '2021-11-12 09:16:45',
+        content: 'Commento generalizzato',
+        likes: 7,
+        isLiked: false,
+      },
+    ],
     isLiked: false,
   },
   {
