@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 type TweetData struct {
@@ -31,11 +30,6 @@ func initClient() {
 }
 
 func getEnvVar(key string) string {
-	// load .env file
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
 	return os.Getenv(key)
 }
 
