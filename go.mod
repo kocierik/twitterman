@@ -1,4 +1,4 @@
-module git.hjkl.gq/team7/twitterman
+module twitterman
 
 go 1.19
 
