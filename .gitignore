@@ -12,6 +12,3 @@
 *.out
 
 .env
-
-#temporary
-**/*_test.go
