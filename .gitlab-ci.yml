@@ -1,3 +1,13 @@
+golang-check:
+  image: golang:latest
+  script:
+    - go vet $(go list ./...)
+    - go test -v -race -coverprofile=coverage.out $(go list ./...)
+  artifacts:
+    paths:
+    - coverage.out
+    expire_in: 1 day
+
 sonarqube-check:
   image: 
     name: sonarsource/sonar-scanner-cli:latest
@@ -12,5 +22,6 @@ sonarqube-check:
   script: 
     - sonar-scanner
   allow_failure: true
-  only:
-    - main # or the name of your main branch
+  # only:
+  #   - main # or the name of your main branch
+  
