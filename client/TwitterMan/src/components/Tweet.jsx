@@ -1,6 +1,6 @@
 import React from 'react'
 import Comments from './Comments'
-// self-start
+
 const TweetCard = ({ data }) => {
   return (
     <article className="place-self-start mb-4 break-inside p-6 rounded-xl flex flex-col text-sm bg-white dark:bg-slate-800 dark:text-white">
