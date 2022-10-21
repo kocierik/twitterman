@@ -56,9 +56,9 @@ const TweetCard = ({ data }) => {
           <span className="font-bold">{data.likes}</span>
         </a>
       </div>
-      {data.comments.map((comment) => {
+      {data.comments.map((comment, i) => {
         return (
-          <div className="pt-6">
+          <div className="pt-6" key={i}>
             <div className="flex pb-4 group">
               <a className="mr-4" href="#">
                 <img
