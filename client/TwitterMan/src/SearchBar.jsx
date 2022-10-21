@@ -2,7 +2,7 @@ import React from 'react'
 
 const SearchBar = () => {
   return (
-    <div style={{ flex: '0 1 50%' }} className="flex">
+    <div style={{ width: '100vh' }} className="flex">
       <label
         htmlFor="search-dropdown"
         className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300"
