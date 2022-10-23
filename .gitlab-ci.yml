@@ -1,4 +1,20 @@
+stages:
+  - test
+  - rate
+
+golang-check:
+  stage: test
+  image: golang:latest
+  script:
+    - go vet $(go list ./...)
+    - go test -v -race -coverprofile=coverage.out $(go list ./...)
+  artifacts:
+    paths:
+    - coverage.out
+    expire_in: 1 day
+
 sonarqube-check:
+  stage: rate
   image: 
     name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
@@ -12,5 +28,5 @@ sonarqube-check:
   script: 
     - sonar-scanner
   allow_failure: true
-  only:
-    - main # or the name of your main branch
+  # only:
+  #   - main # or the name of your main branch
