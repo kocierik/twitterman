@@ -1,4 +1,4 @@
-package main
+package twittermanApi
 
 import (
 	"encoding/json"
@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"twitterman/server/twittermanApi"
 	"twitterman/server/utils"
 
 	"github.com/stretchr/testify/assert"
@@ -16,7 +15,7 @@ import (
 
 func initTest() {
 	utils.InitClient()
-	twittermanApi.InitApi()
+	InitApi()
 }
 
 func sendRequest(method, url string, body io.Reader) ([]byte, *httptest.ResponseRecorder) {
@@ -32,8 +31,8 @@ func TestGetTweetById(t *testing.T) {
 	initTest()
 	response, res := sendRequest("GET", "/tweet/1581295611013320706", nil)
 
-	var result twittermanApi.Tweet
-	var tmpMock twittermanApi.Tweet
+	var result Tweet
+	var tmpMock Tweet
 	mockResponse := `{
 		"data": {
 			"edit_history_tweet_ids": [
