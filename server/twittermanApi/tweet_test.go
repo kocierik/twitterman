@@ -1,8 +1,6 @@
 package twittermanApi
 
 import (
-	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -31,8 +29,8 @@ func TestGetTweetById(t *testing.T) {
 	initTest()
 	response, res := sendRequest("GET", "/tweet/1581295611013320706", nil)
 
-	var result Tweet
-	var tmpMock Tweet
+	var result utils.Tweet
+	var tmpMock utils.Tweet
 	mockResponse := `{
 		"data": {
 			"edit_history_tweet_ids": [
@@ -42,12 +40,10 @@ func TestGetTweetById(t *testing.T) {
 			"text": "#swetesting prova primo tweet"
 		}
 	}`
-	if err := json.Unmarshal(response, &result); err != nil { // Parse []byte to go struct pointer
-		fmt.Println("Can not unmarshal JSON", err)
-	}
-	if err := json.Unmarshal([]byte(mockResponse), &tmpMock); err != nil { // Parse []byte to go struct pointer
-		fmt.Println("Can not unmarshal JSON", err)
-	}
+
+	utils.StringToJson(response, &result)
+	utils.StringToJson([]byte(mockResponse), &tmpMock)
+
 	assert.Equal(t, http.StatusOK, res.Code)
 	assert.Equal(t, tmpMock, result)
 }
