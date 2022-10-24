@@ -8,11 +8,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+/*
+TODO: implementare il poter inserite dei parametri per avere informazioni più precise
+Campi di un tweet:
+  - id
+  - expansions
+  - tweet.fields
+  - media.fields
+  - poll.fields
+  - place.fields
+  - user.fields
+*/
 func getTweetById(c *gin.Context) {
 	id := c.Param("id") // prendo l'id
 
 	// eseguo la richiesta a twitter
-	endpoint := utils.TwitterApi + id
+	endpoint := utils.TwitterApi + "/tweets/" + id
 	req, err := http.NewRequest(http.MethodGet, endpoint, nil)
 
 	utils.ErrorMessage(err, "Error Occurred.")

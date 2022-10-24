@@ -22,7 +22,7 @@ const ServerUrl string = "localhost"
 const DatabaseUrl string = "localhost"
 const DatabasePort string = ""
 
-const TwitterApi string = "https://api.twitter.com/2/tweets/"
+const TwitterApi string = "https://api.twitter.com/2"
 
 var Client *http.Client
 
