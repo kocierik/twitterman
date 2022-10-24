@@ -1,4 +1,4 @@
-package twittermanApi
+package test
 
 import (
 	"io"
@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"twitterman/server/twittermanApi"
 	"twitterman/server/utils"
 
 	"github.com/stretchr/testify/assert"
@@ -13,7 +14,7 @@ import (
 
 func initTest() {
 	utils.InitClient()
-	InitApi()
+	twittermanApi.InitApi()
 }
 
 func sendRequest(method, url string, body io.Reader) ([]byte, *httptest.ResponseRecorder) {

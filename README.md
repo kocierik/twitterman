@@ -18,4 +18,4 @@ go test
 
 ## Autori
 
-Manuel Arto, Fabio Gaiba, Gabriele Genovese, Erik Koci, Alessandro Frau
+Manuel Arto, Fabio Gaiba, Gabriele Genovese, Erik Koci, Andrea Napoli, Alessandro Frau
