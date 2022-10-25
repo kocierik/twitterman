@@ -8,17 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-/*
-TODO: implementare il poter inserite dei parametri per avere informazioni più precise
-Campi di un tweet:
-  - id
-  - expansions
-  - tweet.fields
-  - media.fields
-  - poll.fields
-  - place.fields
-  - user.fields
-*/
 func getTweetById(c *gin.Context) {
 	id := c.Param("id") // prendo l'id
 
@@ -41,7 +30,7 @@ func getTweetById(c *gin.Context) {
 
 	utils.ErrorMessage(err, "Couldn't parse response body.")
 
-	var result utils.Tweet
+	var result utils.ApiTweet
 	utils.StringToJson(body, &result)
 
 	c.IndentedJSON(http.StatusOK, result)

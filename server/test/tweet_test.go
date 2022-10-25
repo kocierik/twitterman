@@ -30,8 +30,8 @@ func TestGetTweetById(t *testing.T) {
 	initTest()
 	response, res := sendRequest("GET", "/tweet/1581295611013320706", nil)
 
-	var result utils.Tweet
-	var tmpMock utils.Tweet
+	var result utils.ApiTweet
+	var tmpMock utils.ApiTweet
 	mockResponse := `{
 		"data": {
 			"edit_history_tweet_ids": [
