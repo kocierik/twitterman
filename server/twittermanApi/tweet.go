@@ -1,7 +1,6 @@
 package twittermanApi
 
 import (
-	"io/ioutil"
 	"net/http"
 	"twitterman/server/utils"
 
@@ -19,27 +18,27 @@ Campi di un tweet:
   - place.fields
   - user.fields
 */
-func getTweetById(c *gin.Context) {
+func GetTweetById(c *gin.Context) {
 	id := c.Param("id") // prendo l'id
 
 	// eseguo la richiesta a twitter
 	endpoint := utils.TwitterApi + "/tweets/" + id
-	req, err := http.NewRequest(http.MethodGet, endpoint, nil)
 
-	utils.ErrorMessage(err, "Error Occurred.")
+	body := utils.Request(http.MethodGet, endpoint, nil)
 
-	req.Header.Add("Authorization", "Bearer "+utils.GetEnvVar("BEARER_TOKEN"))
+	var result utils.Tweet
+	utils.StringToJson(body, &result)
 
-	response, err := utils.Client.Do(req)
+	c.IndentedJSON(http.StatusOK, result)
+}
 
-	utils.ErrorMessage(err, "Error sending request to API endpoint.")
+func GetTweetByHashtag(c *gin.Context) {
+	hashtag := c.Param("hashtag") // prendo l'hashtag
 
-	// Close the connection to reuse it
-	defer response.Body.Close()
+	endpoint := utils.TwitterApi + "/tweets/search/recent"
+	q := map[string]string{"query": "%23" + hashtag}
 
-	body, err := ioutil.ReadAll(response.Body)
-
-	utils.ErrorMessage(err, "Couldn't parse response body.")
+	body := utils.Request(http.MethodGet, endpoint, q)
 
 	var result utils.Tweet
 	utils.StringToJson(body, &result)

@@ -13,7 +13,8 @@ type Endpoint struct {
 }
 
 var EndpointList = []Endpoint{
-	{"/tweet/:id", getTweetById, "GET"},
+	{"/tweet/id/:id", GetTweetById, "GET"},
+	{"/tweet/hashtag/:hashtag", GetTweetByHashtag, "GET"},
 }
 
 func InitApi() {

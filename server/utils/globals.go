@@ -12,6 +12,13 @@ type TweetData struct {
 	Text                string   `json:"text"`
 }
 
+// type MetaData struct {
+// 	NewestId    string `json:"newest_id"`
+// 	OldestId    string `json:"oldest_id"`
+// 	ResultCount string `json:"result_count"`
+// 	NextToken   string `json:"next_token"`
+// }
+
 type Tweet struct {
 	DataTmp TweetData `json:"data"`
 }
