@@ -20,9 +20,9 @@ type User struct {
 
 var Client *mongo.Client
 var Ctx context.Context
-var dbname string = "twitterman"
+var Dbname string = "twitterman"
 
-const collection string = "Users"
+const Collection string = "Users"
 
 func Connect(saveGlobal bool) *mongo.Client {
 	currClient, err := mongo.NewClient(options.Client().ApplyURI(utils.DatabaseUrl))
@@ -48,7 +48,7 @@ func Disconnect() {
 }
 
 func find(query interface{}) interface{} {
-	col := Client.Database(dbname).Collection(collection)
+	col := Client.Database(Dbname).Collection(Collection)
 
 	var decoded interface{}
 	if err := col.FindOne(Ctx, query).Decode(&decoded); err != nil {
@@ -58,7 +58,7 @@ func find(query interface{}) interface{} {
 }
 
 func insert(query interface{}) {
-	col := Client.Database(dbname).Collection(collection)
+	col := Client.Database(Dbname).Collection(Collection)
 	_, err := col.InsertOne(Ctx, query)
 	if err != nil {
 		log.Fatal(err)
