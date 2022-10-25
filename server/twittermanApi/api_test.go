@@ -41,8 +41,8 @@ func TestGetTweetById(t *testing.T) {
 		}
 	}`
 
-	utils.StringToJson(response, &result)
-	utils.StringToJson([]byte(mockResponse), &tmpMock)
+	utils.UnmarshalToJson(response, &result)
+	utils.UnmarshalToJson([]byte(mockResponse), &tmpMock)
 
 	assert.Equal(t, http.StatusOK, res.Code)
 	assert.Equal(t, tmpMock, result)
