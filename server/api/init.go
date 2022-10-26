@@ -1,4 +1,4 @@
-package twittermanApi
+package api
 
 import (
 	"twitterman/server/utils"

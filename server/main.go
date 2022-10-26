@@ -1,13 +1,13 @@
 package main
 
 import (
-	"twitterman/server/twittermanApi"
+	"twitterman/server/api"
 	"twitterman/server/utils"
 )
 
 func main() {
-	utils.InitClient()
-	twittermanApi.InitApi()
+	api.InitClient()
+	api.InitApi()
 
 	utils.Router.Run(utils.ServerUrl + ":" + utils.ServerPort)
 }

@@ -1,13 +1,14 @@
-package utils
+package api
 
 import (
 	"io/ioutil"
-	"time"
 	"net/http"
+	"time"
+	"twitterman/server/utils"
 )
 
 func InitClient() {
-	Client = &http.Client{Timeout: 10 * time.Second}
+	utils.Client = &http.Client{Timeout: 10 * time.Second}
 }
 
 func Request(method string, endpoint string, query map[string]string) []byte {
@@ -43,7 +44,7 @@ func newRequest(method string, endpoint string) *http.Request {
 }
 
 func doRequest(req *http.Request) *http.Response {
-	res, err := Client.Do(req)
+	res, err := utils.Client.Do(req)
 	ErrorMessage(err, "Error sending request to API endpoint.")
 	return res
 }

@@ -1,4 +1,4 @@
-package twittermanApi
+package api
 
 import (
 	"net/http"
@@ -24,10 +24,10 @@ func GetTweetById(c *gin.Context) {
 	// eseguo la richiesta a twitter
 	endpoint := utils.TwitterApi + "/tweets/" + id
 
-	body := utils.Request(http.MethodGet, endpoint, nil)
+	body := Request(http.MethodGet, endpoint, nil)
 
 	var result utils.Data[utils.Tweet]
-	utils.UnmarshalToJson(body, &result)
+	UnmarshalToJson(body, &result)
 
 	c.IndentedJSON(http.StatusOK, result)
 }
@@ -38,10 +38,10 @@ func GetTweetsByHashtag(c *gin.Context) {
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
 	q := map[string]string{"query": "#" + hashtag}
 
-	body := utils.Request(http.MethodGet, endpoint, q)
+	body := Request(http.MethodGet, endpoint, q)
 
 	var result utils.Data[[]utils.Tweet]
-	utils.UnmarshalToJson(body, &result)
+	UnmarshalToJson(body, &result)
 
 	c.IndentedJSON(http.StatusOK, result)
 }
@@ -51,21 +51,20 @@ func GetUserTweetsById(c *gin.Context) {
 	id := getUserIdByUsername(username)
 
 	endpoint := utils.TwitterApi + "/users/" + id + "/tweets"
-	body := utils.Request(http.MethodGet, endpoint, nil)
+	body := Request(http.MethodGet, endpoint, nil)
 
 	var result utils.Data[[]utils.Tweet]
-	utils.UnmarshalToJson(body, &result)
+	UnmarshalToJson(body, &result)
 
 	c.IndentedJSON(http.StatusOK, result)
 }
 
-
 func getUserIdByUsername(username string) string {
 	endpoint := utils.TwitterApi + "/users/by/username/" + username
-	body := utils.Request(http.MethodGet, endpoint, nil)
+	body := Request(http.MethodGet, endpoint, nil)
 
 	var result utils.Data[utils.User]
-	utils.UnmarshalToJson(body, &result)
+	UnmarshalToJson(body, &result)
 
 	return result.DataTmp.Id
 }
