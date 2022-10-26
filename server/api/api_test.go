@@ -1,4 +1,4 @@
-package test
+package api
 
 import (
 	"io"
@@ -6,15 +6,14 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"twitterman/server/api"
 	"twitterman/server/utils"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func initTest() {
-	api.InitClient()
-	api.InitApi()
+	InitClient()
+	InitApi()
 }
 
 func sendTestRequest(method, url string, body io.Reader) ([]byte, *httptest.ResponseRecorder) {
@@ -42,8 +41,8 @@ func TestGetTweetById(t *testing.T) {
 		}
 	}`
 
-	api.UnmarshalToJson(response, &result)
-	api.UnmarshalToJson([]byte(mockResponse), &tmpMock)
+	UnmarshalToJson(response, &result)
+	UnmarshalToJson([]byte(mockResponse), &tmpMock)
 
 	assert.Equal(t, http.StatusOK, res.Code)
 	assert.Equal(t, tmpMock, result)
@@ -51,13 +50,13 @@ func TestGetTweetById(t *testing.T) {
 
 func TestGetRecentTweet(t *testing.T) {
 	response, res := sendTestRequest("GET", "/tweet/hashtag/meme", nil)
-	mockResponse := api.Request(http.MethodGet, "https://api.twitter.com/2/tweets/search/recent?query=%23meme", nil)
+	mockResponse := Request(http.MethodGet, "https://api.twitter.com/2/tweets/search/recent?query=%23meme", nil)
 
 	var result utils.Data[[]utils.Tweet]
 	var tmpMock utils.Data[[]utils.Tweet]
 
-	api.UnmarshalToJson(response, &result)
-	api.UnmarshalToJson(mockResponse, &tmpMock)
+	UnmarshalToJson(response, &result)
+	UnmarshalToJson(mockResponse, &tmpMock)
 
 	assert.Equal(t, http.StatusOK, res.Code)
 	assert.Equal(t, tmpMock, result)
