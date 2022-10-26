@@ -1,11 +1,11 @@
-import { Fragment } from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { useState } from 'react'
+import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import ProfileDropDown from './ProfileDropDown'
-
+import { Link } from 'react-router-dom'
 const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Tweet', href: '#', current: false },
+  { name: 'Dashboard', href: '#', current: true, link: '/' },
+  { name: 'Tweet', href: '#', current: false, link: '#' },
 ]
 
 function classNames(...classes) {
@@ -13,6 +13,8 @@ function classNames(...classes) {
 }
 
 export default function Example() {
+  const [isLogged, setIsLogged] = useState(false)
+
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -41,29 +43,39 @@ export default function Example() {
                     className="hidden h-8 w-auto lg:block"
                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
                     alt="Your Company"
-                  />
+                  />{' '}
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
-                    {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current
-                            ? 'bg-gray-900 text-white'
-                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'px-3 py-2 rounded-md text-sm font-medium'
-                        )}
-                        aria-current={item.current ? 'page' : undefined}
-                      >
-                        {item.name}
-                      </a>
+                    {navigation.map((item, i) => (
+                      <Link to="/" key={i}>
+                        <span
+                          className={classNames(
+                            item.current
+                              ? 'bg-gray-900 text-white'
+                              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                            'px-3 py-2 rounded-md text-sm font-medium'
+                          )}
+                          aria-current={item.current ? 'page' : undefined}
+                        >
+                          {item.name}
+                        </span>
+                      </Link>
                     ))}
                   </div>
                 </div>
               </div>
-              <ProfileDropDown />
+              {!isLogged && (
+                <Link to="/login">
+                  <button
+                    type="button"
+                    className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2 "
+                  >
+                    Login
+                  </button>
+                </Link>
+              )}
+              {isLogged && <ProfileDropDown />}
             </div>
           </div>
         </>
