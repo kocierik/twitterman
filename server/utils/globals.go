@@ -6,10 +6,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type TweetData struct {
+
+// https://developer.twitter.com/en/docs/twitter-api/data-dictionary/object-model/tweet
+
+type Tweet struct {
 	EditHistoryTweetIds []string `json:"edit_history_tweet_ids"`
 	Id                  string   `json:"id"`
 	Text                string   `json:"text"`
+}
+
+type User struct {
+	Id                  string   `json:"id"`
+	Name                string   `json:"name"`
+	Username 			string 	 `json:"username"`
 }
 
 // type MetaData struct {
@@ -19,8 +28,8 @@ type TweetData struct {
 // 	NextToken   string `json:"next_token"`
 // }
 
-type Tweet struct {
-	DataTmp TweetData `json:"data"`
+type Data[T any] struct {
+	DataTmp T `json:"data"`
 }
 
 const ServerPort string = "8080"
