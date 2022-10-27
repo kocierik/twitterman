@@ -2,18 +2,19 @@ import { useState } from 'react'
 import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import ProfileDropDown from './ProfileDropDown'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import twitterman from '../assets/twitterman.png'
 const navigation = [
   { name: 'Dashboard', href: '#', current: true, link: '/' },
-  { name: 'Tweet', href: '#', current: false, link: '#' },
+  { name: 'Tweet', href: '#', current: false, link: '/tweet' },
 ]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+export default function Navbar() {
+  const history = useLocation()
   const [isLogged, setIsLogged] = useState(false)
 
   return (
@@ -25,8 +26,8 @@ export default function Example() {
             data-aos-duration="700"
             className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8"
           >
-            <div className="relative flex h-16 items-center justify-between">
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+            <div className="relative items-center flex h-16 items-center justify-between">
+              <div className="absolute  inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button*/}
                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
@@ -37,7 +38,7 @@ export default function Example() {
                   )}
                 </Disclosure.Button>
               </div>
-              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+              <div className="flex flex-1 items-center justify-center  sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
                   {/* <img
                     className="block h-8 w-auto lg:hidden"
@@ -45,7 +46,7 @@ export default function Example() {
                     alt="Twitterman logo"
                   /> */}
                   <img
-                    className="hidden h-8 w-auto lg:block"
+                    className="hidden h-10 w-auto lg:block"
                     src={twitterman}
                     alt="Twitterman logo"
                   />{' '}
@@ -53,15 +54,17 @@ export default function Example() {
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item, i) => (
-                      <Link to="/" key={i}>
+                      <Link
+                        to={item.link}
+                        key={i}
+                        className="hover:-translate-y-1 hover:scale-105 duration-300"
+                      >
                         <span
-                          className={classNames(
-                            item.current
-                              ? 'bg-gray-900 text-white'
-                              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                            'px-3 py-2 rounded-md text-sm font-medium'
-                          )}
-                          aria-current={item.current ? 'page' : undefined}
+                          style={{
+                            backgroundColor:
+                              history.pathname == item.link ? 'indigo' : '',
+                          }}
+                          className=" text-white hover:bg-gray-700 px-3 py-2 rounded-md text-sm font-medium active"
                         >
                           {item.name}
                         </span>
@@ -89,7 +92,7 @@ export default function Example() {
                 <Link to={item.link} key={i}>
                   <Disclosure.Button
                     key={item.name}
-                    as="a"
+                    as="div"
                     className={classNames(
                       item.current
                         ? 'bg-gray-900 text-white'
