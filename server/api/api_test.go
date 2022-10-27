@@ -48,7 +48,7 @@ func TestGetTweetById(t *testing.T) {
 	assert.Equal(t, tmpMock, result)
 }
 
-func TestGetRecentTweet(t *testing.T) {
+func TestGetTweetsByHashtag(t *testing.T) {
 	response, res := sendTestRequest("GET", "/tweet/hashtag/meme", nil)
 	mockResponse := Request(http.MethodGet, utils.TwitterApi+"/tweets/search/recent?query=%23meme", nil)
 
