@@ -84,12 +84,11 @@ export default function Example() {
           </div>
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 px-2 pt-2 pb-3">
-              {navigation.map((item) => (
-                <Link to={item.link}>
+              {navigation.map((item, i) => (
+                <Link to={item.link} key={i}>
                   <Disclosure.Button
                     key={item.name}
                     as="a"
-                    href={item.href}
                     className={classNames(
                       item.current
                         ? 'bg-gray-900 text-white'
