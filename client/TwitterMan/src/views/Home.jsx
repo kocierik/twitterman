@@ -5,7 +5,11 @@ import TweetCard from '../components/Tweet'
 
 const Home = () => {
   return (
-    <div className="App pt-16 pb-16 mx-5 flex flex-col	gap-5">
+    <div
+      data-aos="zoom-in"
+      data-aos-duration="700"
+      className="App dark:bg-gray-900 pt-16 pb-16  flex flex-col	gap-5"
+    >
       <div className="flex justify-center">
         <SearchBar />
       </div>
