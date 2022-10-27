@@ -3,7 +3,11 @@ import Comments from './Comments'
 
 const TweetCard = ({ data }) => {
   return (
-    <article className="place-self-start mb-4 break-inside p-6 rounded-xl flex flex-col text-sm bg-white dark:bg-slate-800 dark:text-white">
+    <article
+      data-aos="zoom-in"
+      data-aos-duration="700"
+      className="place-self-start mb-4 break-inside p-6 rounded-xl flex flex-col text-sm bg-white dark:bg-slate-800 dark:text-white"
+    >
       <div className="flex pb-5 items-start justify-between">
         <div className="flex">
           <a className="inline-block mr-4" href="#">
