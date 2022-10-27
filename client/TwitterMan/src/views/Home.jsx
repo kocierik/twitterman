@@ -8,7 +8,7 @@ const Home = () => {
     <div
       data-aos="zoom-in"
       data-aos-duration="700"
-      className="App heightMax pt-16 pb-16 mx-5 flex flex-col	gap-5"
+      className="App dark:bg-gray-900 pt-16 pb-16  flex flex-col	gap-5"
     >
       <div className="flex justify-center">
         <SearchBar />

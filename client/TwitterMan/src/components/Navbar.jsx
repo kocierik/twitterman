@@ -45,11 +45,13 @@ export default function Navbar() {
                     src={twitterman}
                     alt="Twitterman logo"
                   /> */}
-                  <img
-                    className="hidden h-10 w-auto lg:block"
-                    src={twitterman}
-                    alt="Twitterman logo"
-                  />{' '}
+                  <Link to="/">
+                    <img
+                      className="hidden h-10 w-auto lg:block"
+                      src={twitterman}
+                      alt="Twitterman logo"
+                    />{' '}
+                  </Link>
                 </div>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
