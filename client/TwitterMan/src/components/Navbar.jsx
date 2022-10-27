@@ -3,6 +3,7 @@ import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import ProfileDropDown from './ProfileDropDown'
 import { Link } from 'react-router-dom'
+import twitterman from '../assets/twitterman.png'
 const navigation = [
   { name: 'Dashboard', href: '#', current: true, link: '/' },
   { name: 'Tweet', href: '#', current: false, link: '#' },
@@ -38,15 +39,15 @@ export default function Example() {
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                 <div className="flex flex-shrink-0 items-center">
-                  <img
+                  {/* <img
                     className="block h-8 w-auto lg:hidden"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                    alt="Your Company"
-                  />
+                    src={twitterman}
+                    alt="Twitterman logo"
+                  /> */}
                   <img
                     className="hidden h-8 w-auto lg:block"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                    alt="Your Company"
+                    src={twitterman}
+                    alt="Twitterman logo"
                   />{' '}
                 </div>
                 <div className="hidden sm:ml-6 sm:block">

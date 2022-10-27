@@ -1,5 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import twitterman from '../assets/twitterman.png'
+
 const Register = () => {
   return (
     <section
@@ -13,9 +15,9 @@ const Register = () => {
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
         >
           <img
-            className="w-8 h-8 mr-2"
-            src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg"
-            alt="logo"
+            className="w-10 h-10 mr-2"
+            src={twitterman}
+            alt="Twitterman logo"
           />
           TwitterMan
         </a>
