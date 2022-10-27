@@ -48,9 +48,9 @@ func TestGetTweetById(t *testing.T) {
 	assert.Equal(t, tmpMock, result)
 }
 
-func TestGetRecentTweet(t *testing.T) {
+func TestGetTweetsByHashtag(t *testing.T) {
 	response, res := sendTestRequest("GET", "/tweet/hashtag/meme", nil)
-	mockResponse := Request(http.MethodGet, "https://api.twitter.com/2/tweets/search/recent?query=%23meme", nil)
+	mockResponse := Request(http.MethodGet, utils.TwitterApi+"/tweets/search/recent?query=%23meme", nil)
 
 	var result utils.Data[[]utils.Tweet]
 	var tmpMock utils.Data[[]utils.Tweet]
@@ -62,7 +62,18 @@ func TestGetRecentTweet(t *testing.T) {
 	assert.Equal(t, tmpMock, result)
 }
 
-// func TestGetEnvVar(t *testing.T) {
-// 	assert.Equal(t, "https://qube.hjkl.gq", api.GetEnvVar("SONAR_HOST_URL"))
-// 	assert.Equal(t, "", api.GetEnvVar("COSE_A_CASO"))
-// }
+func TestGetUserTweetsById(t *testing.T) {
+	user := "Pontifex"
+	response, res := sendTestRequest("GET", "/user/"+user+"/tweets", nil)
+	user_id := getUserIdByUsername(user)
+	mockResponse := Request(http.MethodGet, utils.TwitterApi+"/users/"+user_id+"/tweets", nil)
+
+	var result utils.Data[[]utils.Tweet]
+	var tmpMock utils.Data[[]utils.Tweet]
+
+	UnmarshalToJson(response, &result)
+	UnmarshalToJson(mockResponse, &tmpMock)
+
+	assert.Equal(t, http.StatusOK, res.Code)
+	assert.Equal(t, tmpMock, result)
+}
