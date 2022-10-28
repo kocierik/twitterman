@@ -23,28 +23,26 @@ type User struct {
 
 var Client *mongo.Client
 var Ctx context.Context
+var Cancel context.CancelFunc
 var Dbname string = "twitterman"
 
 const Collection string = "Users"
 
-func Connect(saveGlobal bool) *mongo.Client {
-	currClient, err := mongo.NewClient(options.Client().ApplyURI(utils.DatabaseUrl))
+func Connect() {
+	var err error
+	Client, err = mongo.NewClient(options.Client().ApplyURI(utils.DatabaseUrl))
 	if err != nil {
 		log.Fatal(err)
 	}
-	currCtx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = currClient.Connect(currCtx)
+	Ctx, Cancel = context.WithTimeout(context.Background(), 10*time.Second)
+	err = Client.Connect(Ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if saveGlobal {
-		Client = currClient
-		Ctx = currCtx
-	}
-	return currClient
 }
 
 func Disconnect() {
+	defer Cancel()
 	if err := Client.Disconnect(Ctx); err != nil {
 		log.Fatal(err)
 	}
@@ -68,7 +66,7 @@ func insert(query interface{}) {
 }
 
 func GetUserByEmail(email string) (User, error) {
-	query := bson.D{{"email", email}}
+	query := bson.M{"email": email}
 	res := find(query)
 	var user []User
 	if err := res.All(Ctx, &user); err != nil {

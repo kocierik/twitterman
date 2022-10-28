@@ -8,7 +8,7 @@ import (
 
 func main() {
 	utils.InitClient()
-	database.Connect(true)
+	database.Connect()
 	twittermanApi.InitApi()
 
 	utils.Router.Run(utils.ServerUrl + ":" + utils.ServerPort)

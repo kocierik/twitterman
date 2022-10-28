@@ -13,7 +13,7 @@ import (
 
 func initDbTest() {
 	database.Dbname = "test"
-	_ = database.Connect(true)
+	database.Connect()
 
 	// Clear database
 	if _, err := database.Client.Database(database.Dbname).Collection(database.Collection).DeleteMany(database.Ctx, bson.D{}); err != nil {
@@ -22,11 +22,10 @@ func initDbTest() {
 }
 
 func TestDatabaseConnect(t *testing.T) {
-	mycli := database.Connect(true)
+	database.Connect()
 	defer database.Disconnect()
 	err := database.Client.Ping(database.Ctx, nil)
 	assert.Equal(t, err, nil)
-	assert.Equal(t, mycli, database.Client)
 }
 
 func TestDatabaseDisconnect(t *testing.T) {
