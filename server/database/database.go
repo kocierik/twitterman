@@ -7,15 +7,17 @@ import (
 	"twitterman/server/utils"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type User struct {
-	Email    string        `bson:"email"`
-	Username string        `bson:"username"`
-	Password string        `bson:"password"`
-	Tweets   []utils.Tweet `bson:"tweets"`
+	ID       primitive.ObjectID `bson:"_id,omitempty"`
+	Email    string             `bson:"email"`
+	Username string             `bson:"username"`
+	Password string             `bson:"password"`
+	Tweets   []utils.Tweet      `bson:"tweets"`
 }
 
 var Client *mongo.Client
@@ -47,14 +49,14 @@ func Disconnect() {
 	}
 }
 
-func find(query interface{}) interface{} {
+func find(query interface{}) *mongo.Cursor {
 	col := Client.Database(Dbname).Collection(Collection)
 
-	var decoded interface{}
-	if err := col.FindOne(Ctx, query).Decode(&decoded); err != nil {
+	cursor, err := col.Find(Ctx, query)
+	if err != nil {
 		log.Fatal(err)
 	}
-	return decoded
+	return cursor
 }
 
 func insert(query interface{}) {
@@ -68,19 +70,31 @@ func insert(query interface{}) {
 func GetUserByEmail(email string) User {
 	query := bson.D{{"email", email}}
 	res := find(query)
-	doc, err := bson.Marshal(res)
-	if err != nil {
-		log.Fatal(err)
-	}
-	var user User
-	if err := bson.Unmarshal(doc, &user); err != nil {
+	var user []User
+	if err := res.All(Ctx, &user); err != nil {
 		log.Fatal(err)
 	}
 
-	return user
+	return user[0]
+}
+
+func GetUserById(id string) User {
+	query := bson.D{{"id", id}}
+	res := find(query)
+	var user []User
+	if err := res.All(Ctx, &user); err != nil {
+		log.Fatal(err)
+	}
+
+	return user[0]
 }
 
 func InsertUser(email, username, password string, tweets []utils.Tweet) {
-	user := User{email, username, password, tweets}
+	user := User{
+		Email:    email,
+		Username: username,
+		Password: password,
+		Tweets:   tweets,
+	}
 	insert(user)
 }

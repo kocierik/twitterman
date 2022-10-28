@@ -13,6 +13,8 @@ import (
 func initDbTest() {
 	database.Dbname = "test"
 	_ = database.Connect(true)
+
+	// Clear database
 	if _, err := database.Client.Database(database.Dbname).Collection(database.Collection).DeleteMany(database.Ctx, bson.D{}); err != nil {
 		log.Fatal(err)
 	}
