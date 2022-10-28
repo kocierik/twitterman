@@ -14,6 +14,8 @@ type Endpoint struct {
 
 var EndpointList = []Endpoint{
 	{"/tweet/:id", getTweetById, "GET"},
+	{"/login", loginApi, "POST"},
+	{"/register", registerApi, "POST"},
 }
 
 func InitApi() {

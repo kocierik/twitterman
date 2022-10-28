@@ -8,6 +8,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func initDbTest() {
@@ -38,7 +39,29 @@ func TestDatabaseDisconnect(t *testing.T) {
 func TestInsertandGetUser(t *testing.T) {
 	initDbTest()
 	defer database.Disconnect()
-	database.InsertUser("gianni@gianni", "gianni", "gianni", make([]utils.Tweet, 0))
-	res := database.GetUserByEmail("gianni@gianni")
-	assert.Equal(t, res.Email, "gianni@gianni")
+
+	// It insert the user
+	database.InsertUser("gianni@gianni", "gianni", "gianni", []utils.Tweet{})
+
+	// It returns an error if the email doesn't exist
+	_, err := database.GetUserByEmail("no-user-with-this-email")
+	assert.NotEqual(t, err, nil)
+
+	// It returns the user if the mail does exist
+	userEmail, err := database.GetUserByEmail("gianni@gianni")
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.Equal(t, userEmail.Email, "gianni@gianni")
+
+	// It returns an error if the ID doesn't exist
+	_, err = database.GetUserById(primitive.NewObjectID())
+	assert.NotEqual(t, err, nil)
+
+	// It returns the user if the id exist
+	userId, err := database.GetUserById(userEmail.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	assert.Equal(t, userEmail, userId)
 }

@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"errors"
 	"log"
 	"time"
 	"twitterman/server/utils"
@@ -51,7 +52,6 @@ func Disconnect() {
 
 func find(query interface{}) *mongo.Cursor {
 	col := Client.Database(Dbname).Collection(Collection)
-
 	cursor, err := col.Find(Ctx, query)
 	if err != nil {
 		log.Fatal(err)
@@ -67,26 +67,33 @@ func insert(query interface{}) {
 	}
 }
 
-func GetUserByEmail(email string) User {
+func GetUserByEmail(email string) (User, error) {
 	query := bson.D{{"email", email}}
 	res := find(query)
 	var user []User
 	if err := res.All(Ctx, &user); err != nil {
 		log.Fatal(err)
 	}
-
-	return user[0]
+	if len(user) == 0 {
+		return User{primitive.ObjectID{}, "", "", "", []utils.Tweet{}}, errors.New("no user with that email")
+	} else {
+		return user[0], nil
+	}
 }
 
-func GetUserById(id string) User {
-	query := bson.D{{"id", id}}
+func GetUserById(id primitive.ObjectID) (User, error) {
+	query := bson.M{"_id": id}
 	res := find(query)
 	var user []User
 	if err := res.All(Ctx, &user); err != nil {
 		log.Fatal(err)
 	}
 
-	return user[0]
+	if len(user) == 0 {
+		return User{primitive.ObjectID{}, "", "", "", []utils.Tweet{}}, errors.New("no user with that ID")
+	} else {
+		return user[0], nil
+	}
 }
 
 func InsertUser(email, username, password string, tweets []utils.Tweet) {
