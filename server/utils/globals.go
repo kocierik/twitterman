@@ -21,14 +21,16 @@ Campi di un tweet:
   - place.fields
   - user.fields
 */
-type TweetData struct {
+type TwitterTweetStructure struct {
 	EditHistoryTweetIds []string `json:"edit_history_tweet_ids"`
 	Id                  string   `json:"id"`
 	Text                string   `json:"text"`
 }
 
-type ApiTweet struct {
-	DataTmp TweetData `json:"data"`
+type TwitterUserStructure struct {
+	Id       string `json:"id"`
+	Name     string `json:"name"`
+	Username string `json:"username"`
 }
 
 type Tweet struct {

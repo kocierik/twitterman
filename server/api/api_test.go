@@ -58,8 +58,8 @@ func TestGetTweetsByHashtag(t *testing.T) {
 	response, res := sendTestRequest("GET", "/tweet/hashtag/meme", nil)
 	mockResponse := Request(http.MethodGet, utils.TwitterApi+"/tweets/search/recent?query=%23meme", nil)
 
-	var result utils.Data[[]utils.Tweet]
-	var tmpMock utils.Data[[]utils.Tweet]
+	var result utils.Data[[]utils.TwitterTweetStructure]
+	var tmpMock utils.Data[[]utils.TwitterTweetStructure]
 
 	utils.UnmarshalToJson(response, &result)
 	utils.UnmarshalToJson(mockResponse, &tmpMock)
@@ -75,8 +75,8 @@ func TestGetUserTweetsById(t *testing.T) {
 	user_id := getUserIdByUsername(user)
 	mockResponse := Request(http.MethodGet, utils.TwitterApi+"/users/"+user_id+"/tweets", nil)
 
-	var result utils.Data[[]utils.Tweet]
-	var tmpMock utils.Data[[]utils.Tweet]
+	var result utils.Data[[]utils.TwitterTweetStructure]
+	var tmpMock utils.Data[[]utils.TwitterTweetStructure]
 
 	utils.UnmarshalToJson(response, &result)
 	utils.UnmarshalToJson(mockResponse, &tmpMock)
