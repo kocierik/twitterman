@@ -27,7 +27,7 @@ func GetTweetById(c *gin.Context) {
 	body := Request(http.MethodGet, endpoint, nil)
 
 	var result utils.Data[utils.Tweet]
-	UnmarshalToJson(body, &result)
+	utils.UnmarshalToJson(body, &result)
 
 	c.IndentedJSON(http.StatusOK, result)
 }
@@ -41,7 +41,7 @@ func GetTweetsByHashtag(c *gin.Context) {
 	body := Request(http.MethodGet, endpoint, q)
 
 	var result utils.Data[[]utils.Tweet]
-	UnmarshalToJson(body, &result)
+	utils.UnmarshalToJson(body, &result)
 
 	c.IndentedJSON(http.StatusOK, result)
 }
@@ -54,7 +54,7 @@ func GetUserTweetsById(c *gin.Context) {
 	body := Request(http.MethodGet, endpoint, nil)
 
 	var result utils.Data[[]utils.Tweet]
-	UnmarshalToJson(body, &result)
+	utils.UnmarshalToJson(body, &result)
 
 	c.IndentedJSON(http.StatusOK, result)
 }
@@ -64,7 +64,7 @@ func getUserIdByUsername(username string) string {
 	body := Request(http.MethodGet, endpoint, nil)
 
 	var result utils.Data[utils.User]
-	UnmarshalToJson(body, &result)
+	utils.UnmarshalToJson(body, &result)
 
-	return result.DataTmp.Id
+	return result.DataTmp.ID.Hex()
 }

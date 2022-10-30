@@ -7,13 +7,13 @@ import (
 	"twitterman/server/utils"
 )
 
-func InitClient() {
+func InitHttpClient() {
 	utils.Client = &http.Client{Timeout: 10 * time.Second}
 }
 
 func Request(method string, endpoint string, query map[string]string) []byte {
 	req := newRequest(method, endpoint)
-	req.Header.Add("Authorization", "Bearer "+GetEnvVar("BEARER_TOKEN"))
+	req.Header.Add("Authorization", "Bearer "+utils.GetEnvVar("BEARER_TOKEN"))
 
 	// formo la query
 	if query != nil {
@@ -39,18 +39,18 @@ func addQueryToReq(req *http.Request, params map[string]string) {
 
 func newRequest(method string, endpoint string) *http.Request {
 	req, err := http.NewRequest(method, endpoint, nil)
-	ErrorMessage(err, "Error Occurred.")
+	utils.ErrorMessage(err)
 	return req
 }
 
 func doRequest(req *http.Request) *http.Response {
 	res, err := utils.Client.Do(req)
-	ErrorMessage(err, "Error sending request to API endpoint.")
+	utils.ErrorMessage(err)
 	return res
 }
 
 func parseBody(res *http.Response) []byte {
 	body, err := ioutil.ReadAll(res.Body)
-	ErrorMessage(err, "Couldn't parse response body.")
+	utils.ErrorMessage(err)
 	return body
 }
