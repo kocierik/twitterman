@@ -1,4 +1,4 @@
-package test
+package twittermanApi
 
 import (
 	"bytes"
@@ -10,7 +10,6 @@ import (
 	"net/http/httptest"
 	"testing"
 	"twitterman/server/database"
-	"twitterman/server/twittermanApi"
 	"twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
@@ -20,7 +19,7 @@ import (
 func initTest() {
 	utils.Router = gin.Default()
 	utils.InitClient()
-	twittermanApi.InitApi()
+	InitApi()
 }
 
 func sendRequest(method, url string, body io.Reader) (string, *httptest.ResponseRecorder) {
@@ -32,36 +31,10 @@ func sendRequest(method, url string, body io.Reader) (string, *httptest.Response
 	return string(responseData), res
 }
 
-func TestGetTweetById(t *testing.T) {
-	initTest()
-
-	response, res := sendRequest("GET", "/tweet/1581295611013320706", nil)
-
-	var result utils.ApiTweet
-	var tmpMock utils.ApiTweet
-	mockResponse := `{
-		"data": {
-			"edit_history_tweet_ids": [
-				"1581295611013320706"
-			],
-			"id": "1581295611013320706",
-			"text": "#swetesting prova primo tweet"
-		}
-	}`
-
-	log.Println(result, tmpMock, mockResponse, response, res)
-
-	//utils.StringToJson(response, &result)
-	// utils.StringToJson([]byte(mockResponse), &tmpMock)
-
-	// assert.Equal(t, http.StatusOK, res.Code)
-	// assert.Equal(t, tmpMock, result)
-}
-
 func TestLoginApi(t *testing.T) {
 	initTest()
 	// Insert user to database
-	initDbTest()
+	database.InitDbTest()
 	defer database.Disconnect()
 	database.InsertUser("aldo@aldo", "aldo", "aldo", []utils.Tweet{})
 
@@ -99,7 +72,7 @@ func TestLoginApi(t *testing.T) {
 func TestRegisterApi(t *testing.T) {
 	initTest()
 	// Insert user to database
-	initDbTest()
+	database.InitDbTest()
 	defer database.Disconnect()
 
 	// Test Correct credentials

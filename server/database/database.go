@@ -103,3 +103,13 @@ func InsertUser(email, username, password string, tweets []utils.Tweet) {
 	}
 	insert(user)
 }
+
+func InitDbTest() {
+	Dbname = "test"
+	Connect()
+
+	// Clear database
+	if _, err := Client.Database(Dbname).Collection(Collection).DeleteMany(Ctx, bson.D{}); err != nil {
+		log.Fatal(err)
+	}
+}
