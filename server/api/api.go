@@ -26,7 +26,7 @@ func GetTweetById(c *gin.Context) {
 
 	body := Request(http.MethodGet, endpoint, nil)
 
-	var result utils.Data[utils.Tweet]
+	var result utils.Data[utils.TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
 
 	c.IndentedJSON(http.StatusOK, result)
@@ -40,7 +40,7 @@ func GetTweetsByHashtag(c *gin.Context) {
 
 	body := Request(http.MethodGet, endpoint, q)
 
-	var result utils.Data[[]utils.Tweet]
+	var result utils.Data[[]utils.TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
 
 	c.IndentedJSON(http.StatusOK, result)
@@ -53,7 +53,7 @@ func GetUserTweetsById(c *gin.Context) {
 	endpoint := utils.TwitterApi + "/users/" + id + "/tweets"
 	body := Request(http.MethodGet, endpoint, nil)
 
-	var result utils.Data[[]utils.Tweet]
+	var result utils.Data[[]utils.TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
 
 	c.IndentedJSON(http.StatusOK, result)
@@ -63,8 +63,8 @@ func getUserIdByUsername(username string) string {
 	endpoint := utils.TwitterApi + "/users/by/username/" + username
 	body := Request(http.MethodGet, endpoint, nil)
 
-	var result utils.Data[utils.User]
+	var result utils.Data[utils.TwitterUserStructure]
 	utils.UnmarshalToJson(body, &result)
 
-	return result.DataTmp.ID.Hex()
+	return result.DataTmp.Id
 }
