@@ -1,9 +1,28 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { SERVER_URL } from '../utils'
 import { TweetsData } from '../json/tweet'
 import SearchBar from '../components/SearchBar'
 import TweetCard from '../components/Tweet'
 
 const Home = () => {
+  // TODO: Uncomment when the api is ready
+  /*const [TweetsData, setTweetsData] = useState([]);
+  async function init(){
+    try{
+      let res = await fetch(`${SERVER_URL}/`);
+      res = await res.json();
+      if(!res.success){
+        throw res.message
+      }else{
+        setTweetsData(res.tweets);
+      }
+    }catch(e){
+      alert(e);
+    }
+  }
+  useEffect(()=>{
+    //init()
+  }, [])*/
   return (
     <div
       data-aos="zoom-in"
