@@ -1,6 +1,7 @@
 package twittermanApi
 
 import (
+	"log"
 	"twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,7 @@ var EndpointList = []Endpoint{
 }
 
 func InitApi() {
+	log.Println(utils.Router.Routes())
 	for _, v := range EndpointList {
 		if v.Method == "GET" {
 			utils.Router.GET(v.Endpoint, v.Function)

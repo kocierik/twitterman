@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 /*
@@ -58,4 +60,9 @@ func ErrorMessage(err error, msg string) {
 	if err != nil {
 		log.Fatalf(msg+" %+v", err)
 	}
+}
+
+func IsLoggedIn(c *gin.Context) bool {
+	// TODO: handle jwt cookie from request
+	return true
 }
