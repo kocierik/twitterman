@@ -59,7 +59,14 @@ func GetUserTweetsById(c *gin.Context) {
 	var result utils.Data[[]utils.TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
 
-	c.IndentedJSON(http.StatusOK, result)
+	var ret []utils.Tweet
+
+	for _, elem := range result.DataTmp {
+		tmp := utils.ConvertTweetDataToMyTweet(elem, getUsernameByUserId(elem.Author))
+		ret = append(ret, tmp)
+	}
+
+	c.IndentedJSON(http.StatusOK, ret)
 }
 
 func GetUserIdByUsername(username string) string {
