@@ -6,7 +6,7 @@ const TweetCard = ({ data }) => {
     <article
       data-aos="zoom-in"
       data-aos-duration="700"
-      className="place-self-start mb-4 break-inside p-6 rounded-xl flex flex-col text-sm bg-white dark:bg-slate-800 dark:text-white"
+      className="place-self-start mb-4 break-inside px-6 py-4 rounded-xl flex flex-col text-sm bg-white dark:bg-slate-800 dark:text-white"
     >
       <div className="flex pb-5 items-start justify-between">
         <div className="flex">
@@ -64,23 +64,6 @@ const TweetCard = ({ data }) => {
       {data.comments.map((comment, i) => {
         return <Comments comment={comment} key={i} />
       })}
-      <div className="relative">
-        <input
-          className="pt-2 pb-2 pl-3 w-full pr-20 h-10 bg-slate-100 dark:bg-slate-600 rounded-lg placeholder:text-slate-600 dark:placeholder:text-slate-300 font-medium"
-          type="text"
-          placeholder="Write a comment"
-        />
-        <span className="flex absolute right-3 top-2/4 -mt-3 items-center">
-          <svg
-            className="fill-blue-500 dark:fill-slate-50"
-            width="22"
-            height="22"
-            viewBox="0 0 24 24"
-          >
-            <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
-          </svg>
-        </span>
-      </div>
     </article>
   )
 }
