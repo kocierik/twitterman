@@ -7,6 +7,7 @@ export const TweetsData = [
     content: 'This is a post with comments',
     likes: 3,
     isLiked: false,
+    reposts: 4,
     comments: [
       {
         id: '6544388a-96e2-43b3-9053-985b014a2b19',
@@ -47,6 +48,7 @@ export const TweetsData = [
     likes: 1,
     comments: [],
     isLiked: false,
+    reposts: 1,
   },
   {
     id: 'a55f42e5-0bc8-4368-8955-a7b697552d33',
@@ -58,6 +60,7 @@ export const TweetsData = [
     likes: 1,
     comments: [],
     isLiked: false,
+    reposts: 3,
   },
   {
     id: 'a55f42e5-0bc8-4368-8955-a7b697552d33',
@@ -69,6 +72,7 @@ export const TweetsData = [
     likes: 1,
     comments: [],
     isLiked: false,
+    reposts: 6,
   },
   {
     id: 'a55f42e5-0bc8-4368-8955-a7b697552d33',
@@ -78,6 +82,7 @@ export const TweetsData = [
     timestamp: '2021-11-12 07:15:45',
     content: 'This is a post without comments',
     likes: 1,
+    reposts: 1,
     comments: [
       {
         id: '6544388a-96e2-43b3-9053-985b014a2b19',
@@ -101,5 +106,6 @@ export const TweetsData = [
     likes: 1,
     comments: [],
     isLiked: false,
+    reposts: 7,
   },
 ]

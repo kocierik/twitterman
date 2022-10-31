@@ -77,7 +77,7 @@ const TweetCard = ({ data }) => {
               />
             </svg>
           </span>
-          <span className="font-bold">{data.likes}</span>
+          <span className="font-bold">{data.reposts}</span>
         </a>
       </div>
       {data.comments.length !== 0 && (
