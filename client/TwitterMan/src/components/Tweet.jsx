@@ -48,7 +48,7 @@ const TweetCard = ({ data }) => {
       <p className="text-sm dark:text-slate-200"> {data.content} </p>
       <div className="py-4">
         <a className="inline-flex items-center" href="#">
-          <span className="mr-2">
+          <span className="m-2">
             <svg
               className="fill-rose-600 dark:fill-rose-400"
               width="18"
@@ -60,7 +60,29 @@ const TweetCard = ({ data }) => {
           </span>
           <span className="font-bold">{data.likes}</span>
         </a>
+        <a className="inline-flex items-center" href="#">
+          <span className="m-2">
+            <svg
+              width="20px"
+              height="20px"
+              className="fill-white"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M19 7a1 1 0 0 0-1-1h-8v2h7v5h-3l3.969 5L22 13h-3V7zM5 17a1 1 0 0 0 1 1h8v-2H7v-5h3L6 6l-4 5h3v6z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
+              />
+            </svg>
+          </span>
+          <span className="font-bold">{data.likes}</span>
+        </a>
       </div>
+      {data.comments.length !== 0 && (
+        <hr class=" h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
+      )}
       {data.comments.map((comment, i) => {
         return <Comments comment={comment} key={i} />
       })}
