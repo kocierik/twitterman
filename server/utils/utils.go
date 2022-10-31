@@ -28,3 +28,16 @@ func IsLoggedIn(c *gin.Context) bool {
 	// TODO: handle jwt cookie from request
 	return true
 }
+
+func ConvertTweetDataToMyTweet(t TwitterTweetStructure, author string) Tweet {
+	var ret Tweet = Tweet{
+		Id:            t.Id,
+		Name:          author,
+		Content:       t.Text,
+		Timestamp:     t.Timestamp,
+		PublicMetrics: t.PublicMetrics,
+		Comments:      []Tweet{},
+	}
+
+	return ret
+}

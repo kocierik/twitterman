@@ -72,7 +72,7 @@ func TestGetUserTweetsById(t *testing.T) {
 	initApiTest()
 	user := "Pontifex"
 	response, res := sendTestRequest("GET", "/user/"+user+"/tweets", nil)
-	user_id := getUserIdByUsername(user)
+	user_id := GetUserIdByUsername(user)
 	mockResponse := Request(http.MethodGet, utils.TwitterApi+"/users/"+user_id+"/tweets", nil)
 
 	var result utils.Data[[]utils.TwitterTweetStructure]
