@@ -1,8 +1,45 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useRef } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import twitterman from '../assets/twitterman.png'
+import { SERVER_URL } from '../utils'
 
 const Register = () => {
+  const email = useRef()
+  const username = useRef()
+  const password = useRef()
+  const navigate = useNavigate()
+
+  async function submitRegister() {
+    try {
+      console.log(username.current.value)
+      console.log(email.current.value)
+      console.log(password.current.value)
+      let res = await fetch(`${SERVER_URL}/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'no-cors',
+        credentials: 'include',
+        body: JSON.stringify({
+          username: username.current.value,
+          email: email.current.value,
+          password: password.current.value,
+        }),
+      }).catch((e) => console.log('errore --> ', e))
+      res = await res.json()
+      console.log(res)
+
+      if (!res.success) {
+        throw console.log(res.message)
+      }
+      navigate('/')
+      // TODO: Handle when you are registered correctly, maybe navigate('/home')
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   return (
     <section
       data-aos="zoom-in"
@@ -26,7 +63,7 @@ const Register = () => {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Sign up with an account
             </h1>
-            <form className="space-y-4 md:space-y-6" action="#">
+            <form className="space-y-4 md:space-y-6" method="POST">
               <div>
                 <label
                   htmlFor="email"
@@ -37,6 +74,7 @@ const Register = () => {
                 <input
                   type="email"
                   name="email"
+                  ref={email}
                   id="email"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="name@company.com"
@@ -54,6 +92,7 @@ const Register = () => {
                   type="text"
                   name="username"
                   id="username"
+                  ref={username}
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="username"
                   required=""
@@ -86,6 +125,7 @@ const Register = () => {
                   type="password"
                   name="password"
                   id="password"
+                  ref={password}
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required=""
@@ -114,6 +154,7 @@ const Register = () => {
               </div>
               <button
                 type="submit"
+                onClick={submitRegister}
                 className="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 Sign Up

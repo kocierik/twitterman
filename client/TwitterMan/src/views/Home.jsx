@@ -6,23 +6,27 @@ import TweetCard from '../components/Tweet'
 
 const Home = () => {
   // TODO: Uncomment when the api is ready
-  /*const [TweetsData, setTweetsData] = useState([]);
-  async function init(){
-    try{
-      let res = await fetch(`${SERVER_URL}/`);
-      res = await res.json();
-      if(!res.success){
-        throw res.message
-      }else{
-        setTweetsData(res.tweets);
-      }
-    }catch(e){
-      alert(e);
-    }
-  }
-  useEffect(()=>{
-    //init()
-  }, [])*/
+
+  // const [TweetsData, setTweetsData] = useState([])
+  // async function init() {
+  //   try {
+  //     let res = await fetch(`${SERVER_URL}/tweet/hashtag/salvini`, {
+  //       mode: 'no-cors',
+  //       'Content-Type': 'application/json',
+  //       'Access-Control-Allow-Origin': '*',
+  //     })
+  //     console.log(res)
+  //     res = await res.json()
+  //     if (!res.success) {
+  //       throw console.log(res.message)
+  //     } else {
+  //       setTweetsData(res.tweets)
+  //     }
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
+  // }
+
   return (
     <div
       data-aos="zoom-in"
