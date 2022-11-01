@@ -71,7 +71,7 @@ func TestGetTweetsByHashtag(t *testing.T) {
 	var ret []utils.Tweet
 
 	for _, elem := range tmpMock.DataTmp {
-		tmp := utils.ConvertTweetDataToMyTweet(elem, getUsernameByUserId(elem.Author))
+		tmp := utils.ConvertTweetDataToMyTweet(elem, getUserInfoByUserId(elem.Author))
 		ret = append(ret, tmp)
 	}
 
@@ -95,7 +95,7 @@ func TestGetUserTweetsById(t *testing.T) {
 	var ret []utils.Tweet
 
 	for _, elem := range tmpMock.DataTmp {
-		tmp := utils.ConvertTweetDataToMyTweet(elem, getUsernameByUserId(elem.Author))
+		tmp := utils.ConvertTweetDataToMyTweet(elem, getUserInfoByUserId(elem.Author))
 		ret = append(ret, tmp)
 	}
 

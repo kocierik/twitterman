@@ -4,6 +4,7 @@ import Comments from './Comments'
 const TweetCard = ({ data }) => {
   return (
     <article
+      id={data.id}
       data-aos="zoom-in"
       data-aos-duration="700"
       className="place-self-start mb-4 break-inside px-6 py-4 rounded-xl flex flex-col text-sm bg-white dark:bg-slate-800 dark:text-white"
@@ -13,7 +14,7 @@ const TweetCard = ({ data }) => {
           <a className="inline-block mr-4" href="#">
             <img
               className="rounded-full max-w-none w-12 h-12"
-              src="https://randomuser.me/api/portraits/men/35.jpg"
+              src={data.propic}
               alt="Avatar"
             />
           </a>
@@ -43,11 +44,10 @@ const TweetCard = ({ data }) => {
           </svg>
         </button>
       </div>
-      <h2 className="text-xl font-extrabold"> {data.title} </h2>
 
       <p className="text-sm dark:text-slate-200"> {data.content} </p>
       <div className="py-4">
-        <a className="inline-flex items-center" href="#">
+        <div className="inline-flex items-center">
           <span className="m-2">
             <svg
               className="fill-rose-600 dark:fill-rose-400"
@@ -58,9 +58,9 @@ const TweetCard = ({ data }) => {
               <path d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z" />
             </svg>
           </span>
-          <span className="font-bold">{data.likes}</span>
-        </a>
-        <a className="inline-flex items-center" href="#">
+          <span className="font-bold">{data.public_metrics.like_count}</span>
+        </div>
+        <div className="inline-flex items-center">
           <span className="m-2">
             <svg
               width="20px"
@@ -77,8 +77,8 @@ const TweetCard = ({ data }) => {
               />
             </svg>
           </span>
-          <span className="font-bold">{data.reposts}</span>
-        </a>
+          <span className="font-bold">{data.public_metrics.retweet_count}</span>
+        </div>
       </div>
       {data.comments.length !== 0 && (
         <hr class=" h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>

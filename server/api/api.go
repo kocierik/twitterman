@@ -8,6 +8,7 @@ import (
 )
 
 var TweetsField = "created_at,author_id,public_metrics"
+var UserField = "profile_image_url"
 
 func GetTweetById(c *gin.Context) {
 	id := c.Param("id") // prendo l'id
@@ -21,7 +22,7 @@ func GetTweetById(c *gin.Context) {
 	var result utils.Data[utils.TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
 
-	ret := utils.ConvertTweetDataToMyTweet(result.DataTmp, getUsernameByUserId(result.DataTmp.Author))
+	ret := utils.ConvertTweetDataToMyTweet(result.DataTmp, getUserInfoByUserId(result.DataTmp.Author))
 
 	c.Header("Access-Control-Allow-Origin", "*")
 	c.IndentedJSON(http.StatusOK, ret)
@@ -41,7 +42,7 @@ func GetTweetsByHashtag(c *gin.Context) {
 	var ret []utils.Tweet
 
 	for _, elem := range result.DataTmp {
-		tmp := utils.ConvertTweetDataToMyTweet(elem, getUsernameByUserId(elem.Author))
+		tmp := utils.ConvertTweetDataToMyTweet(elem, getUserInfoByUserId(elem.Author))
 		ret = append(ret, tmp)
 	}
 
@@ -64,7 +65,7 @@ func GetUserTweetsById(c *gin.Context) {
 	var ret []utils.Tweet
 
 	for _, elem := range result.DataTmp {
-		tmp := utils.ConvertTweetDataToMyTweet(elem, getUsernameByUserId(elem.Author))
+		tmp := utils.ConvertTweetDataToMyTweet(elem, getUserInfoByUserId(elem.Author))
 		ret = append(ret, tmp)
 	}
 
@@ -82,12 +83,13 @@ func GetUserIdByUsername(username string) string {
 	return result.DataTmp.Id
 }
 
-func getUsernameByUserId(userId string) string {
-	endpoint := utils.TwitterApi + "/users/" + userId
-	body := Request(http.MethodGet, endpoint, nil)
+func getUserInfoByUserId(userId string) utils.TwitterUserStructure {
+	endpoint := utils.TwitterApi + "/users"
+	q := map[string]string{"ids": userId, "user.fields": UserField}
+	body := Request(http.MethodGet, endpoint, q)
 
-	var result utils.Data[utils.TwitterUserStructure]
+	var result utils.Data[[]utils.TwitterUserStructure]
 	utils.UnmarshalToJson(body, &result)
 
-	return result.DataTmp.Name
+	return result.DataTmp[0]
 }

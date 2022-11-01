@@ -29,13 +29,14 @@ func IsLoggedIn(c *gin.Context) bool {
 	return true
 }
 
-func ConvertTweetDataToMyTweet(t TwitterTweetStructure, author string) Tweet {
+func ConvertTweetDataToMyTweet(tw TwitterTweetStructure, usr TwitterUserStructure) Tweet {
 	var ret Tweet = Tweet{
-		Id:            t.Id,
-		Name:          author,
-		Content:       t.Text,
-		Timestamp:     t.Timestamp,
-		PublicMetrics: t.PublicMetrics,
+		Id:            tw.Id,
+		Name:          usr.Name,
+		Propic:        usr.Propic,
+		Content:       tw.Text,
+		Timestamp:     tw.Timestamp,
+		PublicMetrics: tw.PublicMetrics,
 		Comments:      []Tweet{},
 	}
 

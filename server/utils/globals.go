@@ -29,6 +29,7 @@ type TwitterTweetStructure struct {
 
 type TwitterUserStructure struct {
 	Id       string `json:"id"`
+	Propic   string `json:"profile_image_url"`
 	Name     string `json:"name"`
 	Username string `json:"username"`
 }
@@ -41,6 +42,7 @@ type Data[T any] struct {
 type Tweet struct {
 	Id            string        `json:"id" bson:"id"`
 	Name          string        `json:"name" bson:"name"`
+	Propic        string        `json:"propic" bson:"propic"`
 	Timestamp     string        `json:"timestamp" bson:"timestamp"`
 	Content       string        `json:"content" bson:"content"`
 	PublicMetrics PublicMetrics `json:"public_metrics"`

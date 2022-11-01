@@ -7,8 +7,8 @@ const Home = () => {
   const [TweetsData, setTweetsData] = useState([])
   async function init() {
     try {
-      fetch(SERVER_URL+'/user/elonmusk/tweets')
-        .then(async (response) => console.log(await response.json()))
+      fetch(SERVER_URL+'/user/team7test/tweets')
+        .then(async (response) => setTweetsData(await response.json()))
     } catch (e) {
       console.log(e)
     }
@@ -28,7 +28,7 @@ const Home = () => {
         <SearchBar />
       </div>
       <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
-        {TweetsData.map((tweet, i) => {
+        {TweetsData?.map((tweet, i) => {
           return <TweetCard data={tweet} key={i} />
         })}
       </div>
