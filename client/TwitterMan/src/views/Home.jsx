@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { SERVER_URL } from '../utils'
-import { TweetsData } from '../json/tweet'
 import SearchBar from '../components/SearchBar'
 import TweetCard from '../components/Tweet'
 
@@ -8,9 +7,8 @@ const Home = () => {
   const [TweetsData, setTweetsData] = useState([])
   async function init() {
     try {
-      fetch('http://localhost:8080/user/elonmusk/tweets')
-        .then((response) => setTweetsData(response.json()))
-        // .then(() => console.log(TweetsData));
+      fetch(SERVER_URL+'/user/elonmusk/tweets')
+        .then(async (response) => console.log(await response.json()))
     } catch (e) {
       console.log(e)
     }
