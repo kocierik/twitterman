@@ -5,27 +5,20 @@ import SearchBar from '../components/SearchBar'
 import TweetCard from '../components/Tweet'
 
 const Home = () => {
-  // TODO: Uncomment when the api is ready
+  const [TweetsData, setTweetsData] = useState([])
+  async function init() {
+    try {
+      fetch('http://localhost:8080/user/elonmusk/tweets')
+        .then((response) => setTweetsData(response.json()))
+        // .then(() => console.log(TweetsData));
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
-  // const [TweetsData, setTweetsData] = useState([])
-  // async function init() {
-  //   try {
-  //     let res = await fetch(`${SERVER_URL}/tweet/hashtag/salvini`, {
-  //       mode: 'no-cors',
-  //       'Content-Type': 'application/json',
-  //       'Access-Control-Allow-Origin': '*',
-  //     })
-  //     console.log(res)
-  //     res = await res.json()
-  //     if (!res.success) {
-  //       throw console.log(res.message)
-  //     } else {
-  //       setTweetsData(res.tweets)
-  //     }
-  //   } catch (e) {
-  //     console.log(e)
-  //   }
-  // }
+  useEffect(() => {
+    init()
+  }, [])
 
   return (
     <div

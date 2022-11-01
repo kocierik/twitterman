@@ -38,6 +38,8 @@ func registerApi(c *gin.Context) {
 
 	emptyguy := []utils.Tweet{}
 	database.InsertUser(param.Email, param.Username, param.Password, emptyguy)
+
+	c.Header("Access-Control-Allow-Origin", "*")
 	c.JSON(200, gin.H{
 		"success": true,
 	})
@@ -51,6 +53,7 @@ func loginApi(c *gin.Context) {
 	}
 	param := bind[RequestBody](c)
 
+	c.Header("Access-Control-Allow-Origin", "*")
 	// TODO: make the jwt
 	if isUser(param.Email, param.Password) {
 		c.SetCookie("AUTHORIZATION", "make.this.jwt", 3600, "", "", true, true)

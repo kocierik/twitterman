@@ -23,6 +23,7 @@ func GetTweetById(c *gin.Context) {
 
 	ret := utils.ConvertTweetDataToMyTweet(result.DataTmp, getUsernameByUserId(result.DataTmp.Author))
 
+	c.Header("Access-Control-Allow-Origin", "*")
 	c.IndentedJSON(http.StatusOK, ret)
 }
 
@@ -44,6 +45,7 @@ func GetTweetsByHashtag(c *gin.Context) {
 		ret = append(ret, tmp)
 	}
 
+	c.Header("Access-Control-Allow-Origin", "*")
 	c.IndentedJSON(http.StatusOK, ret)
 }
 
@@ -66,6 +68,7 @@ func GetUserTweetsById(c *gin.Context) {
 		ret = append(ret, tmp)
 	}
 
+	c.Header("Access-Control-Allow-Origin", "*")
 	c.IndentedJSON(http.StatusOK, ret)
 }
 
