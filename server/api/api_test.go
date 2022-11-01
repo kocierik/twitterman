@@ -81,7 +81,7 @@ func TestGetTweetsByHashtag(t *testing.T) {
 
 func TestGetUserTweetsById(t *testing.T) {
 	initApiTest()
-	user := "Pontifex"
+	user := "team7test"
 	response, res := sendTestRequest("GET", "/user/"+user+"/tweets", nil)
 	user_id := GetUserIdByUsername(user)
 	mockResponse := Request(http.MethodGet, utils.TwitterApi+"/users/"+user_id+"/tweets?tweet.fields="+TweetsField, nil)
