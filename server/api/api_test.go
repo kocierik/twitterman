@@ -39,6 +39,7 @@ func TestGetTweetById(t *testing.T) {
 	mockResponse := `{
 		"id": "1581295611013320706",
 		"name": "team7",
+		"propic": "https://pbs.twimg.com/profile_images/1581295877624369152/p6aLdDNO_normal.jpg",
 		"timestamp": "2022-10-15T14:47:07.000Z",
 		"content": "#swetesting prova primo tweet",
 		"public_metrics": {
