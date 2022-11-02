@@ -2,23 +2,20 @@ import React, { useState } from 'react'
 import { SERVER_URL, stringFormat } from '../utils'
 import SearchBar from '../components/home/SearchBar'
 import TweetCard from '../components/home/Tweet'
+import * as Const from '../utils'
 
 const Home = () => {
   const [TweetsData, setTweetsData] = useState([])
-  const [textValue, setTextValue] = useState('elonmusk')
-  const [selectValue, setSelectValue] = useState('username')
+  const [textValue, setTextValue] = useState('')
+
+  const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
 
   async function searchTweets() {
     try {
-      console.log('text -> ', textValue)
-      console.log('select -> ', selectValue)
-      console.log(stringFormat(SERVER_URL + selectValue, textValue))
       const url = stringFormat(SERVER_URL + selectValue, textValue)
-      console.log(url)
       await fetch(url).then(async (response) =>
         setTweetsData(await response.json())
       )
-      console.log(TweetsData)
     } catch (e) {
       console.log(e)
     }
