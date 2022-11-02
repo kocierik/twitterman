@@ -41,19 +41,19 @@ func addQueryToReq(req *http.Request, params map[string]string) {
 
 func newRequest(method string, endpoint string) *http.Request {
 	req, err := http.NewRequest(method, endpoint, nil)
-	utils.ErrorMessage(err)
+	utils.ErrorMessage(err, "(http.go) Cannot create new request")
 	return req
 }
 
 func doRequest(req *http.Request) *http.Response {
 	res, err := utils.Client.Do(req)
-	utils.ErrorMessage(err)
+	utils.ErrorMessage(err, "(http.go) Cannot do the request")
 	return res
 }
 
 func parseBody(res *http.Response) []byte {
 	body, err := ioutil.ReadAll(res.Body)
-	utils.ErrorMessage(err)
+	utils.ErrorMessage(err, "(http.go) Cannot parse the body of response")
 	return body
 }
 

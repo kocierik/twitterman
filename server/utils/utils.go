@@ -15,12 +15,12 @@ func GetEnvVar(key string) string {
 func UnmarshalToJson[T any](response []byte, result *T) {
 	// Parse []byte to go struct pointer
 	err := json.Unmarshal(response, result)
-	ErrorMessage(err)
+	ErrorMessage(err, "UnmarshalToJson function")
 }
 
-func ErrorMessage(err error) {
+func ErrorMessage(err error, msg string) {
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(msg+"= %+v", err)
 	}
 }
 
