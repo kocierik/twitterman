@@ -19,6 +19,7 @@ const SearchBar = (props) => {
       >
         <option value={Const.TWEET_USERNAME}>username</option>
         <option value={Const.TWEET_HASHTAG}>hashtag</option>
+        <option value={Const.TWEET_KEYWORD}>keyword</option>
         {/* <option value={TWEET_ID}>keyword</option> */}{' '}
         {/* TODO: ADD MORE OPTIONS */}
       </select>

@@ -28,6 +28,27 @@ func GetTweetById(c *gin.Context) {
 	sendResponse(c, ret)
 }
 
+func GetTweetsByHashtag(c *gin.Context) {
+	hashtag := c.Param("hashtag") // prendo la keyword
+
+	endpoint := utils.TwitterApi + "/tweets/search/recent"
+	q := map[string]string{"query": "#" + hashtag, "tweet.fields": TweetsField, "expansions": "author_id", "user.fields": "created_at"}
+
+	body := Request(http.MethodGet, endpoint, q)
+
+	var result utils.Data[[]utils.TwitterTweetStructure]
+	utils.UnmarshalToJson(body, &result)
+
+	var ret []utils.Tweet
+
+	for _, elem := range result.DataTmp {
+		tmp := utils.ConvertTweetDataToMyTweet(elem, GetUserInfoByUserId(elem.Author))
+		ret = append(ret, tmp)
+	}
+
+	sendResponse(c, ret)
+}
+
 func GetTweetsByKeyword(c *gin.Context) {
 	keyword := c.Param("keyword") // prendo la keyword
 

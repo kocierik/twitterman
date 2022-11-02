@@ -80,6 +80,28 @@ func TestGetTweetsByHashtag(t *testing.T) {
 	assert.Equal(t, ret, result)
 }
 
+func TestGetTweetsByKeyword(t *testing.T) {
+	initApiTest()
+	response, res := sendTestRequest("GET", "/tweet/keyword/salvini", nil)
+	mockResponse := Request(http.MethodGet, utils.TwitterApi+"/tweets/search/recent?query=salvini&tweet.fields="+TweetsField, nil)
+
+	var result []utils.Tweet
+	var tmpMock utils.Data[[]utils.TwitterTweetStructure]
+
+	utils.UnmarshalToJson(response, &result)
+	utils.UnmarshalToJson(mockResponse, &tmpMock)
+
+	var ret []utils.Tweet
+
+	for _, elem := range tmpMock.DataTmp {
+		tmp := utils.ConvertTweetDataToMyTweet(elem, GetUserInfoByUserId(elem.Author))
+		ret = append(ret, tmp)
+	}
+
+	assert.Equal(t, http.StatusOK, res.Code)
+	assert.Equal(t, ret, result)
+}
+
 func TestGetUserTweetsById(t *testing.T) {
 	initApiTest()
 	user := "team7test"

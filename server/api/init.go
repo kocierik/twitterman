@@ -15,6 +15,7 @@ type Endpoint struct {
 
 var EndpointList = []Endpoint{
 	{"/tweet/id/:id", GetTweetById, "GET"},
+	{"/tweet/hashtag/:hashtag", GetTweetsByHashtag, "GET"},
 	{"/tweet/keyword/:keyword", GetTweetsByKeyword, "GET"},
 	{"/user/:username", GetUserInfo, "GET"},
 	{"/user/:username/tweets", GetUserTweetsById, "GET"},
