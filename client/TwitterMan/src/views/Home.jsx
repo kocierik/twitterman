@@ -1,19 +1,24 @@
 import React, { useState } from 'react'
 import { SERVER_URL, stringFormat } from '../utils'
-import SearchBar from '../components/SearchBar'
-import TweetCard from '../components/Tweet'
+import SearchBar from '../components/home/SearchBar'
+import TweetCard from '../components/home/Tweet'
 
 const Home = () => {
   const [TweetsData, setTweetsData] = useState([])
-  const [textValue, setTextValue] = useState('')
-
+  const [textValue, setTextValue] = useState('elonmusk')
   const [selectValue, setSelectValue] = useState('username')
 
-  async function searchTweetUser() {
+  async function searchTweets() {
     try {
-      fetch(stringFormat(SERVER_URL + selectValue, textValue)).then(
-        async (response) => setTweetsData(await response.json())
+      console.log('text -> ', textValue)
+      console.log('select -> ', selectValue)
+      console.log(stringFormat(SERVER_URL + selectValue, textValue))
+      const url = stringFormat(SERVER_URL + selectValue, textValue)
+      console.log(url)
+      await fetch(url).then(async (response) =>
+        setTweetsData(await response.json())
       )
+      console.log(TweetsData)
     } catch (e) {
       console.log(e)
     }
@@ -23,7 +28,7 @@ const Home = () => {
     <div
       data-aos="zoom-in"
       data-aos-duration="700"
-      className="App dark:bg-gray-900 pt-16 pb-16  flex flex-col	gap-5"
+      className="App min-h-full		px-5 dark:bg-gray-900 pt-16 pb-16  flex flex-col	gap-5"
     >
       <div className="flex justify-center">
         <SearchBar
@@ -31,7 +36,7 @@ const Home = () => {
           setSelectValue={setSelectValue}
           textValue={textValue}
           setTextValue={setTextValue}
-          searchTweetUser={searchTweetUser}
+          searchTweets={searchTweets}
         />
       </div>
       <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">

@@ -1,5 +1,5 @@
 import React from 'react'
-import * as Const from '../utils'
+import * as Const from '../../utils'
 
 const SearchBar = (props) => {
   return (
@@ -7,8 +7,8 @@ const SearchBar = (props) => {
       style={{ width: '100vh' }}
       className="flex"
       onSubmit={(event) => {
-        props.searchTweetUser()
         event.preventDefault()
+        props.searchTweets()
       }}
     >
       <select
@@ -26,10 +26,13 @@ const SearchBar = (props) => {
         <input
           type="search"
           id="search-dropdown"
-          onChange={(e) => props.setTextValue(e.target.value)}
+          onChange={(e) => {
+            props.setTextValue(e.target.value)
+            console.log(e.target.value)
+          }}
           className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
           placeholder="Search on twitterMan..."
-          required=""
+          required
         />
         <button
           type="submit"
