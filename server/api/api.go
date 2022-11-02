@@ -17,22 +17,22 @@ func GetTweetById(c *gin.Context) {
 	endpoint := utils.TwitterApi + "/tweets/" + id
 
 	q := map[string]string{"tweet.fields": TweetsField}
+
 	body := Request(http.MethodGet, endpoint, q)
 
 	var result utils.Data[utils.TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
 
-	ret := utils.ConvertTweetDataToMyTweet(result.DataTmp, getUserInfoByUserId(result.DataTmp.Author))
+	ret := utils.ConvertTweetDataToMyTweet(result.DataTmp, GetUserInfoByUserId(result.DataTmp.Author))
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.IndentedJSON(http.StatusOK, ret)
+	sendResponse(c, ret)
 }
 
-func GetTweetsByHashtag(c *gin.Context) {
-	hashtag := c.Param("hashtag") // prendo l'hashtag
+func GetTweetsByKeyword(c *gin.Context) {
+	keyword := c.Param("keyword") // prendo la keyword
 
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
-	q := map[string]string{"query": "#" + hashtag, "tweet.fields": TweetsField}
+	q := map[string]string{"query": keyword, "tweet.fields": TweetsField, "expansions": "author_id", "user.fields": "created_at"}
 
 	body := Request(http.MethodGet, endpoint, q)
 
@@ -42,12 +42,11 @@ func GetTweetsByHashtag(c *gin.Context) {
 	var ret []utils.Tweet
 
 	for _, elem := range result.DataTmp {
-		tmp := utils.ConvertTweetDataToMyTweet(elem, getUserInfoByUserId(elem.Author))
+		tmp := utils.ConvertTweetDataToMyTweet(elem, GetUserInfoByUserId(elem.Author))
 		ret = append(ret, tmp)
 	}
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.IndentedJSON(http.StatusOK, ret)
+	sendResponse(c, ret)
 }
 
 func GetUserTweetsById(c *gin.Context) {
@@ -65,12 +64,20 @@ func GetUserTweetsById(c *gin.Context) {
 	var ret []utils.Tweet
 
 	for _, elem := range result.DataTmp {
-		tmp := utils.ConvertTweetDataToMyTweet(elem, getUserInfoByUserId(elem.Author))
+		tmp := utils.ConvertTweetDataToMyTweet(elem, GetUserInfoByUserId(elem.Author))
 		ret = append(ret, tmp)
 	}
 
-	c.Header("Access-Control-Allow-Origin", "*")
-	c.IndentedJSON(http.StatusOK, ret)
+	sendResponse(c, ret)
+}
+
+func GetUserInfo(c *gin.Context) {
+	username := c.Param("username")
+
+	id := GetUserIdByUsername(username)
+	ret := GetUserInfoByUserId(id)
+
+	sendResponse(c, ret)
 }
 
 func GetUserIdByUsername(username string) string {
@@ -83,7 +90,7 @@ func GetUserIdByUsername(username string) string {
 	return result.DataTmp.Id
 }
 
-func getUserInfoByUserId(userId string) utils.TwitterUserStructure {
+func GetUserInfoByUserId(userId string) utils.TwitterUserStructure {
 	endpoint := utils.TwitterApi + "/users"
 	q := map[string]string{"ids": userId, "user.fields": UserField}
 	body := Request(http.MethodGet, endpoint, q)
