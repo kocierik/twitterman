@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"time"
 	"twitterman/server/utils"
+
+	"github.com/gin-gonic/gin"
 )
 
 func InitHttpClient() {
@@ -53,4 +55,9 @@ func parseBody(res *http.Response) []byte {
 	body, err := ioutil.ReadAll(res.Body)
 	utils.ErrorMessage(err)
 	return body
+}
+
+func sendResponse(c *gin.Context, ret any) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.IndentedJSON(http.StatusOK, ret)
 }
