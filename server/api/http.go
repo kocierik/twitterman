@@ -13,7 +13,7 @@ func InitHttpClient() {
 	utils.Client = &http.Client{Timeout: 10 * time.Second}
 }
 
-func Request(method string, endpoint string, query map[string]string) []byte {
+func request(method string, endpoint string, query utils.Dict) []byte {
 	req := newRequest(method, endpoint)
 	req.Header.Add("Authorization", "Bearer "+utils.GetEnvVar("BEARER_TOKEN"))
 
@@ -31,7 +31,7 @@ func Request(method string, endpoint string, query map[string]string) []byte {
 	return body
 }
 
-func addQueryToReq(req *http.Request, params map[string]string) {
+func addQueryToReq(req *http.Request, params utils.Dict) {
 	q := req.URL.Query()
 	for key, value := range params {
 		q.Add(key, value)

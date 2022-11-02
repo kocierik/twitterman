@@ -19,12 +19,11 @@ type PublicMetrics struct {
 }
 
 type TwitterTweetStructure struct {
-	EditHistoryTweetIds []string      `json:"edit_history_tweet_ids"`
-	Id                  string        `json:"id"`
-	Text                string        `json:"text"`
-	Author              string        `json:"author_id"`
-	PublicMetrics       PublicMetrics `json:"public_metrics"`
-	Timestamp           string        `json:"created_at"`
+	Id            string        `json:"id"`
+	Text          string        `json:"text"`
+	Author        string        `json:"author_id"`
+	PublicMetrics PublicMetrics `json:"public_metrics"`
+	Timestamp     string        `json:"created_at"`
 }
 
 type TwitterUserStructure struct {
@@ -57,6 +56,8 @@ type User struct {
 	Password string             `bson:"password" json:"password"`
 	Tweets   []Tweet            `bson:"tweets" json:"tweets"`
 }
+
+type Dict map[string]string
 
 const ServerPort = "8080"
 const ServerUrl = "localhost"

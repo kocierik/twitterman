@@ -20,7 +20,7 @@ func UnmarshalToJson[T any](response []byte, result *T) {
 
 func ErrorMessage(err error, msg string) {
 	if err != nil {
-		log.Fatal(msg+"= %+v", err)
+		log.Fatalf(msg+"= %+v", err)
 	}
 }
 

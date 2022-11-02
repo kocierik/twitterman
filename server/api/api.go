@@ -8,33 +8,35 @@ import (
 )
 
 var TweetsField = "created_at,author_id,public_metrics"
+var Expansions = "author_id"
 var UserField = "profile_image_url"
 
 func GetTweetById(c *gin.Context) {
-	id := c.Param("id") // prendo l'id
+	id := c.Param("id")
 
-	// eseguo la richiesta a twitter
 	endpoint := utils.TwitterApi + "/tweets/" + id
 
-	q := map[string]string{"tweet.fields": TweetsField}
+	q := utils.Dict{"tweet.fields": TweetsField}
 
-	body := Request(http.MethodGet, endpoint, q)
+	body := request(http.MethodGet, endpoint, q)
 
 	var result utils.Data[utils.TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
 
-	ret := utils.ConvertTweetDataToMyTweet(result.DataTmp, GetUserInfoByUserId(result.DataTmp.Author))
+	user := GetUserInfoByUserId(result.DataTmp.Author)
+	ret := utils.ConvertTweetDataToMyTweet(result.DataTmp, user)
 
 	sendResponse(c, ret)
 }
 
 func GetTweetsByHashtag(c *gin.Context) {
-	hashtag := c.Param("hashtag") // prendo la keyword
+	hashtag := c.Param("hashtag")
 
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
-	q := map[string]string{"query": "#" + hashtag, "tweet.fields": TweetsField, "expansions": "author_id", "user.fields": "created_at"}
 
-	body := Request(http.MethodGet, endpoint, q)
+	q := utils.Dict{"query": "#" + hashtag, "tweet.fields": TweetsField}
+
+	body := request(http.MethodGet, endpoint, q)
 
 	var result utils.Data[[]utils.TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
@@ -42,7 +44,8 @@ func GetTweetsByHashtag(c *gin.Context) {
 	var ret []utils.Tweet
 
 	for _, elem := range result.DataTmp {
-		tmp := utils.ConvertTweetDataToMyTweet(elem, GetUserInfoByUserId(elem.Author))
+		user := GetUserInfoByUserId(elem.Author)
+		tmp := utils.ConvertTweetDataToMyTweet(elem, user)
 		ret = append(ret, tmp)
 	}
 
@@ -53,9 +56,9 @@ func GetTweetsByKeyword(c *gin.Context) {
 	keyword := c.Param("keyword") // prendo la keyword
 
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
-	q := map[string]string{"query": keyword, "tweet.fields": TweetsField, "expansions": "author_id", "user.fields": "created_at"}
+	q := utils.Dict{"query": keyword, "tweet.fields": TweetsField}
 
-	body := Request(http.MethodGet, endpoint, q)
+	body := request(http.MethodGet, endpoint, q)
 
 	var result utils.Data[[]utils.TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
@@ -63,7 +66,8 @@ func GetTweetsByKeyword(c *gin.Context) {
 	var ret []utils.Tweet
 
 	for _, elem := range result.DataTmp {
-		tmp := utils.ConvertTweetDataToMyTweet(elem, GetUserInfoByUserId(elem.Author))
+		user := GetUserInfoByUserId(elem.Author)
+		tmp := utils.ConvertTweetDataToMyTweet(elem, user)
 		ret = append(ret, tmp)
 	}
 
@@ -75,9 +79,9 @@ func GetUserTweetsById(c *gin.Context) {
 	id := GetUserIdByUsername(username)
 
 	endpoint := utils.TwitterApi + "/users/" + id + "/tweets"
-	q := map[string]string{"tweet.fields": TweetsField}
+	q := utils.Dict{"tweet.fields": TweetsField}
 
-	body := Request(http.MethodGet, endpoint, q)
+	body := request(http.MethodGet, endpoint, q)
 
 	var result utils.Data[[]utils.TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
@@ -103,7 +107,7 @@ func GetUserInfo(c *gin.Context) {
 
 func GetUserIdByUsername(username string) string {
 	endpoint := utils.TwitterApi + "/users/by/username/" + username
-	body := Request(http.MethodGet, endpoint, nil)
+	body := request(http.MethodGet, endpoint, nil)
 
 	var result utils.Data[utils.TwitterUserStructure]
 	utils.UnmarshalToJson(body, &result)
@@ -113,8 +117,8 @@ func GetUserIdByUsername(username string) string {
 
 func GetUserInfoByUserId(userId string) utils.TwitterUserStructure {
 	endpoint := utils.TwitterApi + "/users"
-	q := map[string]string{"ids": userId, "user.fields": UserField}
-	body := Request(http.MethodGet, endpoint, q)
+	q := utils.Dict{"ids": userId, "user.fields": UserField}
+	body := request(http.MethodGet, endpoint, q)
 
 	var result utils.Data[[]utils.TwitterUserStructure]
 	utils.UnmarshalToJson(body, &result)
