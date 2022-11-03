@@ -7,11 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var TweetsField = "created_at,author_id,public_metrics"
-var Expansions = "author_id"
-var UserField = "profile_image_url"
-
-func GetTweetById(c *gin.Context) {
+func getTweetById(c *gin.Context) {
 	id := c.Param("id")
 
 	endpoint := utils.TwitterApi + "/tweets/" + id
@@ -23,13 +19,13 @@ func GetTweetById(c *gin.Context) {
 	var result utils.Data[utils.TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
 
-	user := GetUserInfoByUserId(result.DataTmp.Author)
+	user := getUserInfoByUserId(result.DataTmp.Author)
 	ret := utils.ConvertTweetDataToMyTweet(result.DataTmp, user)
 
-	sendResponse(c, ret)
+	sendOkResponse(c, ret)
 }
 
-func GetTweetsByHashtag(c *gin.Context) {
+func getTweetsByHashtag(c *gin.Context) {
 	hashtag := c.Param("hashtag")
 
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
@@ -44,15 +40,15 @@ func GetTweetsByHashtag(c *gin.Context) {
 	var ret []utils.Tweet
 
 	for _, elem := range result.DataTmp {
-		user := GetUserInfoByUserId(elem.Author)
+		user := getUserInfoByUserId(elem.Author)
 		tmp := utils.ConvertTweetDataToMyTweet(elem, user)
 		ret = append(ret, tmp)
 	}
 
-	sendResponse(c, ret)
+	sendOkResponse(c, ret)
 }
 
-func GetTweetsByKeyword(c *gin.Context) {
+func getTweetsByKeyword(c *gin.Context) {
 	keyword := c.Param("keyword") // prendo la keyword
 
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
@@ -66,19 +62,19 @@ func GetTweetsByKeyword(c *gin.Context) {
 	var ret []utils.Tweet
 
 	for _, elem := range result.DataTmp {
-		user := GetUserInfoByUserId(elem.Author)
+		user := getUserInfoByUserId(elem.Author)
 		tmp := utils.ConvertTweetDataToMyTweet(elem, user)
 		ret = append(ret, tmp)
 	}
 
-	sendResponse(c, ret)
+	sendOkResponse(c, ret)
 }
 
-func GetUserTweetsById(c *gin.Context) {
+func getUserTweetsById(c *gin.Context) {
 	username := c.Param("username")
-	id := GetUserIdByUsername(username)
+	usr := getUserInfoByUsername(username)
 
-	endpoint := utils.TwitterApi + "/users/" + id + "/tweets"
+	endpoint := utils.TwitterApi + "/users/" + usr.Id + "/tweets"
 	q := utils.Dict{"tweet.fields": TweetsField}
 
 	body := request(http.MethodGet, endpoint, q)
@@ -89,39 +85,39 @@ func GetUserTweetsById(c *gin.Context) {
 	var ret []utils.Tweet
 
 	for _, elem := range result.DataTmp {
-		tmp := utils.ConvertTweetDataToMyTweet(elem, GetUserInfoByUserId(elem.Author))
+		tmp := utils.ConvertTweetDataToMyTweet(elem, usr)
 		ret = append(ret, tmp)
 	}
 
-	sendResponse(c, ret)
+	sendOkResponse(c, ret)
 }
 
-func GetUserInfo(c *gin.Context) {
+func getUserInfo(c *gin.Context) {
 	username := c.Param("username")
 
-	id := GetUserIdByUsername(username)
-	ret := GetUserInfoByUserId(id)
+	usr := getUserInfoByUsername(username)
 
-	sendResponse(c, ret)
+	sendOkResponse(c, usr)
 }
 
-func GetUserIdByUsername(username string) string {
-	endpoint := utils.TwitterApi + "/users/by/username/" + username
-	body := request(http.MethodGet, endpoint, nil)
+// TODO: capire perché alla fine delle risposte con granularity sbagliata appare un null di troppo
+// possible granularity: day, hour or minute
+func getTweetCountByUsername(c *gin.Context) {
+	username := c.Param("username")
+	granularity := c.Param("granularity")
 
-	var result utils.Data[utils.TwitterUserStructure]
-	utils.UnmarshalToJson(body, &result)
+	if (granularity != "day") && (granularity != "hour") && (granularity != "minute") {
+		sendOkResponse(c, utils.Dict{"message": "Invalid granularity"})
+	}
 
-	return result.DataTmp.Id
-}
+	// https://api.twitter.com/2/tweets/counts/recent?query=from%3Aelonmusk&granularity=day
+	endpoint := utils.TwitterApi + "/tweets/counts/recent"
+	q := utils.Dict{"query": "from:" + username, "granularity": granularity}
 
-func GetUserInfoByUserId(userId string) utils.TwitterUserStructure {
-	endpoint := utils.TwitterApi + "/users"
-	q := utils.Dict{"ids": userId, "user.fields": UserField}
 	body := request(http.MethodGet, endpoint, q)
 
-	var result utils.Data[[]utils.TwitterUserStructure]
+	var result utils.Data[[]utils.TweetCount]
 	utils.UnmarshalToJson(body, &result)
 
-	return result.DataTmp[0]
+	sendOkResponse(c, result.DataTmp)
 }

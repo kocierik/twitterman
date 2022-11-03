@@ -37,6 +37,13 @@ type Data[T any] struct {
 	DataTmp T `json:"data"`
 }
 
+// tweet count
+type TweetCount struct {
+	Start string `json:"start"`
+	End   string `json:"end"`
+	Count uint64 `json:"tweet_count"`
+}
+
 // My tweet structure
 type Tweet struct {
 	Id            string        `json:"id" bson:"id"`

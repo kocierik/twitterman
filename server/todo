@@ -1,4 +1,22 @@
-test con richiesta:
-  http://localhost:8081/tweet/1581295611013320706
-deve ritornare:
-  "{\"data\":{\"edit_history_tweet_ids\":[\"1581295611013320706\"],\"id\":\"1581295611013320706\",\"text\":\"#swetesting prova primo tweet\"}}"
+refactor strutture dati
+capire per bene come sono fatte le strutture dati di twitter e come prenderle per bene
+fare ulteriori api base più complicate (search)
+
+
+
+TODO per la prossima riunione:
+Bisogna decidere le strutture dati definitive per iniziare a salvarli sul db
+perché prima iniziamo a prenderne, meglio è.
+
+Le api quindi dovranno
+  1. Cercare prima nel db le info richieste (usr,tw)
+  2. Se non ci sono sul db
+    - chiederle a twitter con anche tutte le info in più possibili
+    - salvarle nel nostro db
+  3. Rispondere
+
+Quindi, divisione in 2 sotto-package principali di api:
+- package che fa determinate richieste al db (ed elabora le info)
+- package che fa determinate richieste a twitter (e le salva sul db)
+
+Il package api farà da mediatore ("interfaccia i due pacchetti e converte i dati") tra i due pacchetti

@@ -37,6 +37,8 @@ func addQueryToReq(req *http.Request, params utils.Dict) {
 		q.Add(key, value)
 	}
 	req.URL.RawQuery = q.Encode()
+
+	//fmt.Println("twitter url: ", req.URL)  // debug purpose, uncomment on needs
 }
 
 func newRequest(method string, endpoint string) *http.Request {
@@ -57,7 +59,7 @@ func parseBody(res *http.Response) []byte {
 	return body
 }
 
-func sendResponse(c *gin.Context, ret any) {
+func sendOkResponse(c *gin.Context, ret any) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	c.IndentedJSON(http.StatusOK, ret)
 }

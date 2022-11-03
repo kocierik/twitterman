@@ -73,7 +73,7 @@ func TestGetTweetsByHashtag(t *testing.T) {
 	var ret []utils.Tweet
 
 	for _, elem := range tmpMock.DataTmp {
-		tmp := utils.ConvertTweetDataToMyTweet(elem, GetUserInfoByUserId(elem.Author))
+		tmp := utils.ConvertTweetDataToMyTweet(elem, getUserInfoByUserId(elem.Author))
 		ret = append(ret, tmp)
 	}
 
@@ -95,7 +95,7 @@ func TestGetTweetsByKeyword(t *testing.T) {
 	var ret []utils.Tweet
 
 	for _, elem := range tmpMock.DataTmp {
-		usr := GetUserInfoByUserId(elem.Author)
+		usr := getUserInfoByUserId(elem.Author)
 		tmp := utils.ConvertTweetDataToMyTweet(elem, usr)
 		ret = append(ret, tmp)
 	}
@@ -107,7 +107,7 @@ func TestGetTweetsByKeyword(t *testing.T) {
 func TestGetUserInfo(t *testing.T) {
 	initApiTest()
 	user := "elonmusk"
-	fmt.Println(GetUserIdByUsername(user))
+	fmt.Println(getUserInfoByUsername(user))
 	response, res := sendTestRequest("GET", "/user/"+user, nil)
 
 	var result utils.TwitterUserStructure
@@ -128,8 +128,8 @@ func TestGetUserTweetsById(t *testing.T) {
 	initApiTest()
 	user := "team7test"
 	response, res := sendTestRequest("GET", "/user/"+user+"/tweets", nil)
-	user_id := GetUserIdByUsername(user)
-	mockResponse := request(http.MethodGet, utils.TwitterApi+"/users/"+user_id+"/tweets?tweet.fields="+TweetsField, nil)
+	usrData := getUserInfoByUsername(user)
+	mockResponse := request(http.MethodGet, utils.TwitterApi+"/users/"+usrData.Id+"/tweets?tweet.fields="+TweetsField, nil)
 
 	var result []utils.Tweet
 	var tmpMock utils.Data[[]utils.TwitterTweetStructure]
@@ -140,7 +140,7 @@ func TestGetUserTweetsById(t *testing.T) {
 	var ret []utils.Tweet
 
 	for _, elem := range tmpMock.DataTmp {
-		tmp := utils.ConvertTweetDataToMyTweet(elem, GetUserInfoByUserId(elem.Author))
+		tmp := utils.ConvertTweetDataToMyTweet(elem, usrData)
 		ret = append(ret, tmp)
 	}
 
@@ -164,9 +164,13 @@ func TestLoginApi(t *testing.T) {
 		Email:    "aldo@aldo",
 		Password: "aldo",
 	}
+
 	bodyMarshaled, err := json.Marshal(body)
 	utils.ErrorMessage(err, "(api_test.go) Cannot parse bodyMarshaled1")
+
 	out, res := sendTestRequest("POST", "/login", bytes.NewBuffer(bodyMarshaled))
+
+	// test success
 	assert.Equal(t, `{"success":true}`, string(out))
 	assert.Equal(t, `AUTHORIZATION=make.this.jwt; Path=/; Max-Age=3600; HttpOnly; Secure`, res.Header().Get("Set-Cookie"))
 
@@ -175,9 +179,13 @@ func TestLoginApi(t *testing.T) {
 		Email:    "notamail@outneh",
 		Password: "notapsw",
 	}
+
 	bodyMarshaled, err = json.Marshal(body)
 	utils.ErrorMessage(err, "(api_test.go) Cannot parse bodyMarshaled2")
+
 	out, res = sendTestRequest("POST", "/login", bytes.NewBuffer(bodyMarshaled))
+
+	// test success but no AUTHORIZATION given
 	assert.NotEqual(t, `{"success":true}`, string(out))
 	assert.Equal(t, ``, res.Header().Get("Set-Cookie"))
 }

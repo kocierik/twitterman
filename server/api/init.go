@@ -14,11 +14,12 @@ type Endpoint struct {
 }
 
 var EndpointList = []Endpoint{
-	{"/tweet/id/:id", GetTweetById, "GET"},
-	{"/tweet/hashtag/:hashtag", GetTweetsByHashtag, "GET"},
-	{"/tweet/keyword/:keyword", GetTweetsByKeyword, "GET"},
-	{"/user/:username", GetUserInfo, "GET"},
-	{"/user/:username/tweets", GetUserTweetsById, "GET"},
+	{"/tweet/id/:id", getTweetById, "GET"},
+	{"/tweet/hashtag/:hashtag", getTweetsByHashtag, "GET"},
+	{"/tweet/keyword/:keyword", getTweetsByKeyword, "GET"},
+	{"/user/:username", getUserInfo, "GET"},
+	{"/user/:username/tweets", getUserTweetsById, "GET"},
+	{"/count/:username/:granularity", getTweetCountByUsername, "GET"},
 	{"/login", loginApi, "POST"},
 	{"/register", registerApi, "POST"},
 }
