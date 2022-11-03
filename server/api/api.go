@@ -10,17 +10,19 @@ import (
 func getTweetById(c *gin.Context) {
 	id := c.Param("id")
 
-	endpoint := utils.TwitterApi + "/tweets/" + id
+	// endpoint := utils.TwitterApi + "/tweets/" + id
 
-	q := utils.Dict{"tweet.fields": TweetsField}
+	// q := utils.Dict{"tweet.fields": TweetsField}
 
-	body := request(http.MethodGet, endpoint, q)
+	// body := request(http.MethodGet, endpoint, q)
 
-	var result utils.Data[utils.TwitterTweetStructure]
-	utils.UnmarshalToJson(body, &result)
+	// var result utils.Data[utils.TwitterTweetStructure, any]
+	// utils.UnmarshalToJson(body, &result)
 
-	user := getUserInfoByUserId(result.DataTmp.Author)
-	ret := utils.ConvertTweetDataToMyTweet(result.DataTmp, user)
+	// user := getUserInfoByUserId(result.DataTmp.Author)
+	// ret := utils.ConvertTweetDataToMyTweet(result.DataTmp, user)
+
+	ret := getTweetInfoById(id)
 
 	sendOkResponse(c, ret)
 }

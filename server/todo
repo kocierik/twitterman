@@ -20,3 +20,42 @@ Quindi, divisione in 2 sotto-package principali di api:
 - package che fa determinate richieste a twitter (e le salva sul db)
 
 Il package api farà da mediatore ("interfaccia i due pacchetti e converte i dati") tra i due pacchetti
+
+
+al frontend ritorniamo:
+- singolo Tweet
+- array di Tweet
+- utente di Tweet
+- varie (pool,count)
+
+MongoDb collezioni:
+- Tweets
+- TwUsers
+- Users
+
+
+oggetto che ritorniamo al frontend {
+    id
+    text
+    timestamp
+    public_metrics {like, retw...}
+    media {url, width...}
+    usr di tipo TwUsers
+}
+
+oggetto Tweet sul db {
+    id
+    text
+    author_id -> id del TwUser
+    public_metrics {like, retw...}
+    timestamp
+    media {url, width...}
+}
+
+oggetto TwUser sul db {
+    id
+    name
+    username
+    propic
+    created_at and optionals
+}

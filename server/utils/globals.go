@@ -18,6 +18,16 @@ type PublicMetrics struct {
 	QuoteCount   int64 `json:"quote_count"`
 }
 
+type TwitterMediaStructure struct {
+	Id      string `json:"media_key"`
+	Type    string `json:"type"`
+	Url     string `json:"url"`
+	Height  uint64 `json:"height"`
+	Width   uint64 `json:"width"`
+	AltText string `json:"alt_text"`
+	Preview string `json:"preview_image_url"`
+}
+
 type TwitterTweetStructure struct {
 	Id            string        `json:"id"`
 	Text          string        `json:"text"`
@@ -33,8 +43,14 @@ type TwitterUserStructure struct {
 	Username string `json:"username"`
 }
 
+type TwitterInclude struct {
+	User  []TwitterUserStructure  `json:"users"`
+	Media []TwitterMediaStructure `json:"media"`
+}
+
 type Data[T any] struct {
-	DataTmp T `json:"data"`
+	DataTmp T              `json:"data"`
+	Include TwitterInclude `json:"includes"`
 }
 
 // tweet count
@@ -46,13 +62,14 @@ type TweetCount struct {
 
 // My tweet structure
 type Tweet struct {
-	Id            string        `json:"id" bson:"id"`
-	Name          string        `json:"name" bson:"name"`
-	Propic        string        `json:"propic" bson:"propic"`
-	Timestamp     string        `json:"timestamp" bson:"timestamp"`
-	Content       string        `json:"content" bson:"content"`
-	PublicMetrics PublicMetrics `json:"public_metrics"`
-	Comments      []Tweet       `json:"comments" bson:"comments"`
+	Id            string                  `json:"id" bson:"id"`
+	Name          string                  `json:"name" bson:"name"`
+	Propic        string                  `json:"propic" bson:"propic"`
+	Timestamp     string                  `json:"timestamp" bson:"timestamp"`
+	Content       string                  `json:"content" bson:"content"`
+	PublicMetrics PublicMetrics           `json:"public_metrics"`
+	Comments      []Tweet                 `json:"comments" bson:"comments"`
+	Media         []TwitterMediaStructure `json:"media" bson:"media"`
 }
 
 // Db user structure
