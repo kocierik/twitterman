@@ -2,6 +2,8 @@ package api
 
 import (
 	"log"
+	"net/http"
+	"time"
 	"twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
@@ -33,4 +35,14 @@ func InitApi() {
 			utils.Router.POST(v.Endpoint, v.Function)
 		}
 	}
+}
+
+func InitHttpClient() {
+	utils.Client = &http.Client{Timeout: 10 * time.Second}
+}
+
+func initApiTest() {
+	utils.Router = gin.Default()
+	InitHttpClient()
+	InitApi()
 }

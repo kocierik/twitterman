@@ -3,15 +3,10 @@ package api
 import (
 	"io/ioutil"
 	"net/http"
-	"time"
 	"twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
 )
-
-func InitHttpClient() {
-	utils.Client = &http.Client{Timeout: 10 * time.Second}
-}
 
 func request(method string, endpoint string, query utils.Dict) []byte {
 	req := newRequest(method, endpoint)
@@ -23,18 +18,17 @@ func request(method string, endpoint string, query utils.Dict) []byte {
 	}
 
 	res := doRequest(req)
-
-	// Close the connection to reuse it
-	defer res.Body.Close()
+	defer res.Body.Close() // Close the connection to reuse it
 
 	body := parseBody(res)
+
 	return body
 }
 
 func addQueryToReq(req *http.Request, params utils.Dict) {
 	q := req.URL.Query()
 	for key, value := range params {
-		q.Add(key, value)
+		q.Add(key, value.(string))
 	}
 	req.URL.RawQuery = q.Encode()
 
@@ -62,4 +56,17 @@ func parseBody(res *http.Response) []byte {
 func sendOkResponse(c *gin.Context, ret any) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	c.IndentedJSON(http.StatusOK, ret)
+}
+
+func sendNotFoundResponse(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.AbortWithStatus(http.StatusNotFound)
+}
+
+func sendErrorResponse(c *gin.Context, ret string) {
+	c.Header("Access-Control-Allow-Origin", "*")
+	c.JSON(400, gin.H{
+		"success": false,
+		"message": "Something went wrong",
+	})
 }

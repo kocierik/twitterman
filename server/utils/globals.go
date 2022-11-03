@@ -64,7 +64,7 @@ type User struct {
 	Tweets   []Tweet            `bson:"tweets" json:"tweets"`
 }
 
-type Dict map[string]string
+type Dict map[string]any
 
 const ServerPort = "8080"
 const ServerUrl = "localhost"

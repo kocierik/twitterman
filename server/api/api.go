@@ -100,14 +100,14 @@ func getUserInfo(c *gin.Context) {
 	sendOkResponse(c, usr)
 }
 
-// TODO: capire perché alla fine delle risposte con granularity sbagliata appare un null di troppo
+// TODO: capire perché alla fine delle risposte con granularity sbagliata appare un null di troppo, fare test
 // possible granularity: day, hour or minute
 func getTweetCountByUsername(c *gin.Context) {
 	username := c.Param("username")
 	granularity := c.Param("granularity")
 
 	if (granularity != "day") && (granularity != "hour") && (granularity != "minute") {
-		sendOkResponse(c, utils.Dict{"message": "Invalid granularity"})
+		sendOkResponse(c, `{"message": "Invalid granularity"}`)
 	}
 
 	// https://api.twitter.com/2/tweets/counts/recent?query=from%3Aelonmusk&granularity=day
