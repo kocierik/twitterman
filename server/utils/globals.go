@@ -8,6 +8,13 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+type RequestStruct struct {
+	Method    string
+	EndPoint  string
+	Params    Dict
+	NextToken string
+}
+
 /* Useful structure for fetching data from Twitter API */
 type PublicMetrics struct {
 	RetweetCount int64 `json:"retweet_count"`
@@ -64,3 +71,5 @@ const TwitterApi string = "https://api.twitter.com/2"
 var Client *http.Client
 
 var Router = gin.Default()
+
+var LastRequest = RequestStruct{}

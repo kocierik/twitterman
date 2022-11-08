@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"testing"
-	"twitterman/server/database"
-	"twitterman/server/utils"
+
+	"git.hjkl.gq/team7/twitterman/server/database"
+	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"github.com/stretchr/testify/assert"
 )

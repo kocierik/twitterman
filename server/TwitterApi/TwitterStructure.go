@@ -1,6 +1,6 @@
 package TwitterApi
 
-import "twitterman/server/utils"
+import "git.hjkl.gq/team7/twitterman/server/utils"
 
 type Attachments struct {
 	PollIds   []string `json:"poll_ids"`
@@ -24,11 +24,11 @@ type TwitterUserStructure struct {
 }
 
 type TwitterMetaStructure struct {
-	OldestId      string `json:"oldest_id"`
-	NewestId      string `json:"newest_id"`
-	ResultCount   string `json:"result_count"`
-	NextToken     string `json:"next_token"`
-	PreviousToken string `json:"previous_token"`
+	// OldestId      string `json:"oldest_id"`
+	// NewestId      string `json:"newest_id"`
+	// ResultCount   string `json:"result_count"`
+	NextToken string `json:"next_token"`
+	// PreviousToken string `json:"previous_token"`
 }
 
 type TwitterInclude struct {
@@ -37,7 +37,7 @@ type TwitterInclude struct {
 }
 
 type Data[T any] struct {
-	DataTmp T              `json:"data"`
-	Include TwitterInclude `json:"includes"`
-	// Meta    TwitterMetaStructure `json:"meta"`
+	DataTmp T                    `json:"data"`
+	Include TwitterInclude       `json:"includes"`
+	Meta    TwitterMetaStructure `json:"meta"`
 }

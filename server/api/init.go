@@ -3,8 +3,9 @@ package api
 import (
 	"net/http"
 	"time"
-	"twitterman/server/TwitterApi"
-	"twitterman/server/utils"
+
+	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
+	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,6 +23,7 @@ var EndpointList = []Endpoint{
 	{"/user/:username", getUserInfo, "GET"},
 	{"/user/:username/tweets", getUserTweetsById, "GET"},
 	{"/count/:username/:granularity", getTweetCountByUsername, "GET"},
+	{"/loadLastQuery", getNewPageLastQuery, "GET"},
 	{"/login", loginApi, "POST"},
 	{"/register", registerApi, "POST"},
 }

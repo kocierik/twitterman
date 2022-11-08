@@ -2,7 +2,8 @@ package TwitterApi
 
 import (
 	"net/http"
-	"twitterman/server/utils"
+
+	"git.hjkl.gq/team7/twitterman/server/utils"
 )
 
 // FIELD SOURCE: https://developer.twitter.com/en/docs/twitter-api/fields
@@ -61,14 +62,21 @@ func GetTweetInfoById(id string) Data[[]TwitterTweetStructure] {
 	var result Data[[]TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
 
+	utils.LastRequest = utils.RequestStruct{Method: "GET", EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
+
 	return result
 }
 
-func GetNextTokenReq(endpoint string, q utils.Dict, token string) any {
-	q["next_token"] = token
-	body := utils.Request(http.MethodGet, endpoint, q)
+func GetNextTokenReq(req utils.RequestStruct) Data[[]TwitterTweetStructure] {
+	req.Params["next_token"] = req.NextToken
+
+	body := utils.Request(req.Method, req.EndPoint, req.Params)
+
 	var result Data[[]TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
+
+	utils.LastRequest.NextToken = result.Meta.NextToken
+
 	return result
 }
 
@@ -82,6 +90,8 @@ func GetTwsByHashtag(hashtag string) Data[[]TwitterTweetStructure] {
 	var result Data[[]TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
 
+	utils.LastRequest = utils.RequestStruct{Method: "GET", EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
+
 	return result
 }
 
@@ -94,6 +104,8 @@ func GetTwsByKeyword(keyword string) Data[[]TwitterTweetStructure] {
 
 	var result Data[[]TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
+
+	utils.LastRequest = utils.RequestStruct{Method: "GET", EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
 
 	return result
 }
@@ -120,6 +132,8 @@ func GetUsrTwsById(username string) Data[[]TwitterTweetStructure] {
 
 	var result Data[[]TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
+
+	utils.LastRequest = utils.RequestStruct{Method: "GET", EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
 
 	return result
 }

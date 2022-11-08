@@ -6,8 +6,9 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"twitterman/server/TwitterApi"
-	"twitterman/server/utils"
+
+	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
+	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -1,8 +1,8 @@
 package api
 
 import (
-	"twitterman/server/TwitterApi"
-	"twitterman/server/utils"
+	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
+	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -64,4 +64,12 @@ func getTweetCountByUsername(c *gin.Context) {
 	result := TwitterApi.GetTwCount(username, granularity)
 
 	utils.SendOkResponse(c, result.DataTmp)
+}
+
+func getNewPageLastQuery(c *gin.Context) {
+	tmp := TwitterApi.GetNextTokenReq(utils.LastRequest)
+
+	ret := ConvertTweetDataToMyTweet(tmp)
+
+	utils.SendOkResponse(c, ret)
 }

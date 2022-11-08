@@ -2,7 +2,8 @@ package database
 
 import (
 	"testing"
-	"twitterman/server/utils"
+
+	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
