@@ -27,7 +27,7 @@ const Home = () => {
   async function loadMore() {
     try {
 
-      const url = SERVER_URL + "/tweet/loadLastQuery"
+      const url = SERVER_URL + "/tweet/loadNextPage"
       await fetch(url)
         .then(async (response) => {
           await response.json().then((json) => {

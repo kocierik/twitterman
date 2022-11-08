@@ -20,10 +20,10 @@ var EndpointList = []Endpoint{
 	{"/tweet/id/:id", getTweetById, "GET"},
 	{"/tweet/hashtag/:hashtag", getTweetsByHashtag, "GET"},
 	{"/tweet/keyword/:keyword", getTweetsByKeyword, "GET"},
+	{"/tweet/loadNextPage", getNewPageLastQuery, "GET"},
 	{"/user/:username", getUserInfo, "GET"},
 	{"/user/:username/tweets", getUserTweetsById, "GET"},
 	{"/count/:username/:granularity", getTweetCountByUsername, "GET"},
-	{"/loadLastQuery", getNewPageLastQuery, "GET"},
 	{"/login", loginApi, "POST"},
 	{"/register", registerApi, "POST"},
 }
