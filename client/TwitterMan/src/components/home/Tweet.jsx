@@ -1,19 +1,16 @@
-import React, {useEffect} from 'react'
-import Comments from './Comments'
+import React, { useEffect } from 'react'
 
 const TweetCard = ({ data }) => {
   return (
     <article
       id={data.id}
-      data-aos="zoom-in"
-      data-aos-duration="700"
       className="place-self-start mb-4 break-inside px-6 py-4 rounded-xl flex flex-col text-sm bg-white dark:bg-slate-800 dark:text-white"
     >
       <div className="flex pb-5 items-start justify-between">
         <div className="flex">
           <a className="inline-block mr-4" href="#">
             <img
-              className="rounded-full max-w-none w-12 h-12"
+              className="rounded-full max-w-none w-12 h-12 gap-1"
               src={data.propic}
               alt="Avatar"
             />
@@ -48,7 +45,7 @@ const TweetCard = ({ data }) => {
       <p className="text-sm dark:text-slate-200"> {data.content} </p>
       <div>
         {data.media?.map((img, i) => {
-          if (img.url == "video") {
+          if (img.url == 'video') {
             return <img key={i} src={img.preview_image} alt="img" />
           }
           return <img key={i} src={img.url} alt="img" />
@@ -85,7 +82,9 @@ const TweetCard = ({ data }) => {
               />
             </svg>
           </span>
-          <span className="font-bold">{data.public_metrics?.retweet_count}</span>
+          <span className="font-bold">
+            {data.public_metrics?.retweet_count}
+          </span>
         </div>
       </div>
       {/* {data.comments.length !== 0 && (
