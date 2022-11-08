@@ -8,8 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// https://developer.twitter.com/en/docs/twitter-api/data-dictionary/object-model/tweet
-
 /* Useful structure for fetching data from Twitter API */
 type PublicMetrics struct {
 	RetweetCount int64 `json:"retweet_count"`
@@ -24,33 +22,7 @@ type TwitterMediaStructure struct {
 	Url     string `json:"url"`
 	Height  uint64 `json:"height"`
 	Width   uint64 `json:"width"`
-	AltText string `json:"alt_text"`
 	Preview string `json:"preview_image_url"`
-}
-
-type TwitterTweetStructure struct {
-	Id            string        `json:"id"`
-	Text          string        `json:"text"`
-	Author        string        `json:"author_id"`
-	PublicMetrics PublicMetrics `json:"public_metrics"`
-	Timestamp     string        `json:"created_at"`
-}
-
-type TwitterUserStructure struct {
-	Id       string `json:"id"`
-	Propic   string `json:"profile_image_url"`
-	Name     string `json:"name"`
-	Username string `json:"username"`
-}
-
-type TwitterInclude struct {
-	User  []TwitterUserStructure  `json:"users"`
-	Media []TwitterMediaStructure `json:"media"`
-}
-
-type Data[T any] struct {
-	DataTmp T              `json:"data"`
-	Include TwitterInclude `json:"includes"`
 }
 
 // tweet count
@@ -62,14 +34,14 @@ type TweetCount struct {
 
 // My tweet structure
 type Tweet struct {
-	Id            string                  `json:"id" bson:"id"`
-	Name          string                  `json:"name" bson:"name"`
-	Propic        string                  `json:"propic" bson:"propic"`
-	Timestamp     string                  `json:"timestamp" bson:"timestamp"`
-	Content       string                  `json:"content" bson:"content"`
-	PublicMetrics PublicMetrics           `json:"public_metrics"`
-	Comments      []Tweet                 `json:"comments" bson:"comments"`
-	Media         []TwitterMediaStructure `json:"media" bson:"media"`
+	Id            string        `json:"id" bson:"id"`
+	Name          string        `json:"name" bson:"name"`
+	Propic        string        `json:"propic" bson:"propic"`
+	Timestamp     string        `json:"timestamp" bson:"timestamp"`
+	Content       string        `json:"content" bson:"content"`
+	PublicMetrics PublicMetrics `json:"public_metrics"`
+	// Comments      []Tweet                 `json:"comments" bson:"comments"`
+	Media []TwitterMediaStructure `json:"media" bson:"media"`
 }
 
 // Db user structure

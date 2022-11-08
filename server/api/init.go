@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"twitterman/server/TwitterApi"
 	"twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
@@ -45,4 +46,38 @@ func initApiTest() {
 	utils.Router = gin.Default()
 	InitHttpClient()
 	InitApi()
+}
+
+func ConvertTweetDataToMyTweet(tw TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]) []utils.Tweet {
+
+	var ret []utils.Tweet
+
+	for _, t := range tw.DataTmp {
+		var x utils.Tweet = utils.Tweet{
+			Id:            t.Id,
+			Content:       t.Text,
+			Timestamp:     t.Timestamp,
+			PublicMetrics: t.PublicMetrics,
+		}
+
+		for _, id := range t.Attachments.MediaKeys {
+			for _, m := range tw.Include.Media {
+				if id == m.Id {
+					x.Media = append(x.Media, m)
+					break
+				}
+			}
+		}
+
+		for _, m := range tw.Include.User {
+			if m.Id == t.Author {
+				x.Name = m.Name
+				x.Propic = m.Propic
+			}
+		}
+
+		ret = append(ret, x)
+	}
+
+	return ret
 }

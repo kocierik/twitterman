@@ -1,17 +1,16 @@
-package api
+package utils
 
 import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-func request(method string, endpoint string, query utils.Dict) []byte {
+func Request(method string, endpoint string, query Dict) []byte {
 	req := newRequest(method, endpoint)
-	req.Header.Add("Authorization", "Bearer "+utils.GetEnvVar("BEARER_TOKEN"))
+	req.Header.Add("Authorization", "Bearer "+GetEnvVar("BEARER_TOKEN"))
 
 	// formo la query
 	if query != nil {
@@ -26,7 +25,7 @@ func request(method string, endpoint string, query utils.Dict) []byte {
 	return body
 }
 
-func addQueryToReq(req *http.Request, params utils.Dict) {
+func addQueryToReq(req *http.Request, params Dict) {
 	q := req.URL.Query()
 	for key, value := range params {
 		q.Add(key, value.(string))
@@ -38,23 +37,23 @@ func addQueryToReq(req *http.Request, params utils.Dict) {
 
 func newRequest(method string, endpoint string) *http.Request {
 	req, err := http.NewRequest(method, endpoint, nil)
-	utils.ErrorMessage(err, "(http.go) Cannot create new request")
+	ErrorMessage(err, "(http.go) Cannot create new request")
 	return req
 }
 
 func doRequest(req *http.Request) *http.Response {
-	res, err := utils.Client.Do(req)
-	utils.ErrorMessage(err, "(http.go) Cannot do the request")
+	res, err := Client.Do(req)
+	ErrorMessage(err, "(http.go) Cannot do the request")
 	return res
 }
 
 func parseBody(res *http.Response) []byte {
 	body, err := ioutil.ReadAll(res.Body)
-	utils.ErrorMessage(err, "(http.go) Cannot parse the body of response")
+	ErrorMessage(err, "(http.go) Cannot parse the body of response")
 	return body
 }
 
-func sendOkResponse(c *gin.Context, ret any) {
+func SendOkResponse(c *gin.Context, ret any) {
 	c.Header("Access-Control-Allow-Origin", "*")
 	c.IndentedJSON(http.StatusOK, ret)
 }

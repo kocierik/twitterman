@@ -1,12 +1,12 @@
 package api
 
 import (
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"twitterman/server/TwitterApi"
 	"twitterman/server/utils"
 
 	"github.com/stretchr/testify/assert"
@@ -52,10 +52,10 @@ func TestGetTweetById(t *testing.T) {
 func TestGetTweetsByHashtag(t *testing.T) {
 	initApiTest()
 	response, res := sendTestRequest("GET", "/tweet/hashtag/bellazio", nil)
-	mockResponse := request(http.MethodGet, utils.TwitterApi+"/tweets/search/recent?query=%23bellazio&tweet.fields="+TweetsField, nil)
+	mockResponse := utils.Request(http.MethodGet, utils.TwitterApi+"/tweets/search/recent?query=%23bellazio&tweet.fields="+TwitterApi.TweetsField, nil)
 
 	var result []utils.Tweet
-	var tmpMock utils.Data[[]utils.TwitterTweetStructure]
+	var tmpMock TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]
 
 	utils.UnmarshalToJson(response, &result)
 	utils.UnmarshalToJson(mockResponse, &tmpMock)
@@ -63,7 +63,7 @@ func TestGetTweetsByHashtag(t *testing.T) {
 	var ret []utils.Tweet
 
 	for _, elem := range tmpMock.DataTmp {
-		tmp := utils.ConvertTweetDataToMyTweet(elem, getUserInfoByUserId(elem.Author))
+		tmp := ConvertTweetDataToMyTweet(elem, TwitterApi.GetUserInfoByUserId(elem.Author))
 		ret = append(ret, tmp)
 	}
 
@@ -74,10 +74,10 @@ func TestGetTweetsByHashtag(t *testing.T) {
 func TestGetTweetsByKeyword(t *testing.T) {
 	initApiTest()
 	response, res := sendTestRequest("GET", "/tweet/keyword/buongiorno", nil)
-	mockResponse := request(http.MethodGet, utils.TwitterApi+"/tweets/search/recent?query=buongiorno&tweet.fields="+TweetsField, nil)
+	mockResponse := utils.Request(http.MethodGet, utils.TwitterApi+"/tweets/search/recent?query=buongiorno&tweet.fields="+TwitterApi.TweetsField, nil)
 
 	var result []utils.Tweet
-	var tmpMock utils.Data[[]utils.TwitterTweetStructure]
+	var tmpMock TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]
 
 	utils.UnmarshalToJson(response, &result)
 	utils.UnmarshalToJson(mockResponse, &tmpMock)
@@ -85,8 +85,8 @@ func TestGetTweetsByKeyword(t *testing.T) {
 	var ret []utils.Tweet
 
 	for _, elem := range tmpMock.DataTmp {
-		usr := getUserInfoByUserId(elem.Author)
-		tmp := utils.ConvertTweetDataToMyTweet(elem, usr)
+		usr := TwitterApi.GetUserInfoByUserId(elem.Author)
+		tmp := ConvertTweetDataToMyTweet(elem, usr)
 		ret = append(ret, tmp)
 	}
 
@@ -97,11 +97,11 @@ func TestGetTweetsByKeyword(t *testing.T) {
 func TestGetUserInfo(t *testing.T) {
 	initApiTest()
 	user := "elonmusk"
-	fmt.Println(getUserInfoByUsername(user))
+	// fmt.Println(TwitterApi.GetUserInfoByUsername(user))
 	response, res := sendTestRequest("GET", "/user/"+user, nil)
 
-	var result utils.TwitterUserStructure
-	var tmpMock = utils.TwitterUserStructure{
+	var result TwitterApi.TwitterUserStructure
+	var tmpMock = TwitterApi.TwitterUserStructure{
 		Id:       "44196397",
 		Propic:   "https://pbs.twimg.com/profile_images/1587290337587904512/Y4s_eu5O_normal.jpg",
 		Name:     "Elon Musk",
@@ -118,11 +118,11 @@ func TestGetUserTweetsById(t *testing.T) {
 	initApiTest()
 	user := "team7test"
 	response, res := sendTestRequest("GET", "/user/"+user+"/tweets", nil)
-	usrData := getUserInfoByUsername(user)
-	mockResponse := request(http.MethodGet, utils.TwitterApi+"/users/"+usrData.Id+"/tweets?tweet.fields="+TweetsField, nil)
+	usrData := TwitterApi.GetUserInfoByUsername(user)
+	mockResponse := utils.Request(http.MethodGet, utils.TwitterApi+"/users/"+usrData.Id+"/tweets?tweet.fields="+TwitterApi.TweetsField, nil)
 
 	var result []utils.Tweet
-	var tmpMock utils.Data[[]utils.TwitterTweetStructure]
+	var tmpMock TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]
 
 	utils.UnmarshalToJson(response, &result)
 	utils.UnmarshalToJson(mockResponse, &tmpMock)
@@ -130,7 +130,7 @@ func TestGetUserTweetsById(t *testing.T) {
 	var ret []utils.Tweet
 
 	for _, elem := range tmpMock.DataTmp {
-		tmp := utils.ConvertTweetDataToMyTweet(elem, usrData)
+		tmp := ConvertTweetDataToMyTweet(elem, usrData)
 		ret = append(ret, tmp)
 	}
 

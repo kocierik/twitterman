@@ -2,6 +2,7 @@ package api
 
 import (
 	"net/http"
+	"twitterman/server/TwitterApi"
 	"twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
@@ -10,21 +11,10 @@ import (
 func getTweetById(c *gin.Context) {
 	id := c.Param("id")
 
-	// endpoint := utils.TwitterApi + "/tweets/" + id
+	tmp := TwitterApi.GetTweetInfoById(id)
+	ret := ConvertTweetDataToMyTweet(tmp)
 
-	// q := utils.Dict{"tweet.fields": TweetsField}
-
-	// body := request(http.MethodGet, endpoint, q)
-
-	// var result utils.Data[utils.TwitterTweetStructure, any]
-	// utils.UnmarshalToJson(body, &result)
-
-	// user := getUserInfoByUserId(result.DataTmp.Author)
-	// ret := utils.ConvertTweetDataToMyTweet(result.DataTmp, user)
-
-	ret := getTweetInfoById(id)
-
-	sendOkResponse(c, ret)
+	utils.SendOkResponse(c, ret)
 }
 
 func getTweetsByHashtag(c *gin.Context) {
@@ -32,74 +22,70 @@ func getTweetsByHashtag(c *gin.Context) {
 
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
 
-	q := utils.Dict{"query": "#" + hashtag, "tweet.fields": TweetsField}
+	q := utils.Dict{"query": "#" + hashtag, "tweet.fields": TwitterApi.TweetsField, "expansions": TwitterApi.Expansions, "media.fields": TwitterApi.MediaField, "user.fields": TwitterApi.UserField}
 
-	body := request(http.MethodGet, endpoint, q)
+	body := utils.Request(http.MethodGet, endpoint, q)
 
-	var result utils.Data[[]utils.TwitterTweetStructure]
+	var result TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
 
-	var ret []utils.Tweet
+	// var ret []utils.Tweet
 
-	for _, elem := range result.DataTmp {
-		user := getUserInfoByUserId(elem.Author)
-		tmp := utils.ConvertTweetDataToMyTweet(elem, user)
-		ret = append(ret, tmp)
-	}
+	ret := ConvertTweetDataToMyTweet(result)
 
-	sendOkResponse(c, ret)
+	utils.SendOkResponse(c, ret)
 }
 
 func getTweetsByKeyword(c *gin.Context) {
-	keyword := c.Param("keyword") // prendo la keyword
+	// keyword := c.Param("keyword") // prendo la keyword
 
-	endpoint := utils.TwitterApi + "/tweets/search/recent"
-	q := utils.Dict{"query": keyword, "tweet.fields": TweetsField}
+	// endpoint := utils.TwitterApi + "/tweets/search/recent"
+	// q := utils.Dict{"query": keyword, "tweet.fields": TwitterApi.TweetsField}
 
-	body := request(http.MethodGet, endpoint, q)
+	// body := utils.Request(http.MethodGet, endpoint, q)
 
-	var result utils.Data[[]utils.TwitterTweetStructure]
-	utils.UnmarshalToJson(body, &result)
+	// var result TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]
+	// utils.UnmarshalToJson(body, &result)
 
-	var ret []utils.Tweet
+	// var ret []utils.Tweet
 
-	for _, elem := range result.DataTmp {
-		user := getUserInfoByUserId(elem.Author)
-		tmp := utils.ConvertTweetDataToMyTweet(elem, user)
-		ret = append(ret, tmp)
-	}
+	// for _, elem := range result.DataTmp {
+	// 	user := TwitterApi.GetUserInfoByUserId(elem.Author)
+	// 	tmp := ConvertTweetDataToMyTweet(elem, user)
+	// 	ret = append(ret, tmp)
+	// }
 
-	sendOkResponse(c, ret)
+	// utils.SendOkResponse(c, ret)
 }
 
 func getUserTweetsById(c *gin.Context) {
-	username := c.Param("username")
-	usr := getUserInfoByUsername(username)
+	// username := c.Param("username")
+	// usr := TwitterApi.GetUserInfoByUsername(username)
 
-	endpoint := utils.TwitterApi + "/users/" + usr.Id + "/tweets"
-	q := utils.Dict{"tweet.fields": TweetsField}
+	// endpoint := utils.TwitterApi + "/users/" + usr.Id + "/tweets"
+	// q := utils.Dict{"tweet.fields": TwitterApi.TweetsField}
 
-	body := request(http.MethodGet, endpoint, q)
+	// body := utils.Request(http.MethodGet, endpoint, q)
 
-	var result utils.Data[[]utils.TwitterTweetStructure]
-	utils.UnmarshalToJson(body, &result)
+	// var result TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]
+	// utils.UnmarshalToJson(body, &result)
 
-	var ret []utils.Tweet
+	// var ret []utils.Tweet
 
-	for _, elem := range result.DataTmp {
-		tmp := utils.ConvertTweetDataToMyTweet(elem, usr)
-		ret = append(ret, tmp)
-	}
+	// for _, elem := range result.DataTmp {
+	// 	tmp := ConvertTweetDataToMyTweet(elem, usr)
+	// 	ret = append(ret, tmp)
+	// }
 
-	sendOkResponse(c, ret)
+	// utils.SendOkResponse(c, ret)
 }
 
 func getUserInfo(c *gin.Context) {
 	username := c.Param("username")
 
-	usr := getUserInfoByUsername(username)
+	usr := TwitterApi.GetUserInfoByUsername(username)
 
-	sendOkResponse(c, usr)
+	utils.SendOkResponse(c, usr)
 }
 
 // TODO: capire perché alla fine delle risposte con granularity sbagliata appare un null di troppo, fare test
@@ -109,17 +95,17 @@ func getTweetCountByUsername(c *gin.Context) {
 	granularity := c.Param("granularity")
 
 	if (granularity != "day") && (granularity != "hour") && (granularity != "minute") {
-		sendOkResponse(c, `{"message": "Invalid granularity"}`)
+		utils.SendOkResponse(c, utils.Dict{"message": "Invalid granularity"})
 	}
 
 	// https://api.twitter.com/2/tweets/counts/recent?query=from%3Aelonmusk&granularity=day
 	endpoint := utils.TwitterApi + "/tweets/counts/recent"
 	q := utils.Dict{"query": "from:" + username, "granularity": granularity}
 
-	body := request(http.MethodGet, endpoint, q)
+	body := utils.Request(http.MethodGet, endpoint, q)
 
-	var result utils.Data[[]utils.TweetCount]
+	var result TwitterApi.Data[[]utils.TweetCount]
 	utils.UnmarshalToJson(body, &result)
 
-	sendOkResponse(c, result.DataTmp)
+	utils.SendOkResponse(c, result.DataTmp)
 }
