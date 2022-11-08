@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -31,8 +30,7 @@ func addQueryToReq(req *http.Request, params Dict) {
 		q.Add(key, value.(string))
 	}
 	req.URL.RawQuery = q.Encode()
-
-	fmt.Println("twitter url: ", req.URL) // debug purpose, uncomment on needs
+	// fmt.Println("twitter url: ", req.URL) // debug purpose, uncomment on needs
 }
 
 func newRequest(method string, endpoint string) *http.Request {

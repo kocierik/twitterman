@@ -21,6 +21,10 @@ var MediaField = "url,height,width,preview_image_url"
 
 /* Utils function for getting user information */
 
+func baseQueryPlus(key string, value any) utils.Dict {
+	return utils.Dict{key: value, "tweet.fields": TweetsField, "expansions": Expansions, "media.fields": MediaField, "user.fields": UserField}
+}
+
 func GetUserInfoByUsername(username string) Data[[]TwitterUserStructure] {
 	endpoint := utils.TwitterApi + "/users/by/username/" + username
 
@@ -50,11 +54,10 @@ func GetUserInfoByUserId(userId string) TwitterUserStructure {
 func GetTweetInfoById(id string) Data[[]TwitterTweetStructure] {
 	endpoint := utils.TwitterApi + "/tweets"
 
-	q := utils.Dict{"ids": id, "tweet.fields": TweetsField, "expansions": Expansions, "media.fields": MediaField, "user.fields": UserField}
+	q := baseQueryPlus("ids", id)
 
 	body := utils.Request(http.MethodGet, endpoint, q)
 
-	// fmt.Println(string(body))
 	var result Data[[]TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
 
@@ -66,5 +69,57 @@ func GetNextTokenReq(endpoint string, q utils.Dict, token string) any {
 	body := utils.Request(http.MethodGet, endpoint, q)
 	var result Data[[]TwitterTweetStructure]
 	utils.UnmarshalToJson(body, &result)
+	return result
+}
+
+func GetTwsByHashtag(hashtag string) Data[[]TwitterTweetStructure] {
+	endpoint := utils.TwitterApi + "/tweets/search/recent"
+
+	q := baseQueryPlus("query", "#"+hashtag)
+
+	body := utils.Request(http.MethodGet, endpoint, q)
+
+	var result Data[[]TwitterTweetStructure]
+	utils.UnmarshalToJson(body, &result)
+
+	return result
+}
+
+func GetTwsByKeyword(keyword string) Data[[]TwitterTweetStructure] {
+	endpoint := utils.TwitterApi + "/tweets/search/recent"
+
+	q := baseQueryPlus("query", keyword)
+
+	body := utils.Request(http.MethodGet, endpoint, q)
+
+	var result Data[[]TwitterTweetStructure]
+	utils.UnmarshalToJson(body, &result)
+
+	return result
+}
+
+func GetTwCount(username, granularity string) Data[[]utils.TweetCount] {
+	endpoint := utils.TwitterApi + "/tweets/counts/recent"
+
+	q := utils.Dict{"query": "from:" + username, "granularity": granularity}
+
+	body := utils.Request(http.MethodGet, endpoint, q)
+
+	var result Data[[]utils.TweetCount]
+	utils.UnmarshalToJson(body, &result)
+
+	return result
+}
+
+func GetUsrTwsById(username string) Data[[]TwitterTweetStructure] {
+	endpoint := utils.TwitterApi + "/tweets/search/recent"
+
+	q := baseQueryPlus("query", "from:"+username)
+
+	body := utils.Request(http.MethodGet, endpoint, q)
+
+	var result Data[[]TwitterTweetStructure]
+	utils.UnmarshalToJson(body, &result)
+
 	return result
 }

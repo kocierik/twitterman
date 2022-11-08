@@ -34,14 +34,13 @@ type TweetCount struct {
 
 // My tweet structure
 type Tweet struct {
-	Id            string        `json:"id" bson:"id"`
-	Name          string        `json:"name" bson:"name"`
-	Propic        string        `json:"propic" bson:"propic"`
-	Timestamp     string        `json:"timestamp" bson:"timestamp"`
-	Content       string        `json:"content" bson:"content"`
-	PublicMetrics PublicMetrics `json:"public_metrics"`
-	// Comments      []Tweet                 `json:"comments" bson:"comments"`
-	Media []TwitterMediaStructure `json:"media" bson:"media"`
+	Id            string                  `json:"id" bson:"id"`
+	Name          string                  `json:"name" bson:"name"`
+	Propic        string                  `json:"propic" bson:"propic"`
+	Timestamp     string                  `json:"timestamp" bson:"timestamp"`
+	Content       string                  `json:"content" bson:"content"`
+	PublicMetrics PublicMetrics           `json:"public_metrics"`
+	Media         []TwitterMediaStructure `json:"media" bson:"media"`
 }
 
 // Db user structure

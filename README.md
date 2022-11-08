@@ -16,6 +16,6 @@ To test the program type in the directory with some `*_test.go*` file:
 go test
 ```
 
-## Autori
+## Authors
 
 Manuel Arto, Fabio Gaiba, Gabriele Genovese, Erik Koci, Andrea Napoli, Alessandro Frau

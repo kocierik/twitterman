@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Comments from './Comments'
 
 const TweetCard = ({ data }) => {
@@ -46,6 +46,14 @@ const TweetCard = ({ data }) => {
       </div>
 
       <p className="text-sm dark:text-slate-200"> {data.content} </p>
+      <div>
+        {data.media?.map((img, i) => {
+          if (img.url == "video") {
+            return <img src={img.preview_image} alt="img" />
+          }
+          return <img src={img.url} alt="img" />
+        })}
+      </div>
       <div className="py-4">
         <div className="inline-flex items-center">
           <span className="m-2">
@@ -80,12 +88,12 @@ const TweetCard = ({ data }) => {
           <span className="font-bold">{data.public_metrics.retweet_count}</span>
         </div>
       </div>
-      {data.comments.length !== 0 && (
+      {/* {data.comments.length !== 0 && (
         <hr class=" h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
       )}
       {data.comments.map((comment, i) => {
         return <Comments comment={comment} key={i} />
-      })}
+      })} */}
     </article>
   )
 }
