@@ -42,7 +42,7 @@ const Home = () => {
       <div
         data-aos="zoom-in"
         data-aos-duration="700"
-        className="App min-h-full 		px-5 dark:bg-gray-900 pt-16 pb-16  flex flex-col	gap-5"
+        className="App min-h-full px-5 dark:bg-gray-900 pt-16 pb-16  flex flex-col	gap-5"
       >
         <div className="flex justify-center">
           <SearchBar

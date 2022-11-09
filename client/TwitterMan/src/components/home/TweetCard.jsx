@@ -25,7 +25,7 @@ const TweetCard = ({ data }) => {
             </div>
             <div className="text-slate-500 dark:text-slate-400">
               {' '}
-              {data.timestamp}{' '}
+              {data.timestamp.replace('T', ' ').slice(0, -5)}{' '}
             </div>
           </div>
         </div>
