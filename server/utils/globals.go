@@ -27,7 +27,7 @@ type PublicMetrics struct {
 type GeoTwitterStruct struct {
 	Id    string          `json:"id"`
 	Name  string          `json:"full_name"`
-	Place geojson.Feature `json:"geo" bson:"geo"`
+	Place geojson.Feature `json:"geo" bson:"place"`
 }
 
 type TwitterMediaStructure struct {
