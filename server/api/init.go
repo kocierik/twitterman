@@ -1,6 +1,8 @@
 package api
 
 import (
+	"math"
+
 	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
 	"git.hjkl.gq/team7/twitterman/server/utils"
 
@@ -42,6 +44,15 @@ func initApiTest() {
 	InitApi()
 }
 
+func round(num float64) int {
+	return int(num + math.Copysign(0.5, num))
+}
+
+func toFixed(num float64, precision int) float64 {
+	output := math.Pow(10, float64(precision))
+	return float64(round(num*output)) / output
+}
+
 func ConvertTweetDataToMyTweet(tw TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]) []utils.Tweet {
 
 	var ret []utils.Tweet
@@ -59,8 +70,8 @@ func ConvertTweetDataToMyTweet(tw TwitterApi.Data[[]TwitterApi.TwitterTweetStruc
 				x.Geo.Id = g.Id
 				x.Geo.Name = g.Name
 				x.Geo.Coords = utils.Dict{
-					"x": (g.Place.BoundingBox[1] + g.Place.BoundingBox[3]) / 2,
-					"y": (g.Place.BoundingBox[0] + g.Place.BoundingBox[2]) / 2,
+					"x": toFixed((g.Place.BoundingBox[1]+g.Place.BoundingBox[3])/2, 4),
+					"y": toFixed((g.Place.BoundingBox[0]+g.Place.BoundingBox[2])/2, 4),
 				}
 				break
 			}
