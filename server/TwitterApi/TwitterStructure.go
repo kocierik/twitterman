@@ -20,8 +20,8 @@ type TwitterTweetStructure struct {
 	Author        string              `json:"author_id"`
 	PublicMetrics utils.PublicMetrics `json:"public_metrics"`
 	Timestamp     string              `json:"created_at"`
-	Attachments   Attachments         `json:"attachments"`
-	Geo           GeoStruct           `json:"geo"`
+	Attachments   Attachments         `json:"attachments,omitempty"`
+	Geo           GeoStruct           `json:"geo,omitempty"`
 }
 
 type TwitterUserStructure struct {
@@ -35,7 +35,7 @@ type TwitterMetaStructure struct {
 	// OldestId      string `json:"oldest_id"`
 	// NewestId      string `json:"newest_id"`
 	// ResultCount   uint64 `json:"result_count"`
-	NextToken string `json:"next_token"`
+	NextToken string `json:"next_token,omitempty"`
 	// PreviousToken string `json:"previous_token"`
 }
 
@@ -46,13 +46,13 @@ type GeoTwitterStruct struct {
 }
 
 type TwitterInclude struct {
-	User   []TwitterUserStructure        `json:"users"`
-	Media  []utils.TwitterMediaStructure `json:"media"`
-	Places []GeoTwitterStruct            `json:"places"`
+	User   []TwitterUserStructure        `json:"users,omitempty"`
+	Media  []utils.TwitterMediaStructure `json:"media,omitempty"`
+	Places []GeoTwitterStruct            `json:"places,omitempty"`
 }
 
 type Data[T any] struct {
 	DataTmp T                    `json:"data"`
-	Include TwitterInclude       `json:"includes"`
-	Meta    TwitterMetaStructure `json:"meta"`
+	Include TwitterInclude       `json:"includes,omitempty"`
+	Meta    TwitterMetaStructure `json:"meta,omitempty"`
 }

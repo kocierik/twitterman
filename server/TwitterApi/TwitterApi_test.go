@@ -13,12 +13,11 @@ func TestGetTwsByHashtag(t *testing.T) {
 	hashtag := "bellazio"
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
 
-	q := baseQueryPlus("query", "#"+hashtag)
+	q := BaseQueryPlus("query", "#"+hashtag)
 
 	body := utils.Request(http.MethodGet, endpoint, q)
 
-	var tmpMock Data[[]TwitterTweetStructure]
-	utils.UnmarshalToJson(body, &tmpMock)
+	tmpMock := utils.UnmarshalToJson[Data[[]TwitterUserStructure]](body)
 
 	res := GetTwsByHashtag(hashtag)
 	assert.Equal(t, tmpMock, res)

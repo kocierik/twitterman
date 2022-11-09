@@ -11,7 +11,7 @@ func getTweetById(c *gin.Context) {
 	id := c.Param("id")
 
 	tmp := TwitterApi.GetTweetInfoById(id)
-	ret := ConvertTweetDataToMyTweet(tmp)
+	ret := CastTweetStructToMyStruct(tmp)
 
 	utils.SendOkResponse(c, ret)
 }
@@ -20,7 +20,7 @@ func getTweetsByHashtag(c *gin.Context) {
 	hashtag := c.Param("hashtag")
 
 	tmp := TwitterApi.GetTwsByHashtag(hashtag)
-	ret := ConvertTweetDataToMyTweet(tmp)
+	ret := CastTweetStructToMyStruct(tmp)
 
 	utils.SendOkResponse(c, ret)
 }
@@ -29,16 +29,16 @@ func getTweetsByKeyword(c *gin.Context) {
 	keyword := c.Param("keyword")
 
 	tmp := TwitterApi.GetTwsByKeyword(keyword)
-	ret := ConvertTweetDataToMyTweet(tmp)
+	ret := CastTweetStructToMyStruct(tmp)
 
 	utils.SendOkResponse(c, ret)
 }
 
-func getUserTweetsById(c *gin.Context) {
+func getUserTweetsByUsername(c *gin.Context) {
 	username := c.Param("username")
 
 	tmp := TwitterApi.GetUsrTwsById(username)
-	ret := ConvertTweetDataToMyTweet(tmp)
+	ret := CastTweetStructToMyStruct(tmp)
 
 	utils.SendOkResponse(c, ret)
 }
@@ -69,7 +69,7 @@ func getTweetCountByUsername(c *gin.Context) {
 func getNewPageLastQuery(c *gin.Context) {
 	tmp := TwitterApi.GetNextTokenReq(utils.LastRequest)
 
-	ret := ConvertTweetDataToMyTweet(tmp)
+	ret := CastTweetStructToMyStruct(tmp)
 
 	utils.SendOkResponse(c, ret)
 }

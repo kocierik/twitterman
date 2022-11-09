@@ -21,7 +21,7 @@ var EndpointList = []Endpoint{
 	{"/tweet/keyword/:keyword", getTweetsByKeyword, "GET"},
 	{"/tweet/loadNextPage", getNewPageLastQuery, "GET"},
 	{"/user/:username", getUserInfo, "GET"},
-	{"/user/:username/tweets", getUserTweetsById, "GET"},
+	{"/user/:username/tweets", getUserTweetsByUsername, "GET"},
 	{"/count/:username/:granularity", getTweetCountByUsername, "GET"},
 	{"/login", loginApi, "POST"},
 	{"/register", registerApi, "POST"},
@@ -53,7 +53,7 @@ func toFixed(num float64, precision int) float64 {
 	return float64(round(num*output)) / output
 }
 
-func ConvertTweetDataToMyTweet(tw TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]) []utils.Tweet {
+func CastTweetStructToMyStruct(tw TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]) []utils.Tweet {
 
 	var ret []utils.Tweet
 
@@ -65,17 +65,25 @@ func ConvertTweetDataToMyTweet(tw TwitterApi.Data[[]TwitterApi.TwitterTweetStruc
 			PublicMetrics: t.PublicMetrics,
 		}
 
-		for _, g := range tw.Include.Places {
-			if g.Id == t.Geo.PlaceId {
-				x.Geo.Id = g.Id
-				x.Geo.Name = g.Name
-				x.Geo.Coords = utils.Dict{
-					"x": toFixed((g.Place.BoundingBox[1]+g.Place.BoundingBox[3])/2, 4),
-					"y": toFixed((g.Place.BoundingBox[0]+g.Place.BoundingBox[2])/2, 4),
-				}
-				break
-			}
-		}
+		// for _, g := range tw.Include.Places {
+		// 	if g.Id == t.Geo.PlaceId {
+		// 		x.Geo.Id = g.Id
+		// 		x.Geo.Name = g.Name
+		// 		if len(g.Place.BoundingBox) > 2 {
+		// 			x.Geo.Coords = utils.Dict{
+		// 				"x": toFixed((g.Place.BoundingBox[1]+g.Place.BoundingBox[3])/2, 4),
+		// 				"y": toFixed((g.Place.BoundingBox[0]+g.Place.BoundingBox[2])/2, 4),
+		// 			}
+		// 		} else {
+		// 			x.Geo.Coords = utils.Dict{
+		// 				"x": toFixed((g.Place.BoundingBox[0]), 4),
+		// 				"y": toFixed((g.Place.BoundingBox[1]), 4),
+		// 			}
+		// 		}
+
+		// 		break
+		// 	}
+		// }
 
 		for _, id := range t.Attachments.MediaKeys {
 			for _, m := range tw.Include.Media {
