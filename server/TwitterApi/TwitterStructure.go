@@ -2,6 +2,7 @@ package TwitterApi
 
 import (
 	"git.hjkl.gq/team7/twitterman/server/utils"
+	geojson "github.com/paulmach/go.geojson"
 )
 
 type Attachments struct {
@@ -38,10 +39,16 @@ type TwitterMetaStructure struct {
 	// PreviousToken string `json:"previous_token"`
 }
 
+type GeoTwitterStruct struct {
+	Id    string          `json:"id"`
+	Name  string          `json:"full_name"`
+	Place geojson.Feature `json:"geo"`
+}
+
 type TwitterInclude struct {
 	User   []TwitterUserStructure        `json:"users"`
 	Media  []utils.TwitterMediaStructure `json:"media"`
-	Places []utils.GeoTwitterStruct      `json:"places"`
+	Places []GeoTwitterStruct            `json:"places"`
 }
 
 type Data[T any] struct {
