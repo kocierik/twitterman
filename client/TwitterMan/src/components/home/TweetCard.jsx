@@ -2,9 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const TweetCard = ({ data }) => {
-  console.log(data.geo.coordinates)
   const navigate = useNavigate()
-  console.log(data)
   return (
     <article
       id={data.id}
@@ -90,19 +88,19 @@ const TweetCard = ({ data }) => {
             {data.public_metrics?.retweet_count}
           </span>
         </div>
-        <span className='flex flex-1 justify-end mr-5'>
-          {data.geo.coordinates && <button
-            onClick={() => navigate(`/tweetMaps/${data.id}`)}
-            type="button"
-            data-aos="zoom-in"
-            data-aos-duration="500"
-            className="text-white  bg-blue-600 hover:bg-blue-700 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            maps
-          </button>
-          }
+        <span className="flex flex-1 justify-end mr-5">
+          {data.geo.coordinates && (
+            <button
+              onClick={() => navigate(`/tweetMaps/${data.id}`)}
+              type="button"
+              data-aos="zoom-in"
+              data-aos-duration="500"
+              className="text-white  bg-blue-600 hover:bg-blue-700 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              maps
+            </button>
+          )}
         </span>
-
       </div>
       {/* {data.comments.length !== 0 && (
         <hr class=" h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>

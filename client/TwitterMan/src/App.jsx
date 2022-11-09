@@ -9,7 +9,7 @@ import TweetMaps from './views/TweetMaps'
 function App() {
   return (
     <>
-      <div className="h-full">
+      <div className="h-full dark:bg-gray-900">
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
