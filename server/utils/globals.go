@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	geojson "github.com/paulmach/go.geojson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -24,10 +23,10 @@ type PublicMetrics struct {
 	QuoteCount   int64 `json:"quote_count"`
 }
 
-type GeoTwitterStruct struct {
-	Id    string          `json:"id"`
-	Name  string          `json:"full_name"`
-	Place geojson.Feature `json:"geo" bson:"place"`
+type GeoPosition struct {
+	Id     string `json:"id"`
+	Name   string `json:"full_name"`
+	Coords Dict   `json:"coordinates"`
 }
 
 type TwitterMediaStructure struct {
@@ -55,7 +54,7 @@ type Tweet struct {
 	Content       string                  `json:"content" bson:"content"`
 	PublicMetrics PublicMetrics           `json:"public_metrics"`
 	Media         []TwitterMediaStructure `json:"media" bson:"media"`
-	Geo           GeoTwitterStruct        `json:"geo" bson:"geo"`
+	Geo           GeoPosition             `json:"geo" bson:"geo"`
 }
 
 // Db user structure

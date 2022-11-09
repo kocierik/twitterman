@@ -58,7 +58,10 @@ func ConvertTweetDataToMyTweet(tw TwitterApi.Data[[]TwitterApi.TwitterTweetStruc
 			if g.Id == t.Geo.PlaceId {
 				x.Geo.Id = g.Id
 				x.Geo.Name = g.Name
-				x.Geo.Place = g.Place
+				x.Geo.Coords = utils.Dict{
+					"x": (g.Place.BoundingBox[1] + g.Place.BoundingBox[3]) / 2,
+					"y": (g.Place.BoundingBox[0] + g.Place.BoundingBox[2]) / 2,
+				}
 				break
 			}
 		}
