@@ -54,6 +54,15 @@ func ConvertTweetDataToMyTweet(tw TwitterApi.Data[[]TwitterApi.TwitterTweetStruc
 			PublicMetrics: t.PublicMetrics,
 		}
 
+		for _, m := range tw.Include.Places {
+			if m.Id == t.Geo.PlaceId {
+				x.Geo.Id = m.Id
+				x.Geo.Name = m.Name
+				x.Geo.Place = m.Place
+				break
+			}
+		}
+
 		for _, id := range t.Attachments.MediaKeys {
 			for _, m := range tw.Include.Media {
 				if id == m.Id {

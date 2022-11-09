@@ -1,10 +1,16 @@
 package TwitterApi
 
-import "git.hjkl.gq/team7/twitterman/server/utils"
+import (
+	"git.hjkl.gq/team7/twitterman/server/utils"
+)
 
 type Attachments struct {
 	PollIds   []string `json:"poll_ids"`
 	MediaKeys []string `json:"media_keys"`
+}
+
+type GeoStruct struct {
+	PlaceId string `json:"place_id"`
 }
 
 type TwitterTweetStructure struct {
@@ -14,6 +20,7 @@ type TwitterTweetStructure struct {
 	PublicMetrics utils.PublicMetrics `json:"public_metrics"`
 	Timestamp     string              `json:"created_at"`
 	Attachments   Attachments         `json:"attachments"`
+	Geo           GeoStruct           `json:"geo"`
 }
 
 type TwitterUserStructure struct {
@@ -32,8 +39,9 @@ type TwitterMetaStructure struct {
 }
 
 type TwitterInclude struct {
-	User  []TwitterUserStructure        `json:"users"`
-	Media []utils.TwitterMediaStructure `json:"media"`
+	User   []TwitterUserStructure        `json:"users"`
+	Media  []utils.TwitterMediaStructure `json:"media"`
+	Places []utils.GeoTwitterStruct      `json:"places"`
 }
 
 type Data[T any] struct {
