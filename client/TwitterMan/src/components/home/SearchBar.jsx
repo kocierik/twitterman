@@ -5,7 +5,7 @@ const SearchBar = (props) => {
   return (
     <form
       style={{ width: '100vh' }}
-      className="flex"
+      className="flex mb-5"
       onSubmit={(event) => {
         event.preventDefault()
         props.searchTweets()

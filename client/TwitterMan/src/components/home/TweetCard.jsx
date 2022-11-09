@@ -20,14 +20,14 @@ const TweetCard = ({ data }) => {
     >
       <div className="flex pb-5 items-start justify-between">
         <div className="flex">
-          <a className="inline-block mr-4" href="#">
+          <a className="inline-block mr-4 " href="#">
             <img
               className="rounded-full max-w-none w-12 h-12 gap-1"
               src={data.propic}
               alt="Avatar"
             />
           </a>
-          <div className="flex flex-col">
+          <div className="flex flex-col" style={{ flex: '1 0 auto' }}>
             <div>
               <a className="inline-block text-base font-bold" href="#">
                 {data.name}
@@ -41,7 +41,10 @@ const TweetCard = ({ data }) => {
         </div>
 
         {!isOpen && (
-          <div style={{ width: '100%', display: 'contents' }}>
+          <div
+            style={{ width: '100%', display: 'flex' }}
+            className="justify-end"
+          >
             <Setting settingInfoDesk={settingInfoDescription} />{' '}
           </div>
         )}

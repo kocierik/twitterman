@@ -5,20 +5,20 @@ const Setting = ({ settingInfoDesk }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="flex p-5 self-end">
+    <div className="flex p-5 self-end ml-5">
       <div className="ml-3 relative">
         <div>
           <button
             id="dropdownButton"
             onClick={() => setIsOpen(!isOpen)}
             data-dropdown-toggle="dropdown"
-            className="inline-block flex flex-end text-gray-500  flex-col justify-end focus:outline-none focus:ring-gray-100  rounded-lg text-sm"
+            className="inline-block flex flex-1 flex-end text-gray-500  flex-col justify-end focus:outline-none focus:ring-gray-100  rounded-lg text-sm"
             type="button"
           >
             <span className="sr-only">Open dropdown</span>
             <svg
-              style={{ transform: 'rotate(90deg)' }}
-              className="w-8 h-8"
+              // style={{ transform: 'rotate(90deg)' }}
+              className="w-6 h-6"
               aria-hidden="true"
               fill="currentColor"
               viewBox="0 0 20 20"
