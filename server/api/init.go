@@ -1,9 +1,6 @@
 package api
 
 import (
-	"net/http"
-	"time"
-
 	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
 	"git.hjkl.gq/team7/twitterman/server/utils"
 
@@ -39,13 +36,9 @@ func InitApi() {
 	}
 }
 
-func InitHttpClient() {
-	utils.Client = &http.Client{Timeout: 10 * time.Second}
-}
-
 func initApiTest() {
 	utils.Router = gin.Default()
-	InitHttpClient()
+	utils.InitHttpClient()
 	InitApi()
 }
 

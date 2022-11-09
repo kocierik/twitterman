@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	api.InitHttpClient()
+	utils.InitHttpClient()
 	database.Connect()
 	api.InitApi()
 

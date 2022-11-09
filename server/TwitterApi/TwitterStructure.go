@@ -26,7 +26,7 @@ type TwitterUserStructure struct {
 type TwitterMetaStructure struct {
 	// OldestId      string `json:"oldest_id"`
 	// NewestId      string `json:"newest_id"`
-	// ResultCount   string `json:"result_count"`
+	// ResultCount   uint64 `json:"result_count"`
 	NextToken string `json:"next_token"`
 	// PreviousToken string `json:"previous_token"`
 }
