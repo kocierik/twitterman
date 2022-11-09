@@ -17,7 +17,7 @@ func TestGetTwsByHashtag(t *testing.T) {
 
 	body := utils.Request(http.MethodGet, endpoint, q)
 
-	tmpMock := utils.UnmarshalToJson[Data[[]TwitterUserStructure]](body)
+	tmpMock := utils.UnmarshalToJson[Data[[]TwitterTweetStructure]](body)
 
 	res := GetTwsByHashtag(hashtag)
 	assert.Equal(t, tmpMock, res)
