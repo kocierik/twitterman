@@ -1,9 +1,6 @@
 package api
 
 import (
-	"net/http"
-	"time"
-
 	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
 	"git.hjkl.gq/team7/twitterman/server/utils"
 
@@ -39,13 +36,9 @@ func InitApi() {
 	}
 }
 
-func InitHttpClient() {
-	utils.Client = &http.Client{Timeout: 10 * time.Second}
-}
-
 func initApiTest() {
 	utils.Router = gin.Default()
-	InitHttpClient()
+	utils.InitHttpClient()
 	InitApi()
 }
 
@@ -59,6 +52,15 @@ func ConvertTweetDataToMyTweet(tw TwitterApi.Data[[]TwitterApi.TwitterTweetStruc
 			Content:       t.Text,
 			Timestamp:     t.Timestamp,
 			PublicMetrics: t.PublicMetrics,
+		}
+
+		for _, m := range tw.Include.Places {
+			if m.Id == t.Geo.PlaceId {
+				x.Geo.Id = m.Id
+				x.Geo.Name = m.Name
+				x.Geo.Place = m.Place
+				break
+			}
 		}
 
 		for _, id := range t.Attachments.MediaKeys {

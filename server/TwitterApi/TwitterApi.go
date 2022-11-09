@@ -12,7 +12,7 @@ import (
 var TweetsField = "created_at,author_id,public_metrics"
 
 // Source: https://developer.twitter.com/en/docs/twitter-api/expansions
-var Expansions = "author_id,attachments.media_keys" //ci interesserà anche attachments.poll_ids?,geo.place_id
+var Expansions = "author_id,attachments.media_keys,geo.place_id" //ci interesserà anche attachments.poll_ids?
 
 // Source: https://developer.twitter.com/en/docs/twitter-api/data-dictionary/object-model/user
 var UserField = "profile_image_url"
@@ -20,10 +20,20 @@ var UserField = "profile_image_url"
 // Source: https://developer.twitter.com/en/docs/twitter-api/data-dictionary/object-model/media
 var MediaField = "url,height,width,preview_image_url"
 
+// Source: https://developer.twitter.com/en/docs/twitter-api/data-dictionary/object-model/place
+var placeField = "geo"
+
 /* Utils function for getting user information */
 
 func baseQueryPlus(key string, value any) utils.Dict {
-	return utils.Dict{key: value, "tweet.fields": TweetsField, "expansions": Expansions, "media.fields": MediaField, "user.fields": UserField}
+	return utils.Dict{
+		key:            value,
+		"expansions":   Expansions,
+		"tweet.fields": TweetsField,
+		"media.fields": MediaField,
+		"user.fields":  UserField,
+		"place.fields": placeField,
+	}
 }
 
 func GetUserInfoByUsername(username string) Data[[]TwitterUserStructure] {

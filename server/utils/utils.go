@@ -3,7 +3,9 @@ package utils
 import (
 	"encoding/json"
 	"log"
+	"net/http"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -27,4 +29,8 @@ func ErrorMessage(err error, msg string) {
 func IsLoggedIn(c *gin.Context) bool {
 	// TODO: handle jwt cookie from request
 	return true
+}
+
+func InitHttpClient() {
+	Client = &http.Client{Timeout: 10 * time.Second}
 }
