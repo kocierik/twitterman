@@ -1,8 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Setting from './Setting'
 
 const TweetCard = ({ data }) => {
   const navigate = useNavigate()
+  const [isOpen, setIsOpen] = useState(false)
+
+  const settingInfoDescription = [
+    {
+      name: 'Maps',
+      setting: () => navigate(`/tweetMaps/${data.id}`),
+    },
+  ]
+
   return (
     <article
       id={data.id}
@@ -29,19 +39,12 @@ const TweetCard = ({ data }) => {
             </div>
           </div>
         </div>
-        <button className="flex items-center justify-center rounded-full p-1 transition-all hover:bg-slate-200 dark:hover:bg-slate-700 ">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z"
-              fill="currentColor"
-            />
-          </svg>
-        </button>
+
+        {!isOpen && (
+          <div style={{ width: '100%', display: 'contents' }}>
+            <Setting settingInfoDesk={settingInfoDescription} />{' '}
+          </div>
+        )}
       </div>
 
       <p className="text-sm dark:text-slate-200"> {data.content} </p>
@@ -88,26 +91,7 @@ const TweetCard = ({ data }) => {
             {data.public_metrics?.retweet_count}
           </span>
         </div>
-        <span className="flex flex-1 justify-end mr-5">
-          {data.geo.coordinates && (
-            <button
-              onClick={() => navigate(`/tweetMaps/${data.id}`)}
-              type="button"
-              data-aos="zoom-in"
-              data-aos-duration="500"
-              className="text-white  bg-blue-600 hover:bg-blue-700 focus:ring-1 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              maps
-            </button>
-          )}
-        </span>
       </div>
-      {/* {data.comments.length !== 0 && (
-        <hr class=" h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
-      )}
-      {data.comments.map((comment, i) => {
-        return <Comments comment={comment} key={i} />
-      })} */}
     </article>
   )
 }
