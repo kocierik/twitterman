@@ -2,7 +2,8 @@ package database
 
 import (
 	"testing"
-	"twitterman/server/utils"
+
+	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -35,7 +36,7 @@ func TestInsertandGetUser(t *testing.T) {
 
 	// It returns the user if the mail does exist
 	userEmail, err := GetUserByEmail("gianni@gianni")
-	utils.ErrorMessage(err)
+	utils.ErrorMessage(err, "Test GetUserByEmail function error")
 	assert.Equal(t, userEmail.Email, "gianni@gianni")
 
 	// It returns an error if the ID doesn't exist
@@ -44,6 +45,6 @@ func TestInsertandGetUser(t *testing.T) {
 
 	// It returns the user if the id exist
 	userId, err := GetUserById(userEmail.ID)
-	utils.ErrorMessage(err)
+	utils.ErrorMessage(err, "Test GetUserById function error")
 	assert.Equal(t, userEmail, userId)
 }

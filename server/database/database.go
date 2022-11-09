@@ -5,7 +5,8 @@ import (
 	"errors"
 	"log"
 	"time"
-	"twitterman/server/utils"
+
+	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -25,10 +26,10 @@ var nullUser = utils.User{ID: primitive.ObjectID{}, Email: "", Username: "", Pas
 func Connect() {
 	var err error
 	Client, err = mongo.NewClient(options.Client().ApplyURI(utils.DatabaseUrl))
-	utils.ErrorMessage(err)
+	utils.ErrorMessage(err, "database.Connect function, new client error")
 	Ctx, Cancel = context.WithTimeout(context.Background(), 10*time.Second)
 	err = Client.Connect(Ctx)
-	utils.ErrorMessage(err)
+	utils.ErrorMessage(err, "database.Connect function, connection error")
 }
 
 func Disconnect() {
@@ -41,23 +42,22 @@ func Disconnect() {
 func find(query interface{}) *mongo.Cursor {
 	col := Client.Database(Dbname).Collection(Collection)
 	cursor, err := col.Find(Ctx, query)
-	utils.ErrorMessage(err)
+	utils.ErrorMessage(err, "find function")
 	return cursor
 }
 
 func insert(query interface{}) {
 	col := Client.Database(Dbname).Collection(Collection)
 	_, err := col.InsertOne(Ctx, query)
-	utils.ErrorMessage(err)
+	utils.ErrorMessage(err, "insert function")
 }
 
 func GetUserByEmail(email string) (utils.User, error) {
 	query := bson.M{"email": email}
 	res := find(query)
 	var user []utils.User
-	if err := res.All(Ctx, &user); err != nil {
-		log.Fatal(err)
-	}
+	err := res.All(Ctx, &user)
+	utils.ErrorMessage(err, "GetUserByEmail function")
 	if len(user) == 0 {
 		return nullUser, errors.New("no user with that email")
 	} else {
@@ -69,10 +69,8 @@ func GetUserById(id primitive.ObjectID) (utils.User, error) {
 	query := bson.M{"_id": id}
 	res := find(query)
 	var user []utils.User
-	if err := res.All(Ctx, &user); err != nil {
-		log.Fatal(err)
-	}
-
+	err := res.All(Ctx, &user)
+	utils.ErrorMessage(err, "GetUserById function")
 	if len(user) == 0 {
 		return nullUser, errors.New("no user with that ID")
 	} else {
@@ -95,7 +93,6 @@ func InitDbTest() {
 	Connect()
 
 	// Clear database
-	if _, err := Client.Database(Dbname).Collection(Collection).DeleteMany(Ctx, bson.D{}); err != nil {
-		log.Fatal(err)
-	}
+	_, err := Client.Database(Dbname).Collection(Collection).DeleteMany(Ctx, bson.D{})
+	utils.ErrorMessage(err, "InitDbTest function")
 }

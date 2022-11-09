@@ -2,8 +2,9 @@ package api
 
 import (
 	"log"
-	"twitterman/server/database"
-	"twitterman/server/utils"
+
+	"git.hjkl.gq/team7/twitterman/server/database"
+	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
 )
