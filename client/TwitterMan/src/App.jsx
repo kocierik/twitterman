@@ -15,7 +15,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/tweetMaps" element={<TweetMaps />} />
+          <Route path="/tweetMaps/:id" element={<TweetMaps />} />
         </Routes>
         <Footer />
       </div>

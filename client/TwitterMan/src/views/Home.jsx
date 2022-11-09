@@ -1,19 +1,18 @@
 import React, { useState } from 'react'
-import { SERVER_URL, stringFormat } from '../utils'
 import SearchBar from '../components/home/SearchBar'
 import TweetCard from '../components/home/Tweet'
 import * as Const from '../utils'
-import { useEffect } from 'react'
 
 const Home = () => {
   const [TweetsData, setTweetsData] = useState([])
   const [textValue, setTextValue] = useState('')
-
   const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
 
-  async function searchTweets() {
+
+
+  const searchTweets = async () => {
     try {
-      const url = stringFormat(SERVER_URL + selectValue, textValue)
+      const url = Const.stringFormat(Const.SERVER_URL + selectValue, textValue)
       await fetch(url)
         .then(async (response) =>
           setTweetsData(await response.json().catch((e) => console.log(e)))
@@ -24,9 +23,9 @@ const Home = () => {
     }
   }
 
-  async function loadMore() {
+  const loadMore = async () => {
     try {
-      const url = SERVER_URL + '/tweet/loadNextPage'
+      const url = Const.SERVER_URL + Const.TWEET_LOAD
       await fetch(url)
         .then(async (response) => {
           await response.json().then((json) => {
@@ -59,8 +58,8 @@ const Home = () => {
           return <TweetCard data={tweet} key={i} />
         })}
       </div>
-      <div className="flex flex-1 justify-center">
-        {TweetsData.length && (
+      <div className="flex  justify-center">
+        {TweetsData?.length && (
           <button
             onClick={loadMore}
             type="button"
