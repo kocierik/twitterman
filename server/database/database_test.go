@@ -17,7 +17,7 @@ func TestDatabaseConnect(t *testing.T) {
 }
 
 func TestDatabaseDisconnect(t *testing.T) {
-	InitDbTest()
+	Connect()
 	Disconnect()
 	err := Client.Ping(Ctx, nil)
 	assert.NotEqual(t, err, nil)
@@ -25,10 +25,9 @@ func TestDatabaseDisconnect(t *testing.T) {
 
 func TestInsertandGetUser(t *testing.T) {
 	InitDbTest()
-	defer Disconnect()
 
 	// It insert the user
-	InsertUser("gianni@gianni", "gianni", "gianni", []utils.Tweet{})
+	InsertUser("gianni@gianni", "gianni", "gianni", []string{})
 
 	// It returns an error if the email doesn't exist
 	_, err := GetUserByEmail("no-user-with-this-email")

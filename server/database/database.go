@@ -20,10 +20,13 @@ var Dbname string = "twitterman"
 
 const Collection string = "Users"
 
-var nullUser = utils.User{ID: primitive.ObjectID{}, Email: "", Username: "", Password: "", Tweets: []utils.Tweet{}}
+var nullUser = utils.User{ID: primitive.ObjectID{}, Email: "", Username: "", Password: "", SavedTweetsId: []string{}}
 
 func Connect() {
 	var err error
+	if Client != nil && Client.Ping(Ctx, nil) == nil {
+		return
+	}
 	Client, err = mongo.NewClient(options.Client().ApplyURI(utils.DatabaseUrl))
 	utils.ErrorMessage(err, "database.Connect function, new client error")
 	Ctx, Cancel = context.WithTimeout(context.Background(), 10*time.Second)
@@ -38,6 +41,8 @@ func Disconnect() {
 }
 
 func find(query interface{}) *mongo.Cursor {
+	Connect()
+	defer Disconnect()
 	col := Client.Database(Dbname).Collection(Collection)
 	cursor, err := col.Find(Ctx, query)
 	utils.ErrorMessage(err, "find function")
@@ -45,6 +50,8 @@ func find(query interface{}) *mongo.Cursor {
 }
 
 func insert(query interface{}) {
+	Connect()
+	defer Disconnect()
 	col := Client.Database(Dbname).Collection(Collection)
 	_, err := col.InsertOne(Ctx, query)
 	utils.ErrorMessage(err, "insert function")
@@ -76,12 +83,12 @@ func GetUserById(id primitive.ObjectID) (utils.User, error) {
 	}
 }
 
-func InsertUser(email, username, password string, tweets []utils.Tweet) {
+func InsertUser(email, username, password string, tweets []string) {
 	user := utils.User{
-		Email:    email,
-		Username: username,
-		Password: password,
-		Tweets:   tweets,
+		Email:         email,
+		Username:      username,
+		Password:      password,
+		SavedTweetsId: tweets,
 	}
 	insert(user)
 }
@@ -89,6 +96,7 @@ func InsertUser(email, username, password string, tweets []utils.Tweet) {
 func InitDbTest() {
 	Dbname = "test"
 	Connect()
+	defer Disconnect()
 
 	// Clear database
 	_, err := Client.Database(Dbname).Collection(Collection).DeleteMany(Ctx, bson.D{})

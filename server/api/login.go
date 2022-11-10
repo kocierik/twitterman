@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"git.hjkl.gq/team7/twitterman/server/database"
-	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,8 +11,10 @@ import (
 func isUser(email string, password string) bool {
 	user, err := database.GetUserByEmail(email)
 	if err != nil {
+		log.Println("ciaooooooooooooooo nilllllllllllllll")
 		return false
 	}
+	log.Println("due")
 	return user.Password == password
 }
 
@@ -37,14 +38,11 @@ func registerApi(c *gin.Context) {
 		log.Fatalf("User already exist")
 	}
 
-	emptyguy := []utils.Tweet{}
+	emptyguy := []string{}
 	database.InsertUser(param.Email, param.Username, param.Password, emptyguy)
-
-	c.Header("Access-Control-Allow-Origin", "*")
 	c.JSON(200, gin.H{
 		"success": true,
 	})
-
 }
 
 func loginApi(c *gin.Context) {
@@ -53,8 +51,7 @@ func loginApi(c *gin.Context) {
 		Password string `json:"password"`
 	}
 	param := bind[RequestBody](c)
-
-	c.Header("Access-Control-Allow-Origin", "*")
+	log.Println(param.Email, param.Password)
 	// TODO: make the jwt
 	if isUser(param.Email, param.Password) {
 		c.SetCookie("AUTHORIZATION", "make.this.jwt", 3600, "", "", true, true)

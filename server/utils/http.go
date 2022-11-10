@@ -52,17 +52,14 @@ func parseBody(res *http.Response) []byte {
 }
 
 func SendOkResponse(c *gin.Context, ret any) {
-	c.Header("Access-Control-Allow-Origin", "*")
 	c.IndentedJSON(http.StatusOK, ret)
 }
 
 func sendNotFoundResponse(c *gin.Context) {
-	c.Header("Access-Control-Allow-Origin", "*")
 	c.AbortWithStatus(http.StatusNotFound)
 }
 
 func sendErrorResponse(c *gin.Context, ret string) {
-	c.Header("Access-Control-Allow-Origin", "*")
 	c.JSON(400, gin.H{
 		"success": false,
 		"message": "Something went wrong",

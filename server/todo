@@ -61,3 +61,7 @@ oggetto TwUser sul db {
     propic
     created_at and optionals
 }
+
+
+TODO:
+Fixare server che crasha se gli arrivano troppe richieste insieme.

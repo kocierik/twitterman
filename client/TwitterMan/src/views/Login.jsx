@@ -1,37 +1,36 @@
 import React, { useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import twitterman from '../assets/twitterman.png'
 const SERVER_URL = 'http://localhost:8080'
 
 const Login = () => {
+  const navigate = useNavigate();
   const username = useRef()
   const password = useRef()
 
-  const submitLogin = async () => {
-    console.log(username.current.value)
-    console.log(password.current.value)
+  const submitLogin = async (e) => {
+    e.preventDefault();
     try {
       let res = await fetch(`${SERVER_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '',
         },
-        mode: 'no-cors',
         credentials: 'include',
         body: JSON.stringify({
-          username: username.current.value,
+          email: username.current.value,
           password: password.current.value,
         }),
       })
-      console.log(res)
       res = await res.json()
       if (!res.success) {
         throw res.message
       }
-      // TODO: Handle when you are logged in in frontend
+      // TODO: handle when you are logged in on the frontend.
+      navigate("/");
     } catch (e) {
-      console.log(e)
+      alert(e);
     }
   }
 
@@ -58,7 +57,7 @@ const Login = () => {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Sign in to your account
             </h1>
-            <form className="space-y-4 md:space-y-6" method="POST">
+            <form className="space-y-4 md:space-y-6" method="POST" onSubmit={submitLogin}>
               <div>
                 <label
                   htmlFor="email"

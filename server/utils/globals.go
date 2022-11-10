@@ -23,12 +23,14 @@ type PublicMetrics struct {
 	QuoteCount   int64 `json:"quote_count"`
 }
 
+/* Frontend data structure to send tweets position*/
 type GeoPosition struct {
 	Id     string `json:"id"`
 	Name   string `json:"full_name"`
 	Coords Dict   `json:"coordinates"`
 }
 
+/* Twitter data structure to send images and videos */
 type TwitterMediaStructure struct {
 	Id      string `json:"media_key"`
 	Type    string `json:"type"`
@@ -38,16 +40,16 @@ type TwitterMediaStructure struct {
 	Preview string `json:"preview_image_url"`
 }
 
-// tweet count
+/* Twitter data structure that counts how many tweets you tweet in a day/hour */
 type TweetCount struct {
 	Start string `json:"start"`
 	End   string `json:"end"`
 	Count uint64 `json:"tweet_count"`
 }
 
-// My tweet structure
+/* Tweet structure used by our code */
 type Tweet struct {
-	Id            string                  `json:"id" bson:"id"`
+	TwitterId     string                  `json:"id" bson:"id"`
 	Name          string                  `json:"name" bson:"name"`
 	Propic        string                  `json:"propic" bson:"propic"`
 	Timestamp     string                  `json:"timestamp" bson:"timestamp"`
@@ -57,13 +59,13 @@ type Tweet struct {
 	Geo           GeoPosition             `json:"geo" bson:"geo"`
 }
 
-// Db user structure
+/* User structure */
 type User struct {
-	ID       primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
-	Email    string             `bson:"email" json:"email"`
-	Username string             `bson:"username" json:"username"`
-	Password string             `bson:"password" json:"password"`
-	Tweets   []Tweet            `bson:"tweets" json:"tweets"`
+	ID            primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Email         string             `bson:"email" json:"email"`
+	Username      string             `bson:"username" json:"username"`
+	Password      string             `bson:"password" json:"password"`
+	SavedTweetsId []string           `bson:"tweets" json:"tweets"`
 }
 
 type Dict map[string]any

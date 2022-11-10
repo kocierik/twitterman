@@ -15,8 +15,7 @@ func TestLoginApi(t *testing.T) {
 	initApiTest()
 	// Insert user to database
 	database.InitDbTest()
-	defer database.Disconnect()
-	database.InsertUser("aldo@aldo", "aldo", "aldo", []utils.Tweet{})
+	database.InsertUser("aldo@aldo", "aldo", "aldo", []string{})
 
 	// Test Correct credentials
 	type login struct {
@@ -57,7 +56,6 @@ func TestRegisterApi(t *testing.T) {
 	initApiTest()
 	// Insert user to database
 	database.InitDbTest()
-	defer database.Disconnect()
 
 	// Test Correct credentials
 	type register struct {
