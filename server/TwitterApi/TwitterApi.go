@@ -124,7 +124,7 @@ func GetTwCount(username, granularity string) Data[[]utils.TweetCount] {
 	return result
 }
 
-func GetUsrTwsById(username string) Data[[]TwitterTweetStructure] {
+func GetUsrTwsByUsername(username string) Data[[]TwitterTweetStructure] {
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
 
 	q := BaseQueryPlus("query", "from:"+username)
