@@ -26,25 +26,30 @@ func TestGetTweetById(t *testing.T) {
 	initApiTest()
 	response, res := sendTestRequest("GET", "/tweet/id/1581295611013320706", nil)
 
-	var result utils.Tweet
-	var tmpMock utils.Tweet
-	mockResponse := `{
-		"id": "1581295611013320706",
-		"name": "team7",
-		"propic": "https://pbs.twimg.com/profile_images/1581295877624369152/p6aLdDNO_normal.jpg",
-		"timestamp": "2022-10-15T14:47:07.000Z",
-		"content": "#swetesting prova primo tweet",
-		"public_metrics": {
-			"retweet_count": 0,
-			"reply_count": 0,
-			"like_count": 1,
-			"quote_count": 0
-		},
-		"comments": []
-	}`
+	mockResponse := `[
+		{
+			"id": "1581295611013320706",
+			"name": "team7",
+			"propic": "https://pbs.twimg.com/profile_images/1581295877624369152/p6aLdDNO_normal.jpg",
+			"timestamp": "2022-10-15T14:47:07.000Z",
+			"content": "#swetesting prova primo tweet",
+			"public_metrics": {
+				"retweet_count": 0,
+				"reply_count": 0,
+				"like_count": 1,
+				"quote_count": 0
+			},
+			"media": null,
+			"geo": {
+				"id": "",
+				"full_name": "",
+				"coordinates": null
+			}
+		}
+	]`
 
-	utils.UnmarshalToJson(response, &result)
-	utils.UnmarshalToJson([]byte(mockResponse), &tmpMock)
+	result := utils.UnmarshalToJson[[]utils.Tweet](response)
+	tmpMock := utils.UnmarshalToJson[[]utils.Tweet]([]byte(mockResponse))
 
 	assert.Equal(t, http.StatusOK, res.Code)
 	assert.Equal(t, tmpMock, result)
@@ -52,47 +57,44 @@ func TestGetTweetById(t *testing.T) {
 
 func TestGetTweetsByHashtag(t *testing.T) {
 	initApiTest()
-	response, res := sendTestRequest("GET", "/tweet/hashtag/bellazio", nil)
-	mockResponse := utils.Request(http.MethodGet, utils.TwitterApi+"/tweets/search/recent?query=%23bellazio&tweet.fields="+TwitterApi.TweetsField, nil)
 
-	var result []utils.Tweet
-	var tmpMock TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]
+	hashtag := "bellazio"
 
-	utils.UnmarshalToJson(response, &result)
-	utils.UnmarshalToJson(mockResponse, &tmpMock)
+	endpoint := utils.TwitterApi + "/tweets/search/recent"
+	q := TwitterApi.BaseQueryPlus("query", "#"+hashtag)
 
-	// var ret []utils.Tweet
+	mockResponse := utils.Request(http.MethodGet, endpoint, q)
 
-	// for _, elem := range tmpMock.DataTmp {
-	// 	tmp := ConvertTweetDataToMyTweet(elem, TwitterApi.GetUserInfoByUserId(elem.Author))
-	// 	ret = append(ret, tmp)
-	// }
+	response, res := sendTestRequest("GET", "/tweet/hashtag/"+hashtag, nil)
+
+	result := utils.UnmarshalToJson[[]utils.Tweet](response)
+	tmpMock := utils.UnmarshalToJson[TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]]([]byte(mockResponse))
+
+	ret := CastTweetStructToMyStruct(tmpMock)
 
 	assert.Equal(t, http.StatusOK, res.Code)
-	// assert.Equal(t, ret, result)
+	assert.Equal(t, ret, result)
 }
 
 func TestGetTweetsByKeyword(t *testing.T) {
 	initApiTest()
-	response, res := sendTestRequest("GET", "/tweet/keyword/buongiorno", nil)
-	mockResponse := utils.Request(http.MethodGet, utils.TwitterApi+"/tweets/search/recent?query=buongiorno&tweet.fields="+TwitterApi.TweetsField, nil)
 
-	var result []utils.Tweet
-	var tmpMock TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]
+	keyword := "bellazio"
 
-	utils.UnmarshalToJson(response, &result)
-	utils.UnmarshalToJson(mockResponse, &tmpMock)
+	endpoint := utils.TwitterApi + "/tweets/search/recent"
+	q := TwitterApi.BaseQueryPlus("query", keyword)
 
-	// var ret []utils.Tweet
+	mockResponse := utils.Request(http.MethodGet, endpoint, q)
 
-	// for _, elem := range tmpMock.DataTmp {
-	// 	usr := TwitterApi.GetUserInfoByUserId(elem.Author)
-	// 	tmp := ConvertTweetDataToMyTweet(elem, usr)
-	// 	ret = append(ret, tmp)
-	// }
+	response, res := sendTestRequest("GET", "/tweet/keyword/"+keyword, nil)
+
+	result := utils.UnmarshalToJson[[]utils.Tweet](response)
+	tmpMock := utils.UnmarshalToJson[TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]]([]byte(mockResponse))
+
+	ret := CastTweetStructToMyStruct(tmpMock)
 
 	assert.Equal(t, http.StatusOK, res.Code)
-	// assert.Equal(t, ret, result)
+	assert.Equal(t, ret, result)
 }
 
 func TestGetUserInfo(t *testing.T) {
@@ -101,40 +103,37 @@ func TestGetUserInfo(t *testing.T) {
 
 	response, res := sendTestRequest("GET", "/user/"+user, nil)
 
-	var result TwitterApi.TwitterUserStructure
-	var tmpMock = TwitterApi.TwitterUserStructure{
-		Id:       "44196397",
-		Propic:   "https://pbs.twimg.com/profile_images/1587290337587904512/Y4s_eu5O_normal.jpg",
-		Name:     "Elon Musk",
-		Username: "elonmusk",
+	tmpMock := TwitterApi.Data[TwitterApi.TwitterUserStructure]{
+		DataTmp: TwitterApi.TwitterUserStructure{
+			Id:       "44196397",
+			Propic:   "https://pbs.twimg.com/profile_images/1587290337587904512/Y4s_eu5O_normal.jpg",
+			Name:     "Elon Musk",
+			Username: "elonmusk",
+		},
+		Include: TwitterApi.TwitterInclude{},
+		Meta:    TwitterApi.TwitterMetaStructure{},
 	}
 
-	utils.UnmarshalToJson(response, &result)
+	result := utils.UnmarshalToJson[TwitterApi.Data[TwitterApi.TwitterUserStructure]](response)
 
 	assert.Equal(t, http.StatusOK, res.Code)
 	assert.Equal(t, tmpMock, result)
 }
 
-func TestGetUserTweetsById(t *testing.T) {
+func TestGetUserTweetsByUsername(t *testing.T) {
 	initApiTest()
 	user := "team7test"
 	response, res := sendTestRequest("GET", "/user/"+user+"/tweets", nil)
-	usrData := TwitterApi.GetUserInfoByUsername(user)
-	mockResponse := utils.Request(http.MethodGet, utils.TwitterApi+"/users/"+usrData.DataTmp[0].Id+"/tweets?tweet.fields="+TwitterApi.TweetsField, nil)
 
-	var result []utils.Tweet
-	var tmpMock TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]
+	endpoint := utils.TwitterApi + "/tweets/search/recent"
+	q := TwitterApi.BaseQueryPlus("query", "from:"+user)
+	mockResponse := utils.Request(http.MethodGet, endpoint, q)
 
-	utils.UnmarshalToJson(response, &result)
-	utils.UnmarshalToJson(mockResponse, &tmpMock)
+	result := utils.UnmarshalToJson[[]utils.Tweet](response)
+	tmpMock := utils.UnmarshalToJson[TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]]([]byte(mockResponse))
 
-	// var ret []utils.Tweet
-
-	// for _, elem := range tmpMock.DataTmp {
-	// 	tmp := ConvertTweetDataToMyTweet(elem, usrData)
-	// 	ret = append(ret, tmp)
-	// }
+	ret := CastTweetStructToMyStruct(tmpMock)
 
 	assert.Equal(t, http.StatusOK, res.Code)
-	// assert.Equal(t, ret, result)
+	assert.Equal(t, ret, result)
 }

@@ -14,10 +14,12 @@ func GetEnvVar(key string) string {
 	return os.Getenv(key)
 }
 
-func UnmarshalToJson[T any](response []byte, result *T) {
+func UnmarshalToJson[T any](response []byte) T {
+	var result T
 	// Parse []byte to go struct pointer
-	err := json.Unmarshal(response, result)
+	err := json.Unmarshal(response, &result)
 	ErrorMessage(err, "UnmarshalToJson function")
+	return result
 }
 
 func ErrorMessage(err error, msg string) {
