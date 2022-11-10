@@ -12,7 +12,7 @@ const Chart = () => {
       >
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           Sentiment analysis
-          <hr class="my-3 mx-auto h-1 bg-gray-100 rounded border-0  dark:bg-gray-700" />
+          <hr className="my-3 mx-auto h-1 bg-gray-100 rounded border-0  dark:bg-gray-700" />
         </h5>
 
         <div className="flex flex-1 justify-center">
@@ -25,7 +25,7 @@ const Chart = () => {
       >
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           BarGraph analysis
-          <hr class="my-3 mx-auto h-1 bg-gray-100 rounded border-0  dark:bg-gray-700" />
+          <hr className="my-3 mx-auto h-1 bg-gray-100 rounded border-0  dark:bg-gray-700" />
         </h5>
         <div className="flex flex-1 justify-center items-end">
           <BarGraph />
@@ -37,7 +37,7 @@ const Chart = () => {
       >
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           Word Cloud
-          <hr class="my-3 mx-auto h-1 bg-gray-100 rounded border-0  dark:bg-gray-700" />
+          <hr className="my-3 mx-auto h-1 bg-gray-100 rounded border-0  dark:bg-gray-700" />
         </h5>
         <div className="flex flex-1 justify-center p-5">
           <WordCloud />
