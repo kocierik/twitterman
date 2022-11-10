@@ -20,11 +20,11 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
 
 const PieGraph = () => {
   return (
-    <PieChart width={250} height={200}>
+    <PieChart width={250} height={300}>
       <Pie
         data={data}
         cx={120}
-        cy={100}
+        cy={150}
         innerRadius={60}
         outerRadius={80}
         fill="#8884d8"
