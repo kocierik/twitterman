@@ -37,7 +37,7 @@ func getTweetsByKeyword(c *gin.Context) {
 func getUserTweetsByUsername(c *gin.Context) {
 	username := c.Param("username")
 
-	tmp := TwitterApi.GetUsrTwsById(username)
+	tmp := TwitterApi.GetUsrTwsByUsername(username)
 	ret := CastTweetStructToMyStruct(tmp)
 
 	utils.SendOkResponse(c, ret)

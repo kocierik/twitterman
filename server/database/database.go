@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"errors"
-	"log"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
@@ -34,9 +33,8 @@ func Connect() {
 
 func Disconnect() {
 	defer Cancel()
-	if err := Client.Disconnect(Ctx); err != nil {
-		log.Fatal(err)
-	}
+	err := Client.Disconnect(Ctx)
+	utils.ErrorMessage(err, "database.Disconnect function, some error")
 }
 
 func find(query interface{}) *mongo.Cursor {
