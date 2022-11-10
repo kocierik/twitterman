@@ -5,7 +5,10 @@ import WordCloud from '../components/chart/WordCloud'
 
 const Chart = () => {
   return (
-    <div className="flex flex-col  md:flex-row gap-5 flex-1 p-5 justify-center">
+    <div
+      data-aos="zoom-in"
+      className="flex flex-col  md:flex-row gap-5 flex-1 p-5 justify-center"
+    >
       <div
         href="#"
         className="block p-6 max-w-sm  rounded-lg border border-gray-200 shadow-md  dark:bg-gray-800 dark:border-gray-700 "
