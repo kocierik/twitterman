@@ -40,7 +40,7 @@ func TestGetTwsByKeyword(t *testing.T) {
 
 func TestGetUsrTwsByUsername(t *testing.T) {
 	utils.InitHttpClient()
-	username := "elonmusk"
+	username := "team7test"
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
 
 	q := BaseQueryPlus("query", "from:"+username)
