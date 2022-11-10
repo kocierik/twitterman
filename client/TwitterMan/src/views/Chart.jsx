@@ -8,32 +8,36 @@ const Chart = () => {
     <div className="flex flex-col  md:flex-row gap-5 flex-1 p-5 justify-center">
       <div
         href="#"
-        className="block p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+        className="block p-6 max-w-sm  rounded-lg border border-gray-200 shadow-md  dark:bg-gray-800 dark:border-gray-700 "
       >
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           Sentiment analysis
+          <hr class="my-3 mx-auto h-1 bg-gray-100 rounded border-0  dark:bg-gray-700" />
         </h5>
+
         <div className="flex flex-1 justify-center">
           <PieGraph />
         </div>
       </div>
       <div
         href="#"
-        className="block p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+        className="block flex flex-col p-6 max-w-sm  rounded-lg border border-gray-200 shadow-md  dark:bg-gray-800 dark:border-gray-700 "
       >
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           BarGraph analysis
+          <hr class="my-3 mx-auto h-1 bg-gray-100 rounded border-0  dark:bg-gray-700" />
         </h5>
-        <div className="flex flex-1 justify-center">
+        <div className="flex flex-1 justify-center items-end">
           <BarGraph />
         </div>
       </div>
       <div
         href="#"
-        className="block p-6 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+        className="block p-6 max-w-sm  rounded-lg border border-gray-200 shadow-md dark:bg-gray-800   dark:border-gray-700 "
       >
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           Word Cloud
+          <hr class="my-3 mx-auto h-1 bg-gray-100 rounded border-0  dark:bg-gray-700" />
         </h5>
         <div className="flex flex-1 justify-center p-5">
           <WordCloud />
