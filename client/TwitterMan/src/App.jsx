@@ -6,6 +6,7 @@ import Login from '../src/views/Login'
 import Register from '../src/views/Register'
 import Footer from './components/Footer'
 import TweetMaps from './views/TweetMaps'
+import Chart from './views/Chart'
 function App() {
   return (
     <>
@@ -16,6 +17,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/tweetMaps/:id" element={<TweetMaps />} />
+          <Route path="/chart/" element={<Chart />} />
         </Routes>
         <Footer />
       </div>
