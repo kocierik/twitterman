@@ -10,7 +10,6 @@ require (
 require (
 	github.com/gin-contrib/cors v1.4.0
 	github.com/joho/godotenv v1.4.0
-	github.com/paulmach/go.geojson v1.4.0
 	go.mongodb.org/mongo-driver v1.10.3
 )
 
@@ -19,6 +18,7 @@ require (
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
+	github.com/paulmach/go.geojson v1.4.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rs/cors v1.8.2 // indirect
