@@ -35,7 +35,7 @@ func TestInsertandGetUser(t *testing.T) {
 
 	// It returns the user if the mail does exist
 	userEmail, err := GetUserByEmail("gianni@gianni")
-	utils.ErrorMessage(err, "Test GetUserByEmail function error")
+	utils.ErrorMessage(err, "Test GetUserByEmail function error1")
 	assert.Equal(t, userEmail.Email, "gianni@gianni")
 
 	// It returns an error if the ID doesn't exist
@@ -44,6 +44,6 @@ func TestInsertandGetUser(t *testing.T) {
 
 	// It returns the user if the id exist
 	userId, err := GetUserById(userEmail.ID)
-	utils.ErrorMessage(err, "Test GetUserById function error")
+	utils.ErrorMessage(err, "Test GetUserById function error2")
 	assert.Equal(t, userEmail, userId)
 }
