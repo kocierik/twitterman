@@ -53,7 +53,6 @@ func CORSMiddleware() gin.HandlerFunc {
 }
 
 func InitApi() {
-	// log.Println(utils.Router.Routes())
 	utils.Router.Use(CORSMiddleware())
 	for _, v := range endpointList {
 		if v.Method == "GET" {

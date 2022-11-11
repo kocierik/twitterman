@@ -11,10 +11,8 @@ import (
 func isUser(email string, password string) bool {
 	user, err := database.GetUserByEmail(email)
 	if err != nil {
-		log.Println("ciaooooooooooooooo nilllllllllllllll")
 		return false
 	}
-	log.Println("due")
 	return user.Password == password
 }
 
@@ -51,7 +49,6 @@ func loginApi(c *gin.Context) {
 		Password string `json:"password"`
 	}
 	param := bind[RequestBody](c)
-	log.Println(param.Email, param.Password)
 	// TODO: make the jwt
 	if isUser(param.Email, param.Password) {
 		c.SetCookie("AUTHORIZATION", "make.this.jwt", 3600, "", "", true, true)

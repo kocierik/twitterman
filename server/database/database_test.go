@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"testing"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
@@ -41,10 +42,10 @@ func TestInsertandGetUser(t *testing.T) {
 	// It returns an error if the ID doesn't exist
 	_, err = GetUserById(primitive.NewObjectID())
 	assert.NotEqual(t, err, nil)
-	err = nil // questa maledettissima linea fixa un errore stranissimo, non togliere
 
 	// It returns the user if the id exist
 	userId, err := GetUserById(userEmail.ID)
+	fmt.Println(userEmail.ID, err)
 	utils.ErrorMessage(err, "Test GetUserById function error2")
 	assert.Equal(t, userEmail, userId)
 }

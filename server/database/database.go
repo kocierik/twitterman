@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
@@ -25,19 +26,20 @@ var nullUser = utils.User{ID: primitive.ObjectID{}, Email: "", Username: "", Pas
 func Connect() {
 	var err error
 	if Client != nil && Client.Ping(Ctx, nil) == nil {
+		fmt.Println("Errore di connessione")
 		return
 	}
 	Client, err = mongo.NewClient(options.Client().ApplyURI(utils.DatabaseUrl))
-	utils.ErrorMessage(err, "database.Connect function, new client error")
+	utils.ErrorMessage(err, "database.Connect func, new client error")
 	Ctx, Cancel = context.WithTimeout(context.Background(), 10*time.Second)
 	err = Client.Connect(Ctx)
-	utils.ErrorMessage(err, "database.Connect function, connection error")
+	utils.ErrorMessage(err, "database.Connect func, connection error")
 }
 
 func Disconnect() {
 	defer Cancel()
 	err := Client.Disconnect(Ctx)
-	utils.ErrorMessage(err, "database.Disconnect function, some error")
+	utils.ErrorMessage(err, "database.Disconnect func, some error")
 }
 
 func find(query interface{}) *mongo.Cursor {
@@ -45,7 +47,7 @@ func find(query interface{}) *mongo.Cursor {
 	defer Disconnect()
 	col := Client.Database(Dbname).Collection(Collection)
 	cursor, err := col.Find(Ctx, query)
-	utils.ErrorMessage(err, "find function")
+	utils.ErrorMessage(err, "find func")
 	return cursor
 }
 
@@ -54,7 +56,7 @@ func insert(query interface{}) {
 	defer Disconnect()
 	col := Client.Database(Dbname).Collection(Collection)
 	_, err := col.InsertOne(Ctx, query)
-	utils.ErrorMessage(err, "insert function")
+	utils.ErrorMessage(err, "insert func")
 }
 
 func GetUserByEmail(email string) (utils.User, error) {
@@ -62,7 +64,7 @@ func GetUserByEmail(email string) (utils.User, error) {
 	res := find(query)
 	var user []utils.User
 	err := res.All(Ctx, &user)
-	utils.ErrorMessage(err, "GetUserByEmail function")
+	utils.ErrorMessage(err, "GetUserByEmail func")
 	if len(user) == 0 {
 		return nullUser, errors.New("no user with that email")
 	} else {
@@ -75,7 +77,8 @@ func GetUserById(id primitive.ObjectID) (utils.User, error) {
 	res := find(query)
 	var user []utils.User
 	err := res.All(Ctx, &user)
-	utils.ErrorMessage(err, "GetUserById function")
+	fmt.Println(user)
+	utils.ErrorMessage(err, "GetUserById func")
 	if len(user) == 0 {
 		return nullUser, errors.New("no user with that ID")
 	} else {
@@ -100,5 +103,5 @@ func InitDbTest() {
 
 	// Clear database
 	_, err := Client.Database(Dbname).Collection(Collection).DeleteMany(Ctx, bson.D{})
-	utils.ErrorMessage(err, "InitDbTest function")
+	utils.ErrorMessage(err, "InitDbTest func")
 }
