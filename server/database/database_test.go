@@ -41,6 +41,7 @@ func TestInsertandGetUser(t *testing.T) {
 	// It returns an error if the ID doesn't exist
 	_, err = GetUserById(primitive.NewObjectID())
 	assert.NotEqual(t, err, nil)
+	err = nil // questa maledettissima linea fixa un errore stranissimo, non togliere
 
 	// It returns the user if the id exist
 	userId, err := GetUserById(userEmail.ID)
