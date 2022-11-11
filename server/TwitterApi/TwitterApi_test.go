@@ -17,7 +17,7 @@ func TestGetTwsByQuery(t *testing.T) {
 
 	body := utils.Request(http.MethodGet, endpoint, q)
 
-	tmpMock := utils.UnmarshalToJson[Data[[]TwitterTweetStructure]](body)
+	tmpMock := utils.UnmarshalToJson[DataTweet](body)
 
 	res := GetTwsByQuery("#" + hashtag)
 	assert.Equal(t, tmpMock, res)

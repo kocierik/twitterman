@@ -55,11 +55,11 @@ func SendOkResponse(c *gin.Context, ret any) {
 	c.IndentedJSON(http.StatusOK, ret)
 }
 
-func sendNotFoundResponse(c *gin.Context) {
+func SendNotFoundResponse(c *gin.Context) {
 	c.AbortWithStatus(http.StatusNotFound)
 }
 
-func sendErrorResponse(c *gin.Context, ret string) {
+func SendErrorResponse(c *gin.Context) {
 	c.JSON(400, gin.H{
 		"success": false,
 		"message": "Something went wrong",

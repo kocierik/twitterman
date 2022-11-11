@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -68,7 +69,7 @@ func TestGetTweetsByHashtag(t *testing.T) {
 	response, res := sendTestRequest("GET", "/tweet/hashtag/"+hashtag, nil)
 
 	result := utils.UnmarshalToJson[[]utils.Tweet](response)
-	tmpMock := utils.UnmarshalToJson[TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]]([]byte(mockResponse))
+	tmpMock := utils.UnmarshalToJson[TwitterApi.DataTweet]([]byte(mockResponse))
 
 	ret := castTweetStructToMyTweet(tmpMock)
 
@@ -89,7 +90,7 @@ func TestGetTweetsByKeyword(t *testing.T) {
 	response, res := sendTestRequest("GET", "/tweet/keyword/"+keyword, nil)
 
 	result := utils.UnmarshalToJson[[]utils.Tweet](response)
-	tmpMock := utils.UnmarshalToJson[TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]]([]byte(mockResponse))
+	tmpMock := utils.UnmarshalToJson[TwitterApi.DataTweet]([]byte(mockResponse))
 
 	ret := castTweetStructToMyTweet(tmpMock)
 
@@ -100,21 +101,17 @@ func TestGetTweetsByKeyword(t *testing.T) {
 func TestGetUserInfo(t *testing.T) {
 	initApiTest()
 	user := "elonmusk"
-
+	fmt.Println("ciaone")
 	response, res := sendTestRequest("GET", "/user/"+user, nil)
 
-	tmpMock := TwitterApi.Data[TwitterApi.TwitterUserStructure]{
-		DataTmp: TwitterApi.TwitterUserStructure{
-			Id:       "44196397",
-			Propic:   "https://pbs.twimg.com/profile_images/1590968738358079488/IY9Gx6Ok_normal.jpg",
-			Name:     "Elon Musk",
-			Username: "elonmusk",
-		},
-		Include: TwitterApi.TwitterInclude{},
-		Meta:    TwitterApi.TwitterMetaStructure{},
+	tmpMock := TwitterApi.TwitterUserStruct{
+		Id:       "44196397",
+		Propic:   "https://pbs.twimg.com/profile_images/1590968738358079488/IY9Gx6Ok_normal.jpg",
+		Name:     "Elon Musk",
+		Username: "elonmusk",
 	}
 
-	result := utils.UnmarshalToJson[TwitterApi.Data[TwitterApi.TwitterUserStructure]](response)
+	result := utils.UnmarshalToJson[TwitterApi.TwitterUserStruct](response)
 
 	assert.Equal(t, http.StatusOK, res.Code)
 	assert.Equal(t, tmpMock, result)
@@ -130,7 +127,7 @@ func TestGetUserTweetsByUsername(t *testing.T) {
 	mockResponse := utils.Request(http.MethodGet, endpoint, q)
 
 	result := utils.UnmarshalToJson[[]utils.Tweet](response)
-	tmpMock := utils.UnmarshalToJson[TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]]([]byte(mockResponse))
+	tmpMock := utils.UnmarshalToJson[TwitterApi.DataTweet]([]byte(mockResponse))
 
 	ret := castTweetStructToMyTweet(tmpMock)
 

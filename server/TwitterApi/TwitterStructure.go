@@ -27,14 +27,15 @@ type GeoTwitterStruct struct {
 	Place geojson.Feature `json:"geo"`
 }
 
-type TwitterUserStructure struct {
+type TwitterUserStruct struct {
 	Id       string `json:"id"`
-	Propic   string `json:"profile_image_url"`
 	Name     string `json:"name"`
 	Username string `json:"username"`
+	Propic   string `json:"profile_image_url"`
 }
 
-type TwitterTweetStructure struct {
+// Include structure for tweets
+type TwitterTweetStruct struct {
 	Id            string              `json:"id"`
 	Text          string              `json:"text"`
 	Author        string              `json:"author_id"`
@@ -44,22 +45,30 @@ type TwitterTweetStructure struct {
 	Geo           geoStruct           `json:"geo,omitempty"`
 }
 
+// Include structure for tweets
 type TwitterInclude struct {
-	User   []TwitterUserStructure        `json:"users,omitempty"`
+	User   []TwitterUserStruct           `json:"users,omitempty"`
 	Media  []utils.TwitterMediaStructure `json:"media,omitempty"`
 	Places []GeoTwitterStruct            `json:"places,omitempty"`
 }
 
-type TwitterMetaStructure struct {
+// Token to load next page
+type TwitterMetaStruct struct {
+	NextToken string `json:"next_token,omitempty"`
+	// uncomment if needed
 	// OldestId      string `json:"oldest_id"`
 	// NewestId      string `json:"newest_id"`
 	// ResultCount   uint64 `json:"result_count"`
-	NextToken string `json:"next_token,omitempty"`
 	// PreviousToken string `json:"previous_token"`
 }
 
-type Data[T any] struct {
-	DataTmp T                    `json:"data"`
+// Structure returned from Twitter Api
+type DataTweet struct {
+	Data    []TwitterTweetStruct `json:"data"`
 	Include TwitterInclude       `json:"includes,omitempty"`
-	Meta    TwitterMetaStructure `json:"meta,omitempty"`
+	Meta    TwitterMetaStruct    `json:"meta,omitempty"`
+}
+
+type DataGeneric[T any] struct {
+	Data T `json:"data"`
 }

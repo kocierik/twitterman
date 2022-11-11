@@ -81,7 +81,7 @@ func toFixed(num float64, precision int) float64 {
 }
 
 // set the geo position of a tweet given a list of tweet taken from the Twitter Api
-func setPlace(tw TwitterApi.TwitterTweetStructure, new *utils.Tweet, allTwData TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]) {
+func setPlace(tw TwitterApi.TwitterTweetStruct, new *utils.Tweet, allTwData TwitterApi.DataTweet) {
 	for _, g := range allTwData.Include.Places {
 		if g.Id == tw.Geo.PlaceId {
 			new.Geo.Id = g.Id
@@ -101,7 +101,7 @@ func setPlace(tw TwitterApi.TwitterTweetStructure, new *utils.Tweet, allTwData T
 }
 
 // set the media of a tweet given a list of tweet taken from the Twitter Api
-func setMedia(tw TwitterApi.TwitterTweetStructure, new *utils.Tweet, allTwData TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]) {
+func setMedia(tw TwitterApi.TwitterTweetStruct, new *utils.Tweet, allTwData TwitterApi.DataTweet) {
 	for _, id := range tw.Attachments.MediaKeys {
 		for _, m := range allTwData.Include.Media {
 			if id == m.Id {
@@ -113,7 +113,7 @@ func setMedia(tw TwitterApi.TwitterTweetStructure, new *utils.Tweet, allTwData T
 }
 
 // set the user info of a tweet given a list of tweet taken from the Twitter Api
-func getUser(t TwitterApi.TwitterTweetStructure, new *utils.Tweet, allTwData TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]) {
+func getUser(t TwitterApi.TwitterTweetStruct, new *utils.Tweet, allTwData TwitterApi.DataTweet) {
 	for _, m := range allTwData.Include.User {
 		if m.Id == t.Author {
 			new.Name = m.Name
@@ -122,10 +122,10 @@ func getUser(t TwitterApi.TwitterTweetStructure, new *utils.Tweet, allTwData Twi
 	}
 }
 
-func castTweetStructToMyTweet(tw TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]) []utils.Tweet {
+func castTweetStructToMyTweet(tw TwitterApi.DataTweet) []utils.Tweet {
 	var ret []utils.Tweet
 
-	for _, t := range tw.DataTmp {
+	for _, t := range tw.Data {
 		var x utils.Tweet = utils.Tweet{
 			TwitterId:     t.Id,
 			Content:       t.Text,
