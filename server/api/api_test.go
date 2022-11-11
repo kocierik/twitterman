@@ -70,7 +70,7 @@ func TestGetTweetsByHashtag(t *testing.T) {
 	result := utils.UnmarshalToJson[[]utils.Tweet](response)
 	tmpMock := utils.UnmarshalToJson[TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]]([]byte(mockResponse))
 
-	ret := CastTweetStructToMyStruct(tmpMock)
+	ret := castTweetStructToMyTweet(tmpMock)
 
 	assert.Equal(t, http.StatusOK, res.Code)
 	assert.Equal(t, ret, result)
@@ -91,7 +91,7 @@ func TestGetTweetsByKeyword(t *testing.T) {
 	result := utils.UnmarshalToJson[[]utils.Tweet](response)
 	tmpMock := utils.UnmarshalToJson[TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]]([]byte(mockResponse))
 
-	ret := CastTweetStructToMyStruct(tmpMock)
+	ret := castTweetStructToMyTweet(tmpMock)
 
 	assert.Equal(t, http.StatusOK, res.Code)
 	assert.Equal(t, ret, result)
@@ -106,7 +106,7 @@ func TestGetUserInfo(t *testing.T) {
 	tmpMock := TwitterApi.Data[TwitterApi.TwitterUserStructure]{
 		DataTmp: TwitterApi.TwitterUserStructure{
 			Id:       "44196397",
-			Propic:   "https://pbs.twimg.com/profile_images/1587290337587904512/Y4s_eu5O_normal.jpg",
+			Propic:   "https://pbs.twimg.com/profile_images/1590968738358079488/IY9Gx6Ok_normal.jpg",
 			Name:     "Elon Musk",
 			Username: "elonmusk",
 		},
@@ -123,7 +123,7 @@ func TestGetUserInfo(t *testing.T) {
 func TestGetUserTweetsByUsername(t *testing.T) {
 	initApiTest()
 	user := "team7test"
-	response, res := sendTestRequest("GET", "/user/"+user+"/tweets", nil)
+	response, res := sendTestRequest("GET", "/tweet/user/"+user, nil)
 
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
 	q := TwitterApi.BaseQueryPlus("query", "from:"+user)
@@ -132,7 +132,7 @@ func TestGetUserTweetsByUsername(t *testing.T) {
 	result := utils.UnmarshalToJson[[]utils.Tweet](response)
 	tmpMock := utils.UnmarshalToJson[TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]]([]byte(mockResponse))
 
-	ret := CastTweetStructToMyStruct(tmpMock)
+	ret := castTweetStructToMyTweet(tmpMock)
 
 	assert.Equal(t, http.StatusOK, res.Code)
 	assert.Equal(t, ret, result)

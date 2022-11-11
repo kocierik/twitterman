@@ -9,7 +9,6 @@ import (
 )
 
 type RequestStruct struct {
-	Method    string
 	EndPoint  string
 	Params    Dict
 	NextToken string
@@ -38,13 +37,6 @@ type TwitterMediaStructure struct {
 	Height  uint64 `json:"height"`
 	Width   uint64 `json:"width"`
 	Preview string `json:"preview_image_url"`
-}
-
-/* Twitter data structure that counts how many tweets you tweet in a day/hour */
-type TweetCount struct {
-	Start string `json:"start"`
-	End   string `json:"end"`
-	Count uint64 `json:"tweet_count"`
 }
 
 /* Tweet structure used by our code */
@@ -81,4 +73,4 @@ var Client *http.Client
 
 var Router = gin.Default()
 
-var LastRequest = RequestStruct{}
+var LastRequest RequestStruct

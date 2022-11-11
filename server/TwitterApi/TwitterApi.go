@@ -67,15 +67,14 @@ func GetTweetInfoById(id string) Data[[]TwitterTweetStructure] {
 
 	result := utils.UnmarshalToJson[Data[[]TwitterTweetStructure]](body)
 
-	utils.LastRequest = utils.RequestStruct{Method: "GET", EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
-
 	return result
 }
 
+// Get next page of last req
 func GetNextTokenReq(req utils.RequestStruct) Data[[]TwitterTweetStructure] {
 	req.Params["next_token"] = req.NextToken
 
-	body := utils.Request(req.Method, req.EndPoint, req.Params)
+	body := utils.Request("GET", req.EndPoint, req.Params)
 
 	result := utils.UnmarshalToJson[Data[[]TwitterTweetStructure]](body)
 
@@ -84,56 +83,30 @@ func GetNextTokenReq(req utils.RequestStruct) Data[[]TwitterTweetStructure] {
 	return result
 }
 
-func GetTwsByHashtag(hashtag string) Data[[]TwitterTweetStructure] {
+// Get recent tweets by query
+func GetTwsByQuery(query string) Data[[]TwitterTweetStructure] {
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
 
-	q := BaseQueryPlus("query", "#"+hashtag)
+	q := BaseQueryPlus("query", query)
 
 	body := utils.Request("GET", endpoint, q)
 
 	result := utils.UnmarshalToJson[Data[[]TwitterTweetStructure]](body)
 
-	utils.LastRequest = utils.RequestStruct{Method: "GET", EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
+	utils.LastRequest = utils.RequestStruct{EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
 
 	return result
 }
 
-func GetTwsByKeyword(keyword string) Data[[]TwitterTweetStructure] {
-	endpoint := utils.TwitterApi + "/tweets/search/recent"
-
-	q := BaseQueryPlus("query", keyword)
-
-	body := utils.Request("GET", endpoint, q)
-
-	result := utils.UnmarshalToJson[Data[[]TwitterTweetStructure]](body)
-
-	utils.LastRequest = utils.RequestStruct{Method: "GET", EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
-
-	return result
-}
-
-func GetTwCount(username, granularity string) Data[[]utils.TweetCount] {
+// Get recent tweets count by query
+func GetTwCount(query, granularity string) Data[[]tweetCount] {
 	endpoint := utils.TwitterApi + "/tweets/counts/recent"
 
-	q := utils.Dict{"query": "from:" + username, "granularity": granularity}
+	q := utils.Dict{"query": query, "granularity": granularity}
 
 	body := utils.Request("GET", endpoint, q)
 
-	result := utils.UnmarshalToJson[Data[[]utils.TweetCount]](body)
-
-	return result
-}
-
-func GetUsrTwsByUsername(username string) Data[[]TwitterTweetStructure] {
-	endpoint := utils.TwitterApi + "/tweets/search/recent"
-
-	q := BaseQueryPlus("query", "from:"+username)
-
-	body := utils.Request("GET", endpoint, q)
-
-	result := utils.UnmarshalToJson[Data[[]TwitterTweetStructure]](body)
-
-	utils.LastRequest = utils.RequestStruct{Method: "GET", EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
+	result := utils.UnmarshalToJson[Data[[]tweetCount]](body)
 
 	return result
 }
