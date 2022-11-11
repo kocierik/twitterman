@@ -1,8 +1,6 @@
 package TwitterApi
 
 import (
-	"fmt"
-
 	"git.hjkl.gq/team7/twitterman/server/utils"
 )
 
@@ -43,7 +41,6 @@ func GetUserInfoByUsername(username string) TwitterUserStruct {
 
 	body := utils.Request("GET", endpoint, q)
 
-	fmt.Println("suca", string(body))
 	result := utils.UnmarshalToJson[DataGeneric[TwitterUserStruct]](body)
 
 	return result.Data

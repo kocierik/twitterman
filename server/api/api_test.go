@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -101,7 +100,7 @@ func TestGetTweetsByKeyword(t *testing.T) {
 func TestGetUserInfo(t *testing.T) {
 	initApiTest()
 	user := "elonmusk"
-	fmt.Println("ciaone")
+
 	response, res := sendTestRequest("GET", "/user/"+user, nil)
 
 	tmpMock := TwitterApi.TwitterUserStruct{
