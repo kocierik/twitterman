@@ -4,25 +4,20 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
-func GetEnvVar(key string) string {
-	return os.Getenv(key)
-}
-
 func UnmarshalToJson[T any](response []byte) T {
 	var result T
 	// Parse []byte to go struct pointer
 	err := json.Unmarshal(response, &result)
-	ErrorMessage(err, "UnmarshalToJson function")
+	TestError(err, "UnmarshalToJson function")
 	return result
 }
 
-func ErrorMessage(err error, msg string) {
+func TestError(err error, msg string) {
 	if err != nil {
 		log.Fatalf(msg+"= %+v", err)
 	}

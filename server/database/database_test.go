@@ -10,16 +10,16 @@ import (
 )
 
 func TestDatabaseConnect(t *testing.T) {
-	Connect()
-	defer Disconnect()
-	err := Client.Ping(Ctx, nil)
+	connect()
+	defer disconnect()
+	err := client.Ping(ctx, nil)
 	assert.Equal(t, err, nil)
 }
 
 func TestDatabaseDisconnect(t *testing.T) {
-	Connect()
-	Disconnect()
-	err := Client.Ping(Ctx, nil)
+	connect()
+	disconnect()
+	err := client.Ping(ctx, nil)
 	assert.NotEqual(t, err, nil)
 }
 
@@ -35,7 +35,7 @@ func TestInsertandGetUser(t *testing.T) {
 
 	// It returns the user if the mail does exist
 	userEmail, err := GetUserByEmail("gianni@gianni")
-	utils.ErrorMessage(err, "Test GetUserByEmail function error1")
+	utils.TestError(err, "Test GetUserByEmail function error")
 	assert.Equal(t, userEmail.Email, "gianni@gianni")
 
 	// It returns an error if the ID doesn't exist
@@ -43,8 +43,7 @@ func TestInsertandGetUser(t *testing.T) {
 	assert.NotEqual(t, err, nil)
 
 	// It returns the user if the id exist
-	// userId, err := GetUserById(userEmail.ID)
-	// fmt.Println(userEmail.ID, err)
-	// utils.ErrorMessage(err, "Test GetUserById function error2")
-	// assert.Equal(t, userEmail, userId)
+	userId, err := GetUserById(userEmail.ID)
+	utils.TestError(err, "Test GetUserById function error")
+	assert.Equal(t, userEmail, userId)
 }

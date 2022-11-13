@@ -8,18 +8,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func isUser(email string, password string) bool {
-	user, err := database.GetUserByEmail(email)
-	if err != nil {
-		return false
-	}
-	return user.Password == password
-}
-
 func bind[T any](c *gin.Context) T {
 	var param T
 	c.BindJSON(&param)
 	return param
+}
+
+func isUser(email string, password string) bool {
+	user, err := database.GetUserByEmail(email)
+	log.Print(err)
+	if err != nil {
+		return false
+	}
+	return user.Password == password
 }
 
 func registerApi(c *gin.Context) {
