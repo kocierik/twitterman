@@ -75,7 +75,7 @@ func connect() {
 	if client != nil && client.Ping(ctx, nil) == nil {
 		return
 	}
-	client, err = mongo.NewClient(options.Client().ApplyURI(utils.DatabaseUrl))
+	client, err = mongo.NewClient(options.Client().ApplyURI(utils.DbUrl))
 	utils.TestError(err, "database.Connect function, new client error")
 	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)

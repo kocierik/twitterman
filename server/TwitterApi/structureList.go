@@ -13,9 +13,9 @@ type TwitterUserStruct struct {
 }
 
 type TwitterInclude struct {
-	User   []TwitterUserStruct           `json:"users,omitempty"`
-	Media  []utils.TwitterMediaStructure `json:"media,omitempty"`
-	Places []geoTwitterStruct            `json:"places,omitempty"`
+	User   []TwitterUserStruct        `json:"users,omitempty"`
+	Media  []utils.TwitterMediaStruct `json:"media,omitempty"`
+	Places []geoTwitterStruct         `json:"places,omitempty"`
 }
 
 // Token to load next page
