@@ -17,6 +17,7 @@ var corsEnabledURLs = []string{
 }
 
 var endpointList = []endpoint{
+	// {"/tweet/:mode/:query/date/:start/:end", getTweets, "GET"},
 	{"/tweet/:mode/:query", getTweets, "GET"},
 	{"/tweet/loadNextPage", getNewPageTweets, "GET"},
 	{"/count/:mode/:query/:granularity", getTweetCount, "GET"},
@@ -25,7 +26,7 @@ var endpointList = []endpoint{
 	{"/register", registerApi, "POST"},
 }
 
-func CORSMiddleware() gin.HandlerFunc {
+func cORSMiddleware() gin.HandlerFunc {
 	corsString := ""
 	for i, val := range corsEnabledURLs {
 		corsString += val
@@ -49,7 +50,7 @@ func CORSMiddleware() gin.HandlerFunc {
 }
 
 func InitApi() {
-	utils.Router.Use(CORSMiddleware())
+	utils.Router.Use(cORSMiddleware())
 	for _, v := range endpointList {
 		if v.Method == "GET" {
 			utils.Router.GET(v.Endpoint, v.Function)

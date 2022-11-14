@@ -70,8 +70,6 @@ func parseBody(res *http.Response) []byte {
 
 func baseQuery(key, value string) utils.Dict {
 	return utils.Dict{
-		"key":       key,
-		"value":     value,
-		"basequery": true,
+		key: value,
 	}
 }
