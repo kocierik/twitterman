@@ -19,6 +19,7 @@ var EndpointList = []Endpoint{
 	{"/tweet/id/:id", getTweetById, "GET"},
 	{"/tweet/hashtag/:hashtag", getTweetsByHashtag, "GET"},
 	{"/tweet/keyword/:keyword", getTweetsByKeyword, "GET"},
+	{"/tweet/keyword/:keyword/date/:start/:end", getTweetByDate, "GET"},
 	{"/tweet/loadNextPage", getNewPageLastQuery, "GET"},
 	{"/user/:username", getUserInfo, "GET"},
 	{"/user/:username/tweets", getUserTweetsByUsername, "GET"},

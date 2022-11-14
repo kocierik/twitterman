@@ -64,7 +64,6 @@ func GetTweetInfoById(id string) Data[[]TwitterTweetStructure] {
 	q := BaseQueryPlus("ids", id)
 
 	body := utils.Request("GET", endpoint, q)
-
 	result := utils.UnmarshalToJson[Data[[]TwitterTweetStructure]](body)
 
 	utils.LastRequest = utils.RequestStruct{Method: "GET", EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
@@ -91,6 +90,19 @@ func GetTwsByHashtag(hashtag string) Data[[]TwitterTweetStructure] {
 
 	body := utils.Request("GET", endpoint, q)
 
+	result := utils.UnmarshalToJson[Data[[]TwitterTweetStructure]](body)
+
+	utils.LastRequest = utils.RequestStruct{Method: "GET", EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
+
+	return result
+}
+
+func GetTwsBtDate(keyword string, start string, end string) Data[[]TwitterTweetStructure] {
+	endpoint := utils.TwitterApi + "/tweets/search/recent"
+
+	q := utils.Dict{"query": keyword, "start_time": start, "end_time": end}
+
+	body := utils.Request("GET", endpoint, q)
 	result := utils.UnmarshalToJson[Data[[]TwitterTweetStructure]](body)
 
 	utils.LastRequest = utils.RequestStruct{Method: "GET", EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}

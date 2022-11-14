@@ -1,6 +1,8 @@
 package api
 
 import (
+	"fmt"
+
 	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
 	"git.hjkl.gq/team7/twitterman/server/utils"
 
@@ -20,6 +22,18 @@ func getTweetsByHashtag(c *gin.Context) {
 	hashtag := c.Param("hashtag")
 
 	tmp := TwitterApi.GetTwsByHashtag(hashtag)
+	ret := CastTweetStructToMyStruct(tmp)
+
+	utils.SendOkResponse(c, ret)
+}
+
+func getTweetByDate(c *gin.Context) {
+	keyword := c.Param("keyword")
+	start := c.Param("start")
+	end := c.Param("end")
+
+	tmp := TwitterApi.GetTwsBtDate(keyword, start, end)
+	fmt.Println(tmp)
 	ret := CastTweetStructToMyStruct(tmp)
 
 	utils.SendOkResponse(c, ret)
