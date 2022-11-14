@@ -1,14 +1,4 @@
-
-Priorità:
- - Retrospettiva
- - Fare prima epica
- - Tirare su il sito di produzione
-
-
-
 TODO per la prossima riunione:
-Bisogna decidere le strutture dati definitive per iniziare a salvarli sul db
-perché prima iniziamo a prenderne, meglio è.
 
 Le api quindi dovranno
   1. Cercare prima nel db le info richieste (usr,tw)
@@ -61,3 +51,7 @@ oggetto TwUser sul db {
     propic
     created_at and optionals
 }
+
+
+TODO:
+Fixare server che crasha se gli arrivano troppe richieste insieme.

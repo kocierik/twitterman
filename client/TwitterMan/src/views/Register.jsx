@@ -9,34 +9,32 @@ const Register = () => {
   const password = useRef()
   const navigate = useNavigate()
 
-  async function submitRegister() {
+  async function submitRegister(e) {
+    e.preventDefault();
     try {
-      console.log(username.current.value)
-      console.log(email.current.value)
-      console.log(password.current.value)
       let res = await fetch(`${SERVER_URL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        mode: 'no-cors',
         credentials: 'include',
         body: JSON.stringify({
           username: username.current.value,
           email: email.current.value,
           password: password.current.value,
         }),
-      }).catch((e) => console.log('errore --> ', e))
+      });
       res = await res.json()
       console.log(res)
 
       if (!res.success) {
-        throw console.log(res.message)
+        alert(res.message)
+        return;
       }
       navigate('/')
       // TODO: Handle when you are registered correctly, maybe navigate('/home')
     } catch (e) {
-      console.log(e)
+      alert(e)
     }
   }
 
@@ -63,7 +61,7 @@ const Register = () => {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Sign up with an account
             </h1>
-            <form className="space-y-4 md:space-y-6" method="POST">
+            <form className="space-y-4 md:space-y-6" method="POST" onSubmit={submitRegister}>
               <div>
                 <label
                   htmlFor="email"
