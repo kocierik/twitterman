@@ -1,7 +1,6 @@
 package TwitterApi
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -16,22 +15,21 @@ type requestStruct struct {
 	NextToken string
 }
 
-func makeTwitterRequest(method, endpoint string, param utils.Dict) []byte {
+func makeTwitterRequest(method, endpoint string, q utils.Dict) []byte {
 	req := newRequest(method, endpoint)
 	req.Header.Add("Authorization", "Bearer "+os.Getenv("BEARER_TOKEN"))
-
-	if param != nil {
-		q := utils.Dict{
-			"expansions":   expansions,
-			"tweet.fields": tweetsField,
-			"media.fields": mediaField,
-			"user.fields":  userField,
-			"place.fields": placeField,
+	if q["basequery"].(bool) {
+		q = utils.Dict{
+			q["key"].(string): q["value"].(string),
+			"expansions":      expansions,
+			"tweet.fields":    tweetsField,
+			"media.fields":    mediaField,
+			"user.fields":     userField,
+			"place.fields":    placeField,
 		}
-		for k, i := range param {
-			q[k] = i
-		}
-		// formo la query
+	}
+	// formo la query
+	if q != nil {
 		addQueryToReq(req, q)
 	}
 
@@ -49,7 +47,7 @@ func addQueryToReq(req *http.Request, params utils.Dict) {
 		q.Add(key, value.(string))
 	}
 	req.URL.RawQuery = q.Encode()
-	fmt.Println("twitter url: ", req.URL) // debug purpose, uncomment on needs
+	// fmt.Println("twitter url: ", req.URL) // debug purpose, uncomment on needs
 }
 
 func newRequest(method string, endpoint string) *http.Request {

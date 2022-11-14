@@ -1,8 +1,6 @@
 package TwitterApi
 
 import (
-	"fmt"
-
 	"git.hjkl.gq/team7/twitterman/server/utils"
 )
 
@@ -58,8 +56,6 @@ func GetTweetInfoById(id string) []utils.Tweet {
 func GetNextTokenReq() []utils.Tweet {
 	lastRequest.Params["next_token"] = lastRequest.NextToken
 
-	fmt.Println(lastRequest)
-
 	body := makeTwitterRequest("GET", lastRequest.EndPoint, lastRequest.Params)
 
 	result := utils.UnmarshalToJson[DataTweet](body)
@@ -82,8 +78,6 @@ func GetTwsByQuery(query string) []utils.Tweet {
 	result := utils.UnmarshalToJson[DataTweet](body)
 
 	lastRequest = requestStruct{EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
-
-	fmt.Println(lastRequest)
 
 	ret := castTweetStructToMyTweet(result)
 
