@@ -6,8 +6,8 @@ golang-check:
   stage: test
   image: golang:latest
   script:
-    - go vet $(go list ./...)
-    - go test -v -race -coverprofile=coverage.out $(go list ./...)
+    - go vet $(go list ./... | grep -wv utils | sort)
+    - go test -v -coverprofile=coverage.out $(go list ./... | grep -wv utils | sort)
   artifacts:
     paths:
     - coverage.out

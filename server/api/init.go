@@ -1,36 +1,57 @@
 package api
 
 import (
-	"math"
-
-	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
 	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Endpoint struct {
+type endpoint struct {
 	Endpoint string
 	Function func(*gin.Context)
 	Method   string
 }
 
-var EndpointList = []Endpoint{
-	{"/tweet/id/:id", getTweetById, "GET"},
-	{"/tweet/hashtag/:hashtag", getTweetsByHashtag, "GET"},
-	{"/tweet/keyword/:keyword", getTweetsByKeyword, "GET"},
-	{"/tweet/keyword/:keyword/date/:start/:end", getTweetByDate, "GET"},
-	{"/tweet/loadNextPage", getNewPageLastQuery, "GET"},
+var corsEnabledURLs = []string{
+	"http://localhost:5173",
+}
+
+var endpointList = []endpoint{
+	// {"/tweet/:mode/:query/date/:start/:end", getTweets, "GET"},
+	{"/tweet/:mode/:query", getTweets, "GET"},
+	{"/tweet/loadNextPage", getNewPageTweets, "GET"},
+	{"/count/:mode/:query/:granularity", getTweetCount, "GET"},
 	{"/user/:username", getUserInfo, "GET"},
-	{"/user/:username/tweets", getUserTweetsByUsername, "GET"},
-	{"/count/:username/:granularity", getTweetCountByUsername, "GET"},
 	{"/login", loginApi, "POST"},
 	{"/register", registerApi, "POST"},
 }
 
+func cORSMiddleware() gin.HandlerFunc {
+	corsString := ""
+	for i, val := range corsEnabledURLs {
+		corsString += val
+		if i != len(corsEnabledURLs)-1 {
+			corsString += ", "
+		}
+	}
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", corsString)
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
+}
+
 func InitApi() {
-	// log.Println(utils.Router.Routes())
-	for _, v := range EndpointList {
+	utils.Router.Use(cORSMiddleware())
+	for _, v := range endpointList {
 		if v.Method == "GET" {
 			utils.Router.GET(v.Endpoint, v.Function)
 		} else {
@@ -45,65 +66,20 @@ func initApiTest() {
 	InitApi()
 }
 
-func round(num float64) int {
-	return int(num + math.Copysign(0.5, num))
-}
-
-func toFixed(num float64, precision int) float64 {
-	output := math.Pow(10, float64(precision))
-	return float64(round(num*output)) / output
-}
-
-func CastTweetStructToMyStruct(tw TwitterApi.Data[[]TwitterApi.TwitterTweetStructure]) []utils.Tweet {
-
-	var ret []utils.Tweet
-
-	for _, t := range tw.DataTmp {
-		var x utils.Tweet = utils.Tweet{
-			Id:            t.Id,
-			Content:       t.Text,
-			Timestamp:     t.Timestamp,
-			PublicMetrics: t.PublicMetrics,
-		}
-
-		for _, g := range tw.Include.Places {
-			if g.Id == t.Geo.PlaceId {
-				x.Geo.Id = g.Id
-				x.Geo.Name = g.Name
-				if len(g.Place.BoundingBox) > 2 {
-					x.Geo.Coords = utils.Dict{
-						"x": toFixed((g.Place.BoundingBox[1]+g.Place.BoundingBox[3])/2, 4),
-						"y": toFixed((g.Place.BoundingBox[0]+g.Place.BoundingBox[2])/2, 4),
-					}
-				} else {
-					x.Geo.Coords = utils.Dict{
-						"x": toFixed((g.Place.BoundingBox[0]), 4),
-						"y": toFixed((g.Place.BoundingBox[1]), 4),
-					}
-				}
-
-				break
-			}
-		}
-
-		for _, id := range t.Attachments.MediaKeys {
-			for _, m := range tw.Include.Media {
-				if id == m.Id {
-					x.Media = append(x.Media, m)
-					break
-				}
-			}
-		}
-
-		for _, m := range tw.Include.User {
-			if m.Id == t.Author {
-				x.Name = m.Name
-				x.Propic = m.Propic
-			}
-		}
-
-		ret = append(ret, x)
+// Check if the granularity is valid
+func isGranularityCorrect(c *gin.Context, granularity string) bool {
+	if (granularity != "day") && (granularity != "hour") && (granularity != "minute") {
+		utils.SendOkResponse(c, utils.Dict{"message": "Invalid granularity"})
+		return false
 	}
+	return true
+}
 
-	return ret
+// Check if the mode is valid
+func isModeCorrect(c *gin.Context, mode string) bool {
+	if (mode != "id") && (mode != "hashtag") && (mode != "keyword") && (mode != "user") {
+		utils.SendOkResponse(c, utils.Dict{"message": "Invalid mode"})
+		return false
+	}
+	return true
 }
