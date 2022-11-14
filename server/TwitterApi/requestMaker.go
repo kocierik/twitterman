@@ -15,21 +15,22 @@ type requestStruct struct {
 	NextToken string
 }
 
-func makeTwitterRequest(method, endpoint string, q utils.Dict) []byte {
+func makeTwitterRequest(method, endpoint string, param utils.Dict) []byte {
 	req := newRequest(method, endpoint)
 	req.Header.Add("Authorization", "Bearer "+os.Getenv("BEARER_TOKEN"))
-	if q["basequery"].(bool) {
-		q = utils.Dict{
-			q["key"].(string): q["value"].(string),
-			"expansions":      expansions,
-			"tweet.fields":    tweetsField,
-			"media.fields":    mediaField,
-			"user.fields":     userField,
-			"place.fields":    placeField,
+
+	if param != nil {
+		q := utils.Dict{
+			"expansions":   expansions,
+			"tweet.fields": tweetsField,
+			"media.fields": mediaField,
+			"user.fields":  userField,
+			"place.fields": placeField,
 		}
-	}
-	// formo la query
-	if q != nil {
+		for k, i := range param {
+			q[k] = i
+		}
+		// formo la query
 		addQueryToReq(req, q)
 	}
 
