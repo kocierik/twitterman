@@ -21,7 +21,7 @@ var mediaField = "url,height,width,preview_image_url"
 // Source: https://developer.twitter.com/en/docs/twitter-api/data-dictionary/object-model/place
 var placeField = "geo"
 
-// the
+// Last request made by this package
 var lastRequest requestStruct
 
 /* Utils function for getting user information */
