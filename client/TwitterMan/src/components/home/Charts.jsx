@@ -1,9 +1,9 @@
 import React from 'react'
-import BarGraph from '../components/chart/BarGraph'
-import PieGraph from '../components/chart/PieGraph'
-import WordCloud from '../components/chart/WordCloud'
+import BarGraph from '../chart/BarGraph'
+import PieGraph from '../chart/PieGraph'
+import WordCloud from '../chart/WordCloud'
 
-const Chart = () => {
+const Charts = () => {
   return (
     <div
       data-aos="zoom-in"
@@ -50,4 +50,4 @@ const Chart = () => {
   )
 }
 
-export default Chart
+export default Charts
