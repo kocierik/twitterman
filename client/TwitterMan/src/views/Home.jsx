@@ -4,6 +4,7 @@ import SearchBar from '../components/home/SearchBar'
 import TweetCard from '../components/home/TweetCard'
 import * as Const from '../utils'
 
+
 const Home = () => {
   const [tweetsData, setTweetsData] = useState([])
   const [textValue, setTextValue] = useState('')
