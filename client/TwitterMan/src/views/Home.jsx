@@ -13,7 +13,7 @@ const Home = () => {
   const searchTweets = async () => {
     try {
       const url = Const.stringFormat(Const.SERVER_URL + selectValue, textValue)
-      await fetch(url)
+      await fetch(url+Const.DATE)
         .then(async (response) =>
           setTweetsData(await response.json().catch((e) => console.log(e)))
         )
