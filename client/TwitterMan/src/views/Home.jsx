@@ -73,13 +73,13 @@ const Home = () => {
           )}
         </div>
       </div>
-      {tweetsData.length && <div className="p-10 dark:bg-gray-900">
+      {tweetsData?.length && <div className="p-10 dark:bg-gray-900">
         <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
           Charts
         </div>
         <Charts tweetsData={tweetsData} />
       </div>}
-      {tweetsData.length && <div className="p-10 dark:bg-gray-900">
+      {tweetsData?.length && <div className="p-10 dark:bg-gray-900">
         <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
           TweetMaps
         </div>
