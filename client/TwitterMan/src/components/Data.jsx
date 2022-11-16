@@ -13,7 +13,6 @@ function DataRangePicker() {
         <div class="relative">
         <DatePicker
           selected={startDate}
-          selectsStart
           startDate={startDate}
           endDate={endDate}
           onChange={date => setStartDate(date)}    
@@ -28,7 +27,6 @@ function DataRangePicker() {
       <div class="relative">
         <DatePicker
           selected={endDate}
-          selectsEnd
           startDate={startDate}
           endDate={endDate}
           minDate={startDate}
