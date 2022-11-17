@@ -6,7 +6,8 @@ import WordCloud from '../chart/WordCloud'
 const Charts = ({ tweetsData }) => {
   return (
     <div
-      data-aos="zoom-in"
+      // TODO: fix zoom-in
+      // data-aos="zoom-in" 
       className="flex flex-col  md:flex-row gap-5 flex-1 p-5 justify-center"
     >
       <div
@@ -43,7 +44,7 @@ const Charts = ({ tweetsData }) => {
           <hr className="my-3 mx-auto h-1 bg-gray-100 rounded border-0  dark:bg-gray-700" />
         </h5>
         <div className="flex flex-1 justify-center p-5">
-          <WordCloud tweetsData={tweetsData} />
+          <WordCloud contentData={tweetsData.map((tweet) => tweet.content)} />
         </div>
       </div>
     </div>
