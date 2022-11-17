@@ -3,7 +3,7 @@ import BarGraph from '../chart/BarGraph'
 import PieGraph from '../chart/PieGraph'
 import WordCloud from '../chart/WordCloud'
 
-const Charts = () => {
+const Charts = ({ tweetsData }) => {
   return (
     <div
       data-aos="zoom-in"
@@ -43,11 +43,12 @@ const Charts = () => {
           <hr className="my-3 mx-auto h-1 bg-gray-100 rounded border-0  dark:bg-gray-700" />
         </h5>
         <div className="flex flex-1 justify-center p-5">
-          <WordCloud />
+          <WordCloud tweetsData={tweetsData} />
         </div>
       </div>
     </div>
   )
 }
+
 
 export default Charts
