@@ -1,6 +1,7 @@
 package TwitterApi
 
 import (
+	"git.hjkl.gq/team7/twitterman/server/database"
 	"git.hjkl.gq/team7/twitterman/server/utils"
 )
 
@@ -48,7 +49,12 @@ func GetTweetInfoById(id string) []utils.Tweet {
 	result := utils.UnmarshalToJson[DataTweet](body)
 
 	ret := castTweetStructToMyTweet(result)
+
+	// Get other results from cache
 	cache := searchCache("id", id)
+
+	// Save new results in cache
+	database.InsertTweetList(ret)
 
 	return append(ret, cache...)
 }
@@ -81,7 +87,13 @@ func GetTwsByQuery(mode, query string) []utils.Tweet {
 	lastRequest = requestStruct{EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
 
 	ret := castTweetStructToMyTweet(result)
+
+	// Get other results from cache
 	cache := searchCache(mode, query)
+
+	// Save new query in cache
+	database.InsertTweetList(ret)
+
 	return append(ret, cache...)
 }
 

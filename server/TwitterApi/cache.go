@@ -1,6 +1,8 @@
 package TwitterApi
 
 import (
+	"log"
+
 	"git.hjkl.gq/team7/twitterman/server/database"
 	"git.hjkl.gq/team7/twitterman/server/utils"
 )
@@ -14,9 +16,12 @@ func searchCache(key, value string) []utils.Tweet {
 		//retValue = database.GetTweetsByUsername(value)
 		// TODO: Per fare lo username bisogna cambiare la struttura dei tweet, quindi bello complicato
 		// TODO: Per qualche motivo twitter restituisce username e userid spostati dunque va visto
-	default:
+	case "hashtag":
+		retValue = database.GetTweetsByKeyword("#" + value)
+	case "keyword":
 		retValue = database.GetTweetsByKeyword(value)
 	}
 
+	log.Print(retValue)
 	return retValue
 }

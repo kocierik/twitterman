@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"errors"
+	"log"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
@@ -54,8 +55,10 @@ func GetUserById(id primitive.ObjectID) (utils.User, error) {
 	}
 }
 
-func InsertTweet(twt utils.Tweet) {
-	insert(twt, "Tweets")
+func InsertTweetList(twts []utils.Tweet) {
+	for _, t := range twts {
+		insert(t, "Tweets")
+	}
 }
 
 func GetTweetsByTwitterId(id string) []utils.Tweet {
@@ -67,23 +70,23 @@ func GetTweetsByTwitterId(id string) []utils.Tweet {
 	return binded
 }
 
-func GetTweetsByUsername(username string) []utils.Tweet {
+// TODO: Appena la struttura Tweet ha lo username si puo fare
+/*func GetTweetsByUsername(username string) []utils.Tweet {
 
-	// TODO: Appena la struttura Tweet ha lo username si puo fare
-	/*
-		myDict := map[string]string{
-			"username": username,
-		}
-		res := find(myDict, "Tweets")
-		binded := bindType[[]utils.Tweet](res)
-		return binded
-	*/
+	myDict := map[string]string{
+		"username": username,
+	}
+	res := find(myDict, "Tweets")
+	binded := bindType[[]utils.Tweet](res)
+	return binded
 }
+*/
 
 func GetTweetsByKeyword(keyword string) []utils.Tweet {
 	myDict := map[string]interface{}{
-		"content": map[string]string{"$regex": "/#" + keyword + "/", "$options": "i"},
+		"content": map[string]string{"$regex": "/" + keyword + "/", "$options": "i"},
 	}
+	log.Print(myDict)
 	res := find(myDict, "Tweets")
 	binded := bindType[[]utils.Tweet](res)
 	return binded
@@ -134,6 +137,7 @@ func find(query interface{}, collection string) *mongo.Cursor {
 	connect()
 	defer disconnect()
 	col := client.Database(dbname).Collection(collection)
+	log.Print(query)
 	cursor, err := col.Find(ctx, query)
 	utils.TestError(err, "find function")
 	return cursor

@@ -68,7 +68,6 @@ func castTweetStructToMyTweet(tw DataTweet) []utils.Tweet {
 			Content:       t.Text,
 			Timestamp:     t.Timestamp,
 			PublicMetrics: t.PublicMetrics,
-			Username: t.Include.
 		}
 
 		setPlace(t, &x, tw)
