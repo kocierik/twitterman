@@ -16,6 +16,7 @@
     "@heroicons/react": "^2.0.12",
     "@syncfusion/ej2-react-calendars": "^20.3.56",
     "aos": "^3.0.0-beta.6",
+    "esbuild-windows-64": "^0.15.14",
     "flowbite-datepicker": "^1.2.2",
     "pigeon-maps": "^0.21.3",
     "react": "^18.2.0",
