@@ -18,13 +18,13 @@ var ctx context.Context
 var cancel context.CancelFunc
 var dbname string = "twitterman"
 
-const Collection string = "Users"
+var collectionList [2]string = [2]string{"Users", "Tweets"}
 
 var nullUser = utils.User{ID: primitive.ObjectID{}, Email: "", Username: "", Password: "", SavedTweetsId: []string{}}
 
 func GetUserByEmail(email string) (utils.User, error) {
 	query := bson.M{"email": email}
-	res := find(query)
+	res := find(query, "Users")
 	//log.Print(res)
 	var user []utils.User
 	err := res.All(ctx, &user)
@@ -36,17 +36,57 @@ func GetUserByEmail(email string) (utils.User, error) {
 	}
 }
 
+func bindType[T any](res *mongo.Cursor) T {
+	var currentFoundValue T
+	err := res.All(ctx, &currentFoundValue)
+	utils.TestError(err, "bind type after find error: ")
+	return currentFoundValue
+}
+
 func GetUserById(id primitive.ObjectID) (utils.User, error) {
 	query := bson.M{"_id": id}
-	res := find(query)
-	var user []utils.User
-	err := res.All(ctx, &user)
-	utils.TestError(err, "GetUserById function")
-	if len(user) == 0 {
+	res := find(query, "Users")
+	binded := bindType[[]utils.User](res)
+	if len(binded) == 0 {
 		return nullUser, errors.New("no user with that ID")
 	} else {
-		return user[0], nil
+		return binded[0], nil
 	}
+}
+
+func InsertTweet(twt utils.Tweet) {
+	insert(twt, "Tweets")
+}
+
+func GetTweetsByTwitterId(id string) []utils.Tweet {
+	myDict := map[string]string{
+		"id": id,
+	}
+	res := find(myDict, "Tweets")
+	binded := bindType[[]utils.Tweet](res)
+	return binded
+}
+
+func GetTweetsByUsername(username string) []utils.Tweet {
+
+	// TODO: Appena la struttura Tweet ha lo username si puo fare
+	/*
+		myDict := map[string]string{
+			"username": username,
+		}
+		res := find(myDict, "Tweets")
+		binded := bindType[[]utils.Tweet](res)
+		return binded
+	*/
+}
+
+func GetTweetsByKeyword(keyword string) []utils.Tweet {
+	myDict := map[string]interface{}{
+		"content": map[string]string{"$regex": "/#" + keyword + "/", "$options": "i"},
+	}
+	res := find(myDict, "Tweets")
+	binded := bindType[[]utils.Tweet](res)
+	return binded
 }
 
 func InsertUser(email, username, password string, tweets []string) {
@@ -56,7 +96,7 @@ func InsertUser(email, username, password string, tweets []string) {
 		Password:      password,
 		SavedTweetsId: tweets,
 	}
-	insert(user)
+	insert(user, "Users")
 }
 
 func InitDbTest() {
@@ -66,8 +106,10 @@ func InitDbTest() {
 	defer disconnect()
 
 	// Clear database
-	_, err := client.Database(dbname).Collection(Collection).DeleteMany(ctx, bson.D{})
-	utils.TestError(err, "InitDbTest function")
+	for _, col := range collectionList {
+		_, err := client.Database(dbname).Collection(col).DeleteMany(ctx, bson.D{})
+		utils.TestError(err, "InitDbTest clear function error on collection:"+col)
+	}
 }
 
 func connect() {
@@ -88,19 +130,19 @@ func disconnect() {
 	utils.TestError(err, "database.Disconnect function, some error")
 }
 
-func find(query interface{}) *mongo.Cursor {
+func find(query interface{}, collection string) *mongo.Cursor {
 	connect()
 	defer disconnect()
-	col := client.Database(dbname).Collection(Collection)
+	col := client.Database(dbname).Collection(collection)
 	cursor, err := col.Find(ctx, query)
 	utils.TestError(err, "find function")
 	return cursor
 }
 
-func insert(query interface{}) {
+func insert(query interface{}, collection string) {
 	connect()
 	defer disconnect()
-	col := client.Database(dbname).Collection(Collection)
+	col := client.Database(dbname).Collection(collection)
 	_, err := col.InsertOne(ctx, query)
 	utils.TestError(err, "insert function")
 }

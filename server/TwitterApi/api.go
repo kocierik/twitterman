@@ -48,8 +48,9 @@ func GetTweetInfoById(id string) []utils.Tweet {
 	result := utils.UnmarshalToJson[DataTweet](body)
 
 	ret := castTweetStructToMyTweet(result)
+	cache := searchCache("id", id)
 
-	return ret
+	return append(ret, cache...)
 }
 
 // Get next page of last req
@@ -68,7 +69,7 @@ func GetNextTokenReq() []utils.Tweet {
 }
 
 // Get recent tweets by query
-func GetTwsByQuery(query string) []utils.Tweet {
+func GetTwsByQuery(mode, query string) []utils.Tweet {
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
 
 	q := baseQuery("query", query)
@@ -80,8 +81,8 @@ func GetTwsByQuery(query string) []utils.Tweet {
 	lastRequest = requestStruct{EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
 
 	ret := castTweetStructToMyTweet(result)
-
-	return ret
+	cache := searchCache(mode, query)
+	return append(ret, cache...)
 }
 
 // Get recent tweets count by query

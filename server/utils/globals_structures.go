@@ -6,11 +6,12 @@ import (
 
 /* Tweet structure used by our code */
 type Tweet struct {
-	TwitterId     string               `json:"id" bson:"id"`
-	Name          string               `json:"name" bson:"name"`
-	Propic        string               `json:"propic" bson:"propic"`
-	Timestamp     string               `json:"timestamp" bson:"timestamp"`
-	Content       string               `json:"content" bson:"content"`
+	TwitterId string `json:"id" bson:"id"`
+	Name      string `json:"name" bson:"name"`
+	Propic    string `json:"propic" bson:"propic"`
+	Timestamp string `json:"timestamp" bson:"timestamp"`
+	Content   string `json:"content" bson:"content"`
+	//	Username      string               `json:"username" bson:"username"`
 	PublicMetrics PublicMetrics        `json:"public_metrics"`
 	Media         []TwitterMediaStruct `json:"media" bson:"media"`
 	Geo           GeoPosition          `json:"geo" bson:"geo"`
