@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ReactWordcloud from 'react-wordcloud'
 import 'tippy.js/dist/tippy.css'
 import 'tippy.js/animations/scale.css'
 
 const WordCloud = ({ contentData }) => {
+  useEffect(() => {
+    // console.log(contentData)S
+  }, [])
+
   const callbacks = {
     getWordTooltip: (word) =>
       `The word "${word.text}" appears ${word.value} times.`,
@@ -27,7 +31,9 @@ function getOccurencesFromTweets(contentData) {
 
   let words = []  // { [text: 'told', value: 64], ... }
   words = Array.from(wordsOccurences, ([word, value]) => {
-    return { text: word, value: value };
+      if(value < 2)
+        return {};
+      return { text: word, value: value };
   });
 
   return words
@@ -35,7 +41,7 @@ function getOccurencesFromTweets(contentData) {
 
 function getFormattedWordsList(content) {
   // Formattazione della lista di parole tramite regex
-  return content.replace(/\n|\r|(\. )|,|(' )|(: )|\?|\!/g, ' ').split(' ').filter((word) => word !== '')
+  return content.replace(/\n|\r|(\. )|,|(' )|(: )|\?|\!/g, ' ').split(' ').filter((word) => word !== '' && word.length > 3)
 }
 
 export default WordCloud
