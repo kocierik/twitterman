@@ -1,9 +1,9 @@
 # import main Flask class and request object
 from flask import Flask, request
-from feel_it import SentimentClassifier
+from feel_it import EmotionClassifier
 
 # create the Flask app
-sent_class = SentimentClassifier()
+emotion_classifier = EmotionClassifier()
 app = Flask(__name__)
 
 @app.route('/sentiment', methods=['GET'])
@@ -14,7 +14,7 @@ def get_sentiment():
     text = []
     for d in data:
       text.append(d["text"])
-    result = sent_class.predict(text)
+    result = emotion_classifier.predict(text)
     return result
   else:
     return 'Content-Type not supported!'
