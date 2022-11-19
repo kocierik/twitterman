@@ -55,6 +55,3 @@ oggetto TwUser sul db {
 
 TODO:
 Fixare server che crasha se gli arrivano troppe richieste insieme.
-- [ ] Test tweet insert and find in database
-- [ ] Test cache.go
-- [ ] Rimuovi doppioni tra cache e risultati

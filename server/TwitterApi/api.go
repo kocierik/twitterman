@@ -3,6 +3,7 @@ package TwitterApi
 import (
 	"git.hjkl.gq/team7/twitterman/server/database"
 	"git.hjkl.gq/team7/twitterman/server/utils"
+	"golang.org/x/exp/slices"
 )
 
 // FIELD SOURCE: https://developer.twitter.com/en/docs/twitter-api/fields
@@ -56,7 +57,13 @@ func GetTweetInfoById(id string) []utils.Tweet {
 	// Save new results in cache
 	database.InsertTweetList(ret)
 
-	return append(ret, cache...)
+	// remove duplicates from result
+	for _, k := range cache {
+		if slices.IndexFunc(ret, func(v utils.Tweet) bool { return (v.TwitterId == k.TwitterId) }) == -1 {
+			ret = append(ret, k)
+		}
+	}
+	return ret
 }
 
 // Get next page of last req
@@ -70,6 +77,9 @@ func GetNextTokenReq() []utils.Tweet {
 	lastRequest.NextToken = result.Meta.NextToken
 
 	ret := castTweetStructToMyTweet(result)
+
+	// Save new query in cache
+	database.InsertTweetList(ret)
 
 	return ret
 }
@@ -94,7 +104,13 @@ func GetTwsByQuery(mode, query string) []utils.Tweet {
 	// Save new query in cache
 	database.InsertTweetList(ret)
 
-	return append(ret, cache...)
+	for _, k := range cache {
+		if slices.IndexFunc(ret, func(v utils.Tweet) bool { return (v.TwitterId == k.TwitterId) }) == -1 {
+			ret = append(ret, k)
+		}
+	}
+
+	return ret
 }
 
 // Get recent tweets count by query

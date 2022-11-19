@@ -55,6 +55,7 @@ func getUser(t twitterTweetStruct, new *utils.Tweet, allTwData DataTweet) {
 		if m.Id == t.Author {
 			new.Name = m.Name
 			new.Propic = m.Propic
+			new.Username = m.Username
 		}
 	}
 }

@@ -62,29 +62,27 @@ func InsertTweetList(twts []utils.Tweet) {
 }
 
 func GetTweetsByTwitterId(id string) []utils.Tweet {
-	myDict := map[string]string{
-		"id": id,
+	myDict := bson.M{
+		"id": primitive.Regex{Pattern: "^" + id + "$", Options: "i"},
 	}
 	res := find(myDict, "Tweets")
 	binded := bindType[[]utils.Tweet](res)
 	return binded
 }
 
-// TODO: Appena la struttura Tweet ha lo username si puo fare
-/*func GetTweetsByUsername(username string) []utils.Tweet {
-
-	myDict := map[string]string{
-		"username": username,
+func GetTweetsByUsername(username string) []utils.Tweet {
+	myDict := bson.M{
+		"username": primitive.Regex{Pattern: "^" + username + "$", Options: "i"},
 	}
 	res := find(myDict, "Tweets")
+	log.Println(res)
 	binded := bindType[[]utils.Tweet](res)
 	return binded
 }
-*/
 
 func GetTweetsByKeyword(keyword string) []utils.Tweet {
-	myDict := map[string]interface{}{
-		"content": map[string]string{"$regex": "/" + keyword + "/", "$options": "i"},
+	myDict := bson.M{
+		"content": primitive.Regex{Pattern: keyword, Options: "i"},
 	}
 	log.Print(myDict)
 	res := find(myDict, "Tweets")
@@ -136,17 +134,31 @@ func disconnect() {
 func find(query interface{}, collection string) *mongo.Cursor {
 	connect()
 	defer disconnect()
+	log.Println(dbname, collection, query)
 	col := client.Database(dbname).Collection(collection)
-	log.Print(query)
 	cursor, err := col.Find(ctx, query)
 	utils.TestError(err, "find function")
 	return cursor
 }
 
-func insert(query interface{}, collection string) {
+type queryTypeInterface interface {
+	GetKey() string
+}
+
+func insert[T queryTypeInterface](query T, collection string) {
+	var updateQuery bson.M
+	switch collection {
+	case "Tweets":
+		updateQuery = bson.M{"id": query.GetKey()}
+	case "Users":
+		updateQuery = bson.M{"email": query.GetKey()}
+	default:
+		updateQuery = bson.M{}
+	}
+	mytrue := true
 	connect()
 	defer disconnect()
 	col := client.Database(dbname).Collection(collection)
-	_, err := col.InsertOne(ctx, query)
+	_, err := col.UpdateOne(ctx, updateQuery, bson.M{"$set": query}, &options.UpdateOptions{Upsert: &mytrue})
 	utils.TestError(err, "insert function")
 }
