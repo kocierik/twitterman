@@ -1,0 +1,13 @@
+GET https://api.twitter.com/2/tweets/search/recent HTTP/1.1
+
+Authorization: Bearer AAAAAAAAAAAAAAAAAAAAAGY9iQEAAAAA%2B9F%2FomFSQBTgpxO0M2q9rfbfhBs%3DumBmJlZ7yoZIj96NHUTgjLnTDs0t1y0Cuxr9fcQlvmAT27SJcR
+Host: api.twitter.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+DNT: 1
+Connection: keep-alive
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-site

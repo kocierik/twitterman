@@ -1,7 +1,9 @@
 package TwitterApi
 
 import (
+	"git.hjkl.gq/team7/twitterman/server/database"
 	"git.hjkl.gq/team7/twitterman/server/utils"
+	"golang.org/x/exp/slices"
 )
 
 // FIELD SOURCE: https://developer.twitter.com/en/docs/twitter-api/fields
@@ -49,6 +51,18 @@ func GetTweetInfoById(id string) []utils.Tweet {
 
 	ret := castTweetStructToMyTweet(result)
 
+	// Get other results from cache
+	cache := searchCache("id", id)
+
+	// Save new results in cache
+	database.InsertTweetList(ret)
+
+	// remove duplicates from result
+	for _, k := range cache {
+		if slices.IndexFunc(ret, func(v utils.Tweet) bool { return (v.TwitterId == k.TwitterId) }) == -1 {
+			ret = append(ret, k)
+		}
+	}
 	return ret
 }
 
@@ -64,11 +78,14 @@ func GetNextTokenReq() []utils.Tweet {
 
 	ret := castTweetStructToMyTweet(result)
 
+	// Save new query in cache
+	database.InsertTweetList(ret)
+
 	return ret
 }
 
 // Get recent tweets by query
-func GetTwsByQuery(query string) []utils.Tweet {
+func GetTwsByQuery(mode, query string) []utils.Tweet {
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
 
 	q := baseQuery("query", query)
@@ -80,6 +97,18 @@ func GetTwsByQuery(query string) []utils.Tweet {
 	lastRequest = requestStruct{EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
 
 	ret := castTweetStructToMyTweet(result)
+
+	// Get other results from cache
+	cache := searchCache(mode, query)
+
+	// Save new query in cache
+	database.InsertTweetList(ret)
+
+	for _, k := range cache {
+		if slices.IndexFunc(ret, func(v utils.Tweet) bool { return (v.TwitterId == k.TwitterId) }) == -1 {
+			ret = append(ret, k)
+		}
+	}
 
 	return ret
 }
