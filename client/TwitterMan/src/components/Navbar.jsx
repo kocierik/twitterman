@@ -6,7 +6,7 @@ import { Link, useLocation } from 'react-router-dom'
 import twitterman from '../assets/twitterman.png'
 const navigation = [
   { name: 'Dashboard', href: '#', current: true, link: '/' },
-  // { name: 'TweetMaps', href: '#', current: false, link: '/tweetMaps' },
+  { name: 'Charts', href: '#', current: false, link: '/chart' },
 ]
 
 function classNames(...classes) {

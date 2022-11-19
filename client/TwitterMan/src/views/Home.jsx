@@ -2,15 +2,14 @@ import React, { useState } from 'react'
 import Maps from '../components/home/Maps'
 import SearchBar from '../components/home/SearchBar'
 import TweetCard from '../components/home/TweetCard'
+import Charts from '../components/home/Charts'
 import * as Const from '../utils'
 
 
 const Home = () => {
   const [tweetsData, setTweetsData] = useState([])
-  const [textValue, setTextValue] = useState('')
-  const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
 
-  const searchTweets = async () => {
+  const searchTweets = async (selectValue, textValue) => {
     try {
       const url = Const.stringFormat(Const.SERVER_URL + selectValue, textValue)
       await fetch(url+Const.DATE)
@@ -46,13 +45,7 @@ const Home = () => {
         className="App min-h-full px-5 dark:bg-gray-900 pt-16 pb-16  flex flex-col	gap-5"
       >
         <div className="flex justify-center">
-          <SearchBar
-            selectValue={selectValue}
-            setSelectValue={setSelectValue}
-            textValue={textValue}
-            setTextValue={setTextValue}
-            searchTweets={searchTweets}
-          />
+          <SearchBar searchTweets={searchTweets}/>
         </div>
         <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
           {tweetsData?.map((tweet, i) => {
@@ -73,12 +66,18 @@ const Home = () => {
           )}
         </div>
       </div>
-      <div className="p-10 dark:bg-gray-900">
+      {tweetsData?.length && <div className="p-10 dark:bg-gray-900">
+        <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
+          Charts
+        </div>
+        <Charts tweetsData={tweetsData} />
+      </div>}
+      {tweetsData?.length && <div className="p-10 dark:bg-gray-900">
         <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
           TweetMaps
         </div>
-        {tweetsData && <Maps tweetsData={tweetsData} />}
-      </div>
+        <Maps tweetsData={tweetsData} />
+      </div>}
     </>
   )
 }
