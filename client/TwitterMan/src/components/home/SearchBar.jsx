@@ -1,19 +1,22 @@
-import React from 'react'
+import React, { useState } from 'react'
 import * as Const from '../../utils'
 
-const SearchBar = (props) => {
+const SearchBar = ({ searchTweets }) => {
+  const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
+  const [textValue, setTextValue] = useState('')
+
   return (
     <form
       style={{ width: '100vh' }}
       className="flex mb-5"
       onSubmit={(event) => {
         event.preventDefault()
-        props.searchTweets()
+        searchTweets(selectValue, textValue)
       }}
     >
       <select
         onChange={(choice) => {
-          props.setSelectValue(choice.target.value)
+          setSelectValue(choice.target.value)
         }}
         className="rounded-xl	mr-2 flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200  focus:outline-none  dark:bg-gray-700 dark:hover:bg-gray-600  dark:text-white dark:border-gray-600"
       >
@@ -28,7 +31,7 @@ const SearchBar = (props) => {
           type="search"
           id="search-dropdown"
           onChange={(e) => {
-            props.setTextValue(e.target.value)
+            setTextValue(e.target.value)
           }}
           className="block p-2.5 rounded-xl	indent-3	 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
           placeholder="Search on twitterMan..."
