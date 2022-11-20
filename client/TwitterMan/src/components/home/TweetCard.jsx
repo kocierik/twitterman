@@ -20,13 +20,16 @@ const TweetCard = ({ data }) => {
       case "positive":
         setSentimetIcon("😀");
         break;
+      case "neutral":
+        setSentimetIcon("😐");
+        break;
       case "negative":
         setSentimetIcon("☹️");
         break;
     }
   }, [data])
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log(data);
   }, [data])
 

@@ -20,10 +20,14 @@ def get_sentiment():
       if lang_code == "it":
         res = it_analyzer.predict([d["text"]])
         res_list.append(res[0])
-      if lang_code == "en":
+      elif lang_code == "en":
         res = en_analyzer.polarity_scores(d["text"])
-        res = "positive" if res["compound"] > 0 else "negative"
+        res = "positive" if res["compound"] > 0.5 else ("negative" if res["compound"] < -0.5 else "neutral")
         res_list.append(res)
+      else:
+        # print("error, lang not detected:", lang_code)
+        res_list.append("")
+
     
     return res_list
   else:
