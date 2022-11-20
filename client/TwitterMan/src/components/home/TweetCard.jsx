@@ -17,17 +17,11 @@ const TweetCard = ({ data }) => {
 
   useEffect(() => {
     switch (data.sentiment) {
-      case "joy":
+      case "positive":
         setSentimetIcon("😀");
         break;
-      case "fear":
-        setSentimetIcon("😱");
-        break;
-      case "sadness":
-        setSentimetIcon("😭");
-        break;
-      case "anger":
-        setSentimetIcon("🤬");
+      case "negative":
+        setSentimetIcon("☹️");
         break;
     }
   }, [data])
