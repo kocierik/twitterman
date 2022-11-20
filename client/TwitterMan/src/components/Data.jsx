@@ -3,19 +3,15 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import './format-style.css'
 
-function DataRangePicker() {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+function DataRangePicker(props) {
 
   return (
     <div id="dateRangePickerId">
       <div date-rangepicker class="flex items-center">
         <div class="relative">
         <DatePicker
-          selected={startDate}
-          startDate={startDate}
-          endDate={endDate}
-          onChange={date => setStartDate(date)}    
+          selected={props.startDate}
+          onChange={date => props.setStartDate(date)}    
           className="custom-input"
         />
         <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -26,11 +22,8 @@ function DataRangePicker() {
       <span class="mx-4 text-gray-500">to</span>
       <div class="relative">
         <DatePicker
-          selected={endDate}
-          startDate={startDate}
-          endDate={endDate}
-          minDate={startDate}
-          onChange={date => setEndDate(date)}
+          selected={props.endDate}
+          onChange={date => props.setEndDate(date)}
           className="custom-input"
         />
         <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">

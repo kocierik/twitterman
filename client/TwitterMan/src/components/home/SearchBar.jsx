@@ -8,9 +8,18 @@ const SearchBar = ({ searchTweets }) => {
   const handleOnChange = () => {
     setIsChecked(!isChecked);
   };
+  
   const [isChecked, setIsChecked] = useState(false);
+  
   const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
   const [textValue, setTextValue] = useState('')
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  const formattedData = () => {
+    // startDate(Date) => string (2022-11-14T00:00:00.000Z)
+    return `/date/${startDate.toISOString()}/${endDate.toISOString()}`
+  }
 
   return (
     <form
@@ -18,7 +27,7 @@ const SearchBar = ({ searchTweets }) => {
       className="flex mb-5"
       onSubmit={(event) => {
         event.preventDefault()
-        searchTweets(selectValue, textValue)
+        searchTweets(selectValue, textValue, formattedData())
       }}
     >
       <div id="elements">
@@ -61,7 +70,12 @@ const SearchBar = ({ searchTweets }) => {
 
         <If condition={isChecked}>
           <Then>
-            <Data /> 
+            <Data
+              startDate={startDate}
+              setStartDate={setStartDate}
+              endDate={endDate}
+              setEndDate={setEndDate}
+            /> 
             <button
             type="submit"
             className="hover:scale-105 duration-300 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2"

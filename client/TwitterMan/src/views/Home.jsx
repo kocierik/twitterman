@@ -9,10 +9,11 @@ import * as Const from '../utils'
 const Home = () => {
   const [tweetsData, setTweetsData] = useState([])
 
-  const searchTweets = async (selectValue, textValue) => {
+  const searchTweets = async (selectValue, textValue, formattedDates) => {
     try {
-      const url = Const.stringFormat(Const.SERVER_URL + selectValue, textValue)
-      await fetch(url+Const.DATE)
+      const url = Const.stringFormat(Const.SERVER_URL + selectValue, textValue + formattedDates)
+      console.log(url)
+      await fetch(url)
         .then(async (response) =>
           setTweetsData(await response.json().catch((e) => console.log(e)))
         )
