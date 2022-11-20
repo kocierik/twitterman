@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Setting from './Setting'
 
 const TweetCard = ({ data }) => {
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
+  const [sentimentIcon, setSentimetIcon] = useState("")
 
   const settingInfoDescription = [
     {
@@ -12,6 +14,21 @@ const TweetCard = ({ data }) => {
       setting: () => navigate(`/tweetMaps/${data.id}`),
     },
   ]
+
+  useEffect(() => {
+    switch (data.sentiment) {
+      case "positive":
+        setSentimetIcon("😀");
+        break;
+      case "negative":
+        setSentimetIcon("☹️");
+        break;
+    }
+  }, [data])
+
+  useEffect(()=>{
+    console.log(data);
+  }, [data])
 
   return (
     <article
@@ -92,6 +109,14 @@ const TweetCard = ({ data }) => {
           </span>
           <span className="font-bold">
             {data.public_metrics?.retweet_count}
+          </span>
+        </div>
+        <div className="inline-flex items-center">
+          <span className="m-2">
+            {sentimentIcon}
+          </span>
+          <span className="font-bold">
+            {data.sentiment}
           </span>
         </div>
       </div>
