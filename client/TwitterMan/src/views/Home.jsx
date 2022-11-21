@@ -42,7 +42,7 @@ const Home = () => {
       const url = Const.stringFormat(Const.SERVER_URL + selectValue, textValue)
       let res = await fetch(url)
       res = await res.json()
-      setTweetsData(await setSentiment(res));
+      setTweetsData(res);
     } catch (e) {
       console.log(e)
     }
@@ -54,7 +54,7 @@ const Home = () => {
       let res = await fetch(url);
       res = await res.json();
       let sentimentRes = await setSentiment(res);
-      setTweetsData((last) => [...last, ...sentimentRes])
+      setTweetsData((last) => [...last, ...res])
     } catch (e) {
       console.log(e)
     }
