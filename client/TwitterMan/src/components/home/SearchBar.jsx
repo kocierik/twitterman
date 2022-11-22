@@ -3,6 +3,7 @@ import * as Const from '../../utils'
 import Data from "../Data"
 import '../format-style.css'
 import { If, Then, Else, When, Unless, Switch, Case, Default } from 'react-if';
+import { useEffect } from 'react';
 
 const SearchBar = ({ searchTweets }) => {
   const handleOnChange = () => {
@@ -16,9 +17,16 @@ const SearchBar = ({ searchTweets }) => {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 
+  const compareDates = (a, b) => {
+    return a.getDate() == b.getDate() && a.getFullYear() == b.getFullYear() && a.getMonth() == b.getMonth();
+  }
   const formattedData = () => {
-    // startDate(Date) => string (2022-11-14T00:00:00.000Z)
-    return `/date/${startDate.toISOString()}/${endDate.toISOString()}`
+    let startString = `${startDate.getFullYear()}-${startDate.getMonth()+1}-${startDate.getDate()}T00:00:00.000Z`;
+    
+    let today = new Date();
+    console.log(compareDates(today, endDate));
+    let endString = (!compareDates(today, endDate) ?`${endDate.getFullYear()}-${endDate.getMonth()+1}-${endDate.getDate()}T23:59:59.000Z`:endDate.toISOString())
+    return `/date/${startString}/${endString}`
   }
 
   return (
@@ -44,16 +52,16 @@ const SearchBar = ({ searchTweets }) => {
           {/* <option value={TWEET_ID}>keyword</option> */}{' '}
           {/* TODO: ADD MORE OPTIONS */}
         </select>
-        <div class="flex justify-center">
+        <div className="flex justify-center">
           <input 
             id="checkbox" 
             type="checkbox" 
             value="" 
             checked={isChecked}
             onChange={handleOnChange}
-            class="mt-1 w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+            className="mt-1 w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
           />
-          <label for="checkbox" class="mt-1 ml-2 text-sm font-medium text-white">Add date</label>
+          <label htmlFor="checkbox" className="mt-1 ml-2 text-sm font-medium text-white">Add date</label>
         </div>
       </div>
       <div className="relative w-full">
