@@ -37,15 +37,12 @@ func getTweets(c *gin.Context) {
 	} else {
 		switch mode {
 		case "keyword":
-			break
 		case "hashtag":
 			query = "#" + query
-			break
 		case "user":
 			query = "from:" + query
-			break
 		}
-		twRet = TwitterApi.GetTwsByQuery(query, start, end)
+		twRet = TwitterApi.GetTwsByQuery(mode, query, start, end)
 	}
 
 	utils.SendOkResponse(c, twRet)

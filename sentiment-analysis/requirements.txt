@@ -1,0 +1,7 @@
+Flask
+feel-it
+Flask-Cors
+polyglot
+pyICU
+pycld2
+vaderSentiment
