@@ -14,7 +14,7 @@ const SearchBar = ({ searchTweets }) => {
   
   const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
   const [textValue, setTextValue] = useState('')
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date("2022-11"));
   const [endDate, setEndDate] = useState(new Date());
 
   const compareDates = (a, b) => {
