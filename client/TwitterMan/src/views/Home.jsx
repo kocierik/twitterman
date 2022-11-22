@@ -5,10 +5,6 @@ import TweetCard from '../components/home/TweetCard'
 import Charts from '../components/home/Charts'
 import * as Const from '../utils'
 
-
-
-  
-
 const Home = () => {
   const [tweetsData, setTweetsData] = useState([])
 
@@ -40,17 +36,6 @@ const Home = () => {
     return tweetsWithSentiment
   }
 
-  const searchTweets = async (selectValue, textValue, formattedDates) => {
-    try {
-      const url = Const.stringFormat(Const.SERVER_URL + selectValue, textValue + formattedDates)
-      let res = await fetch(url)
-      res = await res.json()
-      setTweetsData(await setSentiment(res));
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
   const loadMore = async () => {
     try {
       const url = Const.SERVER_URL + Const.TWEET_LOAD
@@ -75,9 +60,9 @@ const Home = () => {
         className="App min-h-full px-5 dark:bg-gray-900 pt-16 pb-16  flex flex-col	gap-5"
       >
         <div className="flex justify-center">
-          <SearchBar searchTweets={searchTweets} />
+          <SearchBar setTweetsData={setTweetsData} setSentiment={setSentiment}/>
         </div>
-        <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
+        <div className="box-border m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
           {tweetsData?.map((tweet, i) => {
             return <TweetCard data={tweet} key={i} />
           })}

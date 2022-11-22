@@ -3,9 +3,8 @@ import * as Const from '../../utils'
 import Data from "../Data"
 import '../format-style.css'
 import { If, Then, Else, When, Unless, Switch, Case, Default } from 'react-if';
-import { useEffect } from 'react';
 
-const SearchBar = ({ searchTweets }) => {
+const SearchBar = ({setTweetsData, setSentiment}) => {
   const handleOnChange = () => {
     setIsChecked(!isChecked);
   };
@@ -33,9 +32,9 @@ const SearchBar = ({ searchTweets }) => {
     <form
       style={{ width: '100vh' }}
       className="flex mb-5"
-      onSubmit={(event) => {
+      onSubmit={async(event) => {
         event.preventDefault()
-        searchTweets(selectValue, textValue, formattedData())
+        setTweetsData(await setSentiment(await Const.searchTweets(selectValue, textValue, formattedData())));
       }}
     >
       <div id="elements">
