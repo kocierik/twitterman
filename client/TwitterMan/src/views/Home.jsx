@@ -61,7 +61,7 @@ const Home = () => {
   }
 
   useEffect(() => {
-    console.log(tweetsData);
+    // console.log(tweetsData);
   }, [tweetsData])
 
   return (

@@ -20,7 +20,7 @@ const Charts = ({ tweetsData }) => {
         </h5>
 
         <div className="flex flex-1 justify-center">
-          <PieGraph />
+          <PieGraph tweets={tweetsData}/>
         </div>
       </div>
       <div
