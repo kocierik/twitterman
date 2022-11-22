@@ -1,7 +1,7 @@
-Flask
-feel-it
-Flask-Cors
-polyglot
 pyICU
 pycld2
+feel-it
+Flask
+Flask-Cors
+polyglot
 vaderSentiment

@@ -1,31 +1,34 @@
-import React, { useState }from 'react'
+import React, { useState } from 'react'
 import * as Const from '../../utils'
-import Data from "../Data"
 import '../format-style.css'
-import { If, Then, Else, When, Unless, Switch, Case, Default } from 'react-if';
-import { useEffect } from 'react';
+import ModalFilter from './ModalFilter'
 
 const SearchBar = ({ searchTweets }) => {
-  const handleOnChange = () => {
-    setIsChecked(!isChecked);
-  };
-  
-  const [isChecked, setIsChecked] = useState(false);
-  
   const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
   const [textValue, setTextValue] = useState('')
-  const [startDate, setStartDate] = useState(new Date("2022-11"));
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date('2022-11'))
+  const [endDate, setEndDate] = useState(new Date())
+  const [showModal, setShowModal] = useState(false)
 
   const compareDates = (a, b) => {
-    return a.getDate() == b.getDate() && a.getFullYear() == b.getFullYear() && a.getMonth() == b.getMonth();
+    return (
+      a.getDate() == b.getDate() &&
+      a.getFullYear() == b.getFullYear() &&
+      a.getMonth() == b.getMonth()
+    )
   }
   const formattedData = () => {
-    let startString = `${startDate.getFullYear()}-${startDate.getMonth()+1}-${startDate.getDate()}T00:00:00.000Z`;
-    
-    let today = new Date();
-    console.log(compareDates(today, endDate));
-    let endString = (!compareDates(today, endDate) ?`${endDate.getFullYear()}-${endDate.getMonth()+1}-${endDate.getDate()}T23:59:59.000Z`:endDate.toISOString())
+    let startString = `${startDate.getFullYear()}-${
+      startDate.getMonth() + 1
+    }-${startDate.getDate()}T00:00:00.000Z`
+
+    let today = new Date()
+    console.log(compareDates(today, endDate))
+    let endString = !compareDates(today, endDate)
+      ? `${endDate.getFullYear()}-${
+          endDate.getMonth() + 1
+        }-${endDate.getDate()}T23:59:59.000Z`
+      : endDate.toISOString()
     return `/date/${startString}/${endString}`
   }
 
@@ -39,83 +42,60 @@ const SearchBar = ({ searchTweets }) => {
       }}
     >
       <div id="elements">
-        <select
-          style={{height: '2.7rem'}}
-          onChange={(choice) => {
-            setSelectValue(choice.target.value)
-          }}
-          className="rounded-xl	mr-2 flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200  focus:outline-none  dark:bg-gray-700 dark:hover:bg-gray-600  dark:text-white dark:border-gray-600"
+        <div
+          onClick={() => setShowModal(!showModal)}
+          className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-200 to-blue-800 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
         >
-          <option value={Const.TWEET_USERNAME}>username</option>
-          <option value={Const.TWEET_HASHTAG}>hashtag</option>
-          <option value={Const.TWEET_KEYWORD}>keyword</option>
-          {/* <option value={TWEET_ID}>keyword</option> */}{' '}
-          {/* TODO: ADD MORE OPTIONS */}
-        </select>
-        <div className="flex justify-center">
-          <input 
-            id="checkbox" 
-            type="checkbox" 
-            value="" 
-            checked={isChecked}
-            onChange={handleOnChange}
-            className="mt-1 w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-          />
-          <label htmlFor="checkbox" className="mt-1 ml-2 text-sm font-medium text-white">Add date</label>
+          <span className="relative cursor-pointer px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+            Filters
+          </span>
         </div>
       </div>
+      {showModal && (
+        <ModalFilter
+          selectValue={selectValue}
+          setSelectValue={setSelectValue}
+          showModal={showModal}
+          setShowModal={setShowModal}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          setStartDate={setStartDate}
+          startDate={startDate}
+        />
+      )}
+
       <div className="relative w-full">
         <input
           type="search"
-          id="search-dropdown" 
+          id="search-dropdown"
           onChange={(e) => {
             setTextValue(e.target.value)
           }}
           className="block p-2.5 rounded-xl	indent-3 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
           placeholder="Search on twitterMan..."
           required
-        /> 
-
-        <If condition={isChecked}>
-          <Then>
-            <Data
-              startDate={startDate}
-              setStartDate={setStartDate}
-              endDate={endDate}
-              setEndDate={setEndDate}
-            /> 
-            <button
-            type="submit"
-            className="hover:scale-105 duration-300 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2"
-            id="btn"
-            >
-              <b>Search</b>
-            </button>
-          </Then>
-          <Else>
-            <button
-              type="submit"
-              className="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              <svg
-                aria-hidden="true"
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-              <span className="sr-only">Search</span>
-            </button>
-          </Else>
-        </If>
+        />
+        <button
+          type="submit"
+          className="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          <svg
+            aria-hidden="true"
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+          <span className="sr-only">Search</span>
+        </button>
       </div>
     </form>
   )
