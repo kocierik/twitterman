@@ -5,7 +5,7 @@ import 'tippy.js/animations/scale.css'
 
 const WordCloud = ({ contentData }) => {
   useEffect(() => {
-    // console.log(contentData)S
+    // console.log(contentData)
   }, [])
 
   const callbacks = {
@@ -15,9 +15,7 @@ const WordCloud = ({ contentData }) => {
 
   return (
     <div>
-      <div>
-        <ReactWordcloud words={getOccurencesFromTweets(contentData)} callbacks={callbacks} options={{ fontSizes: [20, 50] }} />
-      </div>
+      <ReactWordcloud words={getOccurencesFromTweets(contentData)} callbacks={callbacks} options={{ fontSizes: [20, 50] }} />
     </div>
   )
 }
@@ -31,9 +29,9 @@ function getOccurencesFromTweets(contentData) {
 
   let words = []  // { [text: 'told', value: 64], ... }
   words = Array.from(wordsOccurences, ([word, value]) => {
-      if(value < 2)
-        return {};
-      return { text: word, value: value };
+    if (value < 2)
+      return {};
+    return { text: word, value: value };
   });
 
   return words
