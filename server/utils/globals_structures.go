@@ -6,14 +6,19 @@ import (
 
 /* Tweet structure used by our code */
 type Tweet struct {
-	TwitterId     string                  `json:"id" bson:"id"`
-	Name          string                  `json:"name" bson:"name"`
-	Propic        string                  `json:"propic" bson:"propic"`
-	Timestamp     string                  `json:"timestamp" bson:"timestamp"`
-	Content       string                  `json:"content" bson:"content"`
-	PublicMetrics PublicMetrics           `json:"public_metrics"`
-	Media         []TwitterMediaStructure `json:"media" bson:"media"`
-	Geo           GeoPosition             `json:"geo" bson:"geo"`
+	TwitterId     string               `json:"id" bson:"id"`
+	Name          string               `json:"name" bson:"name"`
+	Propic        string               `json:"propic" bson:"propic"`
+	Timestamp     string               `json:"timestamp" bson:"timestamp"`
+	Content       string               `json:"content" bson:"content"`
+	Username      string               `json:"username" bson:"username"`
+	PublicMetrics PublicMetrics        `json:"public_metrics"`
+	Media         []TwitterMediaStruct `json:"media" bson:"media"`
+	Geo           GeoPosition          `json:"geo" bson:"geo"`
+}
+
+func (a Tweet) GetKey() string {
+	return a.TwitterId
 }
 
 /* User structure */
@@ -23,6 +28,10 @@ type User struct {
 	Username      string             `bson:"username" json:"username"`
 	Password      string             `bson:"password" json:"password"`
 	SavedTweetsId []string           `bson:"tweets" json:"tweets"`
+}
+
+func (a User) GetKey() string {
+	return a.Email
 }
 
 type Dict map[string]any
@@ -43,7 +52,7 @@ type GeoPosition struct {
 }
 
 /* Twitter data structure to send images and videos */
-type TwitterMediaStructure struct {
+type TwitterMediaStruct struct {
 	Id      string `json:"media_key"`
 	Type    string `json:"type"`
 	Url     string `json:"url"`

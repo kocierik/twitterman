@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"errors"
+	"log"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
@@ -18,13 +19,13 @@ var ctx context.Context
 var cancel context.CancelFunc
 var dbname string = "twitterman"
 
-const Collection string = "Users"
+var collectionList [2]string = [2]string{"Users", "Tweets"}
 
 var nullUser = utils.User{ID: primitive.ObjectID{}, Email: "", Username: "", Password: "", SavedTweetsId: []string{}}
 
 func GetUserByEmail(email string) (utils.User, error) {
 	query := bson.M{"email": email}
-	res := find(query)
+	res := find(query, "Users")
 	//log.Print(res)
 	var user []utils.User
 	err := res.All(ctx, &user)
@@ -36,17 +37,57 @@ func GetUserByEmail(email string) (utils.User, error) {
 	}
 }
 
+func bindType[T any](res *mongo.Cursor) T {
+	var currentFoundValue T
+	err := res.All(ctx, &currentFoundValue)
+	utils.TestError(err, "bind type after find error: ")
+	return currentFoundValue
+}
+
 func GetUserById(id primitive.ObjectID) (utils.User, error) {
 	query := bson.M{"_id": id}
-	res := find(query)
-	var user []utils.User
-	err := res.All(ctx, &user)
-	utils.TestError(err, "GetUserById function")
-	if len(user) == 0 {
+	res := find(query, "Users")
+	binded := bindType[[]utils.User](res)
+	if len(binded) == 0 {
 		return nullUser, errors.New("no user with that ID")
 	} else {
-		return user[0], nil
+		return binded[0], nil
 	}
+}
+
+func InsertTweetList(twts []utils.Tweet) {
+	for _, t := range twts {
+		insert(t, "Tweets")
+	}
+}
+
+func GetTweetsByTwitterId(id string) []utils.Tweet {
+	myDict := bson.M{
+		"id": primitive.Regex{Pattern: "^" + id + "$", Options: "i"},
+	}
+	res := find(myDict, "Tweets")
+	binded := bindType[[]utils.Tweet](res)
+	return binded
+}
+
+func GetTweetsByUsername(username string) []utils.Tweet {
+	myDict := bson.M{
+		"username": primitive.Regex{Pattern: "^" + username + "$", Options: "i"},
+	}
+	res := find(myDict, "Tweets")
+	log.Println(res)
+	binded := bindType[[]utils.Tweet](res)
+	return binded
+}
+
+func GetTweetsByKeyword(keyword string) []utils.Tweet {
+	myDict := bson.M{
+		"content": primitive.Regex{Pattern: keyword, Options: "i"},
+	}
+	log.Print(myDict)
+	res := find(myDict, "Tweets")
+	binded := bindType[[]utils.Tweet](res)
+	return binded
 }
 
 func InsertUser(email, username, password string, tweets []string) {
@@ -56,7 +97,7 @@ func InsertUser(email, username, password string, tweets []string) {
 		Password:      password,
 		SavedTweetsId: tweets,
 	}
-	insert(user)
+	insert(user, "Users")
 }
 
 func InitDbTest() {
@@ -66,8 +107,10 @@ func InitDbTest() {
 	defer disconnect()
 
 	// Clear database
-	_, err := client.Database(dbname).Collection(Collection).DeleteMany(ctx, bson.D{})
-	utils.TestError(err, "InitDbTest function")
+	for _, col := range collectionList {
+		_, err := client.Database(dbname).Collection(col).DeleteMany(ctx, bson.D{})
+		utils.TestError(err, "InitDbTest clear function error on collection:"+col)
+	}
 }
 
 func connect() {
@@ -75,7 +118,7 @@ func connect() {
 	if client != nil && client.Ping(ctx, nil) == nil {
 		return
 	}
-	client, err = mongo.NewClient(options.Client().ApplyURI(utils.DatabaseUrl))
+	client, err = mongo.NewClient(options.Client().ApplyURI(utils.DbUrl))
 	utils.TestError(err, "database.Connect function, new client error")
 	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
@@ -88,19 +131,34 @@ func disconnect() {
 	utils.TestError(err, "database.Disconnect function, some error")
 }
 
-func find(query interface{}) *mongo.Cursor {
+func find(query interface{}, collection string) *mongo.Cursor {
 	connect()
 	defer disconnect()
-	col := client.Database(dbname).Collection(Collection)
+	log.Println(dbname, collection, query)
+	col := client.Database(dbname).Collection(collection)
 	cursor, err := col.Find(ctx, query)
 	utils.TestError(err, "find function")
 	return cursor
 }
 
-func insert(query interface{}) {
+type queryTypeInterface interface {
+	GetKey() string
+}
+
+func insert[T queryTypeInterface](query T, collection string) {
+	var updateQuery bson.M
+	switch collection {
+	case "Tweets":
+		updateQuery = bson.M{"id": query.GetKey()}
+	case "Users":
+		updateQuery = bson.M{"email": query.GetKey()}
+	default:
+		updateQuery = bson.M{}
+	}
+	mytrue := true
 	connect()
 	defer disconnect()
-	col := client.Database(dbname).Collection(Collection)
-	_, err := col.InsertOne(ctx, query)
+	col := client.Database(dbname).Collection(collection)
+	_, err := col.UpdateOne(ctx, updateQuery, bson.M{"$set": query}, &options.UpdateOptions{Upsert: &mytrue})
 	utils.TestError(err, "insert function")
 }

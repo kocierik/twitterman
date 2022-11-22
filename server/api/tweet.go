@@ -45,7 +45,7 @@ func getTweets(c *gin.Context) {
 			query = "from:" + query
 			break
 		}
-		twRet = TwitterApi.GetTwsByQuery(query)
+		twRet = TwitterApi.GetTwsByQuery(mode, query)
 	}
 
 	utils.SendOkResponse(c, twRet)
