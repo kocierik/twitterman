@@ -1,0 +1,11 @@
+    82	geno <gabrigeno@gmail.com>
+    69	kocierik <kocierik@gmail.com>
+    20	takenX10 <frau.alessandro01@gmail.com>
+    14	Gabriele Genovese <gabriele.genovese2@studio.unibo.it>
+    10	geno <gabriele.genovese2@studio.unibo.it>
+     8	ManuelArto <43347768+ManuelArto@users.noreply.github.com>
+     3	Erik Koci <erik.koci@studio.unibo.it>
+     1	Alessandro Frau <alessandro.frau@studio.unibo.it>
+     1	Fabio <faga2703@gmail.com>
+co-authored commits:
+214
