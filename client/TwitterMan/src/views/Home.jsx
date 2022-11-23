@@ -62,10 +62,6 @@ const Home = () => {
     }
   }
 
-  useEffect(() => {
-    console.log(tweetsData)
-  }, [tweetsData])
-
   return (
     <>
       <div
@@ -82,11 +78,10 @@ const Home = () => {
           })}
         </div>
         <div className="flex  justify-center">
-          {tweetsData?.length && (
+          {tweetsData?.length > 0 && (
             <button
               onClick={loadMore}
               type="button"
-              // data-aos-duration="500"
               className="text-white  bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Load more
@@ -94,7 +89,7 @@ const Home = () => {
           )}
         </div>
       </div>
-      {tweetsData?.length && (
+      {tweetsData?.length > 0 && (
         <div className="p-10 dark:bg-gray-900">
           <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
             Charts
@@ -102,7 +97,7 @@ const Home = () => {
           <Charts tweetsData={tweetsData} />
         </div>
       )}
-      {tweetsData?.length && (
+      {tweetsData?.length > 0 && (
         <div className="p-10 dark:bg-gray-900">
           <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
             TweetMaps

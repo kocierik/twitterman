@@ -6,7 +6,7 @@ import './format-style.css'
 function DataRangePicker(props) {
   return (
     <div id="dateRangePickerId flex flex-1 rounded">
-      <div className=" rounded   flex-shrink-0 z-10 inline-flex w-full items-center py-2.5 text-sm font-medium  text-gray-900 bg-gray-100  hover:bg-gray-200  focus:outline-none  dark:bg-gray-700 dark:hover:bg-gray-600  dark:text-white ">
+      <div className=" rounded   flex-shrink-0 z-10 inline-flex w-full items-center text-sm font-medium  text-gray-900 bg-gray-100    focus:outline-none  dark:bg-gray-700   dark:text-white ">
         <div className="relative">
           <DatePicker
             selected={props.startDate}
@@ -18,7 +18,7 @@ function DataRangePicker(props) {
           <div className="flex absolute inset-y-0  left-1 items-center pl-5 pointer-events-none">
             <svg
               aria-hidden="true"
-              className="w-5 h-5 text-black"
+              className="w-5 h-5 text-white"
               fill="currentColor"
               viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +32,7 @@ function DataRangePicker(props) {
           </div>
         </div>
 
-        <span className="mx-4 text-black">to</span>
+        <span className="mx-4 text-white">to</span>
         <div className="relative">
           <DatePicker
             selected={props.startDate}
@@ -44,7 +44,7 @@ function DataRangePicker(props) {
           <div className="flex absolute inset-y-0  left-1 items-center pl-5 pointer-events-none">
             <svg
               aria-hidden="true"
-              className="w-5 h-5 text-black"
+              className="w-5 h-5 text-white"
               fill="currentColor"
               viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"

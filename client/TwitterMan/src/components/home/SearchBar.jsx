@@ -3,13 +3,21 @@ import * as Const from '../../utils'
 import '../format-style.css'
 import ModalFilter from './ModalFilter'
 
+const calculateDate = () => {
+  const date = new Date()
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  return [year, month, day].join('-')
+}
+
 const SearchBar = ({ searchTweets }) => {
   const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
   const [textValue, setTextValue] = useState('')
-  const [startDate, setStartDate] = useState(new Date('2022-11'))
+  const [startDate, setStartDate] = useState(new Date(calculateDate()))
   const [endDate, setEndDate] = useState(new Date())
   const [showModal, setShowModal] = useState(false)
-
+  const [sliderValue, setSliderValue] = useState(50)
   const compareDates = (a, b) => {
     return (
       a.getDate() == b.getDate() &&
@@ -61,6 +69,8 @@ const SearchBar = ({ searchTweets }) => {
           setEndDate={setEndDate}
           setStartDate={setStartDate}
           startDate={startDate}
+          setSliderValue={setSliderValue}
+          sliderValue={sliderValue}
         />
       )}
 

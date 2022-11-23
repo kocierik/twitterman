@@ -3,11 +3,27 @@ import { useState } from 'react'
 import * as Const from '../../utils'
 import Data from '../Data'
 const ModalFilter = (props) => {
+  const [sentimentIcon, setSentimentIcon] = useState('😐')
+
+  const evaluateRangeInput = (value) => {
+    props.setSliderValue(value)
+    if (value > 70) {
+      setSentimentIcon('😀')
+      return '😀'
+    } else if (value > 40) {
+      setSentimentIcon('😐')
+      return '😐'
+    } else {
+      setSentimentIcon('🙁')
+      return '🙁'
+    }
+  }
+
   return (
     <>
       <div
         data-aos="fade-in"
-        className="py-12 flex text-white   transition duration-150 ease-in-out z-10 absolute top-20 right-0 bottom-0 left-0"
+        className=" flex text-white   transition duration-150 ease-in-out z-10 absolute top-20 right-0 bottom-0 left-0"
       >
         <div
           data-aos="zoom-in"
@@ -51,24 +67,41 @@ const ModalFilter = (props) => {
               onChange={(choice) => {
                 props.setSelectValue(choice.target.value)
               }}
-              className="rounded-xl m3-5	mr-2 h-10 flex-shrink-0 z-10 inline-flex w-full items-center py-2.5 px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg hover:bg-gray-200  focus:outline-none  dark:bg-gray-700 dark:hover:bg-gray-600  dark:text-white dark:border-gray-600"
+              className="rounded-xl m3-5 cursor-pointer	mr-2 h-10 flex-shrink-0 z-10 inline-flex w-full items-center py-2.5 px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg   focus:outline-none  dark:bg-gray-700   dark:text-white dark:border-gray-600"
             >
               <option value={Const.TWEET_USERNAME}>username</option>
               <option value={Const.TWEET_HASHTAG}>hashtag</option>
               <option value={Const.TWEET_KEYWORD}>keyword</option>
             </select>
-            <label
-              htmlFor="Range date"
-              className="text-white-800 mt-5  flex flex-col mb-2 text-sm font-bold leading-tight tracking-normal"
-            >
-              Select a range date
-            </label>
-            <div className="flex pb-5">
-              <Data
-                startDate={props.startDate}
-                setStartDate={props.setStartDate}
-                endDate={props.endDate}
-                setEndDate={props.setEndDate}
+            <div className="rounded-xl mt-5	mr-2 mb-5  z-10 w-full items-center px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300     dark:bg-gray-700   dark:text-white dark:border-gray-600">
+              <label
+                htmlFor="Range date"
+                className="text-white-800 mt-5  flex flex-col  text-sm font-bold leading-tight tracking-normal"
+              >
+                Select a range date
+              </label>
+              <div className="flex pb-5">
+                <Data
+                  startDate={props.startDate}
+                  setStartDate={props.setStartDate}
+                  endDate={props.endDate}
+                  setEndDate={props.setEndDate}
+                />
+              </div>
+            </div>
+            <div className="rounded-xl m3-5	mr-2 mb-5  z-10 w-full items-center py-2.5 px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg     dark:bg-gray-700   dark:text-white dark:border-gray-600">
+              <label
+                htmlFor="default-range"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Sentiment Range:{' '}
+                <span className="text-2xl ml-3">{sentimentIcon}</span>
+              </label>
+              <input
+                id="default-range"
+                type="range"
+                onChange={(value) => evaluateRangeInput(value.target.value)}
+                className="w-full h-2 mb-5 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-600"
               />
             </div>
             <div className="flex items-center justify-start w-full">
