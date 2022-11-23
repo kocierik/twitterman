@@ -3,13 +3,16 @@ import Maps from '../components/home/Maps'
 import SearchBar from '../components/home/SearchBar'
 import TweetCard from '../components/home/TweetCard'
 import Charts from '../components/home/Charts'
+import Show_tweet from '../components/home/Btn_show'
+import Hide_tweet from '../components/home/Btn_hide'
 import * as Const from '../utils'
-
-
-
+ 
+ 
+ 
 const Home = () => {
   const [tweetsData, setTweetsData] = useState([])
-
+  const [state, setState] = useState()
+ 
   const setSentiment = async (tweets) => {
     let tweetsWithSentiment = [];
     try{
@@ -36,7 +39,7 @@ const Home = () => {
     }
     return tweetsWithSentiment
   }
-
+ 
   const searchTweets = async (selectValue, textValue) => {
     try {
       const url = Const.stringFormat(Const.SERVER_URL + selectValue, textValue)
@@ -47,7 +50,7 @@ const Home = () => {
       console.log(e)
     }
   }
-
+ 
   const loadMore = async () => {
     try {
       const url = Const.SERVER_URL + Const.TWEET_LOAD
@@ -59,20 +62,22 @@ const Home = () => {
       console.log(e)
     }
   }
-
+ 
   useEffect(() => {
     console.log(tweetsData);
   }, [tweetsData])
-
+ 
   return (
     <>
       <div
         data-aos="zoom-in"
         data-aos-duration="700"
-        className="App min-h-full px-5 dark:bg-gray-900 pt-16 pb-16  flex flex-col	gap-5"
+        className="App min-h-full px-5 dark:bg-gray-900 pt-16 pb-16  flex flex-col  gap-5"
       >
         <div className="flex justify-center">
           <SearchBar searchTweets={searchTweets} />
+          <Show_tweet />
+          <Hide_tweet />
         </div>
         <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
           {tweetsData?.map((tweet, i) => {
@@ -108,5 +113,5 @@ const Home = () => {
     </>
   )
 }
-
+ 
 export default Home
