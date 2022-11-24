@@ -3,15 +3,14 @@ import Maps from '../components/home/Maps'
 import SearchBar from '../components/home/SearchBar'
 import TweetCard from '../components/home/TweetCard'
 import Charts from '../components/home/Charts'
-import Show_tweet from '../components/home/Btn_show'
-import Hide_tweet from '../components/home/Btn_hide'
+import HideTweets from '../components/home/HideTweets'
 import * as Const from '../utils'
- 
- 
+import { If, Then, Else, When, Unless, Switch, Case, Default } from 'react-if';
  
 const Home = () => {
   const [tweetsData, setTweetsData] = useState([])
-  const [state, setState] = useState()
+  const [showTweets, setShowTweets] = useState(true)
+  
  
   const setSentiment = async (tweets) => {
     let tweetsWithSentiment = [];
@@ -76,27 +75,30 @@ const Home = () => {
       >
         <div className="flex justify-center">
           <SearchBar searchTweets={searchTweets} />
-          <Show_tweet />
-          <Hide_tweet />
+          {tweetsData?.length && <HideTweets showTweets={showTweets} setShowTweets={setShowTweets}/>}
         </div>
-        <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
-          {tweetsData?.map((tweet, i) => {
-            return <TweetCard data={tweet} key={i} />
-          })}
-        </div>
-        <div className="flex  justify-center">
-          {tweetsData?.length && (
-            <button
-              onClick={loadMore}
-              type="button"
-              // data-aos="zoom-in"
-              // data-aos-duration="500"
-              className="text-white  bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Load more
-            </button>
-          )}
-        </div>
+        <If condition={showTweets}>
+          <Then>
+            <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
+              {tweetsData?.map((tweet, i) => {
+                return <TweetCard data={tweet} key={i} />
+              })}
+            </div>
+            <div className="flex justify-center">
+              {tweetsData?.length && (
+                <button
+                  onClick={loadMore}
+                  type="button"
+                  // data-aos="zoom-in"
+                  // data-aos-duration="500"
+                  className="text-white  bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Load more
+                </button>
+              )}
+            </div>
+          </Then>
+        </If>
       </div>
       {tweetsData?.length && <div className="p-10 dark:bg-gray-900">
         <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
@@ -104,7 +106,8 @@ const Home = () => {
         </div>
         <Charts tweetsData={tweetsData} />
       </div>}
-      {tweetsData?.length && <div className="p-10 dark:bg-gray-900">
+      {tweetsData?.length && 
+      <div className="p-10 dark:bg-gray-900">
         <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
           TweetMaps
         </div>
