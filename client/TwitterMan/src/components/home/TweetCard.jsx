@@ -29,10 +29,6 @@ const TweetCard = ({ data }) => {
     }
   }, [data])
 
-  useEffect(() => {
-    console.log(data);
-  }, [data])
-
   return (
     <article
       id={data.id}
