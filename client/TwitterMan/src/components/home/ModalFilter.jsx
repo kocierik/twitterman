@@ -3,18 +3,17 @@ import { useState } from 'react'
 import * as Const from '../../utils'
 import Data from '../Data'
 const ModalFilter = (props) => {
-  const [sentimentIcon, setSentimentIcon] = useState('😐')
 
   const evaluateRangeInput = (value) => {
     props.setSliderValue(value)
     if (value > 70) {
-      setSentimentIcon('😀')
+      props.setSentimentIcon('positive')
       return '😀'
     } else if (value > 40) {
-      setSentimentIcon('😐')
+      props.setSentimentIcon('neutral')
       return '😐'
     } else {
-      setSentimentIcon('🙁')
+      props.setSentimentIcon('negative')
       return '🙁'
     }
   }
@@ -95,7 +94,7 @@ const ModalFilter = (props) => {
                 className="block mb-2 text-sm font-medium text-gray-900 text-white"
               >
                 Sentiment Range:{' '}
-                <span className="text-2xl ml-3">{sentimentIcon}</span>
+                <span className="text-2xl ml-3">{props.sentimentIcon}</span>
               </label>
               <input
                 id="default-range"

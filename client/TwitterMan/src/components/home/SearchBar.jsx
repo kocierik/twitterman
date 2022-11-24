@@ -19,13 +19,13 @@ const calculateDate = (isStartDate) => {
   }
 }
 
-const SearchBar = ({ searchTweets }) => {
+const SearchBar = ({ searchTweets, sliderValue, setSliderValue, sentimentIcon, setSentimentIcon }) => {
   const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
   const [textValue, setTextValue] = useState('')
   const [startDate, setStartDate] = useState(new Date(calculateDate(true)))
   const [endDate, setEndDate] = useState(new Date(calculateDate(false)))
   const [showModal, setShowModal] = useState(false)
-  const [sliderValue, setSliderValue] = useState(50)
+
   const compareDates = (a, b) => {
     return (
       a.getDate() == b.getDate() &&
@@ -77,6 +77,8 @@ const SearchBar = ({ searchTweets }) => {
           startDate={startDate}
           setSliderValue={setSliderValue}
           sliderValue={sliderValue}
+          sentimentIcon={sentimentIcon}
+          setSentimentIcon={setSentimentIcon}
         />
       )}
 

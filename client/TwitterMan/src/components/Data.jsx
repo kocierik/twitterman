@@ -4,7 +4,6 @@ import 'react-datepicker/dist/react-datepicker.css'
 import './format-style.css'
 
 function DataRangePicker(props) {
-  console.log(props.setEndDate)
   return (
     <div id="dateRangePickerId flex flex-1 rounded">
       <div className=" rounded   flex-shrink-0 z-10 inline-flex w-full items-center text-sm font-medium  text-gray-900 focus:outline-none   text-white ">

@@ -7,7 +7,8 @@ import * as Const from '../utils'
 
 const Home = () => {
   const [tweetsData, setTweetsData] = useState([])
-
+  const [sentimentIcon, setSentimentIcon] = useState(null)
+  const [sliderValue, setSliderValue] = useState(null)
   const setSentiment = async (tweets) => {
     let tweetsWithSentiment = []
     try {
@@ -42,8 +43,15 @@ const Home = () => {
       )
       let res = await fetch(url)
       res = await res.json()
-      setTweetsData(res)
-      // await setSentiment(res)
+      if (sliderValue) {
+        console.log('res ', res)
+        console.log('sentimentIcon ', sentimentIcon)
+        const filterSentiment = res.filter(item => item.sentiment == sentimentIcon)
+        setTweetsData(filterSentiment)
+      } else {
+        setTweetsData(res)
+      }
+      await setSentiment(res)
     } catch (e) {
       console.log(e)
     }
@@ -54,9 +62,9 @@ const Home = () => {
       const url = Const.SERVER_URL + Const.TWEET_LOAD
       let res = await fetch(url)
       res = await res.json()
-      // let sentimentRes = await setSentiment(res)
-      setTweetsData((last) => [...last, ...res])
-      // setTweetsData((last) => [...last, ...sentimentRes])
+      let sentimentRes = await setSentiment(res)
+      // setTweetsData((last) => [...last, ...res])
+      setTweetsData((last) => [...last, ...sentimentRes])
     } catch (e) {
       console.log(e)
     }
@@ -70,7 +78,7 @@ const Home = () => {
         className="App min-h-full px-5 dark:bg-gray-900 pt-16 pb-16  flex flex-col	gap-5"
       >
         <div className="flex justify-center">
-          <SearchBar searchTweets={searchTweets} />
+          <SearchBar searchTweets={searchTweets} sliderValue={sliderValue} setSliderValue={setSliderValue} sentimentIcon={sentimentIcon} setSentimentIcon={setSentimentIcon} />
         </div>
         <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
           {tweetsData?.map((tweet, i) => {

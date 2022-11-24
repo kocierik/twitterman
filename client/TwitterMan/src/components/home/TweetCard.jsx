@@ -6,25 +6,23 @@ import Setting from './Setting'
 const TweetCard = ({ data }) => {
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
-  const [sentimentIcon, setSentimetIcon] = useState("")
-
+  const [sentimentIcon, setSentimetIcon] = useState("?")
   const settingInfoDescription = [
     {
       name: 'Maps',
       setting: () => navigate(`/tweetMaps/${data.id}`),
     },
   ]
-
   useEffect(() => {
     switch (data.sentiment) {
       case "positive":
-        setSentimetIcon("😀");
+        setSentimetIcon("positive");
         break;
       case "neutral":
-        setSentimetIcon("😐");
+        setSentimetIcon("neutral");
         break;
       case "negative":
-        setSentimetIcon("☹️");
+        setSentimetIcon("negative");
         break;
     }
   }, [data])
