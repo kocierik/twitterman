@@ -36,7 +36,7 @@ const TweetCard = ({ data }) => {
   return (
     <article
       id={data.id}
-      className="place-self-start mb-4 break-inside px-6 py-4 rounded-xl flex flex-col text-sm bg-white dark:bg-slate-800 dark:text-white"
+      className="place-self-start mb-4 break-inside px-6 py-4 rounded-xl flex flex-col text-sm bg-white bg-slate-800 text-white"
     >
       <div className="flex pb-5 items-start justify-between">
         <div className="flex">
@@ -53,7 +53,7 @@ const TweetCard = ({ data }) => {
                 {data.name}
               </a>
             </div>
-            <div className="text-slate-500 dark:text-slate-400">
+            <div className="text-slate-500 text-slate-400">
               {' '}
               {data.timestamp.replace('T', ' ').slice(0, -5)}{' '}
             </div>
@@ -70,7 +70,7 @@ const TweetCard = ({ data }) => {
         )}
       </div>
 
-      <p className="text-sm dark:text-slate-200"> {data.content} </p>
+      <p className="text-sm text-slate-200"> {data.content} </p>
       <div>
         {data.media?.map((img, i) => {
           if (img.url == 'video') {
@@ -83,7 +83,7 @@ const TweetCard = ({ data }) => {
         <div className="inline-flex items-center">
           <span className="m-2">
             <svg
-              className="fill-rose-600 dark:fill-rose-400"
+              className="fill-rose-600 fill-rose-400"
               width="18"
               height="18"
               viewBox="0 0 24 24"

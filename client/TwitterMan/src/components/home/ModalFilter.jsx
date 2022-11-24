@@ -67,13 +67,13 @@ const ModalFilter = (props) => {
               onChange={(choice) => {
                 props.setSelectValue(choice.target.value)
               }}
-              className="rounded-xl m3-5 cursor-pointer	mr-2 h-10 flex-shrink-0 z-10 inline-flex w-full items-center py-2.5 px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg   focus:outline-none  dark:bg-gray-700   dark:text-white dark:border-gray-600"
+              className="rounded-xl m3-5 cursor-pointer	mr-2 h-10 flex-shrink-0 z-10 inline-flex w-full items-center py-2.5 px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg   focus:outline-none  bg-gray-700   text-white border-gray-600"
             >
               <option value={Const.TWEET_USERNAME}>username</option>
               <option value={Const.TWEET_HASHTAG}>hashtag</option>
               <option value={Const.TWEET_KEYWORD}>keyword</option>
             </select>
-            <div className="rounded-xl mt-5	mr-2 mb-5  z-10 w-full items-center px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300     dark:bg-gray-700   dark:text-white dark:border-gray-600">
+            <div className="rounded-xl mt-5	mr-2 mb-5  z-10 w-full items-center px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300     bg-gray-700   text-white border-gray-600">
               <label
                 htmlFor="Range date"
                 className="text-white-800 mt-5  flex flex-col  text-sm font-bold leading-tight tracking-normal"
@@ -89,10 +89,10 @@ const ModalFilter = (props) => {
                 />
               </div>
             </div>
-            <div className="rounded-xl m3-5	mr-2 mb-5  z-10 w-full items-center py-2.5 px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg     dark:bg-gray-700   dark:text-white dark:border-gray-600">
+            <div className="rounded-xl m3-5	mr-2 mb-5  z-10 w-full items-center py-2.5 px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg     bg-gray-700   text-white border-gray-600">
               <label
                 htmlFor="default-range"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="block mb-2 text-sm font-medium text-gray-900 text-white"
               >
                 Sentiment Range:{' '}
                 <span className="text-2xl ml-3">{sentimentIcon}</span>
@@ -101,7 +101,7 @@ const ModalFilter = (props) => {
                 id="default-range"
                 type="range"
                 onChange={(value) => evaluateRangeInput(value.target.value)}
-                className="w-full h-2 mb-5 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-600"
+                className="w-full h-2 mb-5 bg-gray-200 rounded-lg appearance-none cursor-pointer bg-gray-600"
               />
             </div>
             <div className="flex items-center justify-start w-full">

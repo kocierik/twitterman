@@ -4,9 +4,10 @@ import 'react-datepicker/dist/react-datepicker.css'
 import './format-style.css'
 
 function DataRangePicker(props) {
+  console.log(props.setEndDate)
   return (
     <div id="dateRangePickerId flex flex-1 rounded">
-      <div className=" rounded   flex-shrink-0 z-10 inline-flex w-full items-center text-sm font-medium  text-gray-900 bg-gray-100    focus:outline-none  dark:bg-gray-700   dark:text-white ">
+      <div className=" rounded   flex-shrink-0 z-10 inline-flex w-full items-center text-sm font-medium  text-gray-900 bg-gray-100    focus:outline-none  bg-gray-700   text-white ">
         <div className="relative">
           <DatePicker
             selected={props.startDate}
@@ -35,9 +36,9 @@ function DataRangePicker(props) {
         <span className="mx-4 text-white">to</span>
         <div className="relative">
           <DatePicker
-            selected={props.startDate}
+            selected={props.endDate}
             onChange={(date) => {
-              props.setStartDate(date)
+              props.setEndDate(date)
             }}
             className=" rounded w-120 h-30 cursor-pointer m-3 bg-gray-800	p-1.5 text-center"
           />

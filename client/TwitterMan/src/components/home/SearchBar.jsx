@@ -3,19 +3,27 @@ import * as Const from '../../utils'
 import '../format-style.css'
 import ModalFilter from './ModalFilter'
 
-const calculateDate = () => {
-  const date = new Date()
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-  return [year, month, day].join('-')
+const calculateDate = (isStartDate) => {
+  if (isStartDate) {
+    const date = new Date()
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate() - 7
+    return [year, month, day].join('-')
+  } else {
+    const date = new Date()
+    const year = date.getFullYear()
+    const month = date.getMonth() + 1
+    const day = date.getDate()
+    return [year, month, day].join('-')
+  }
 }
 
 const SearchBar = ({ searchTweets }) => {
   const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
   const [textValue, setTextValue] = useState('')
-  const [startDate, setStartDate] = useState(new Date(calculateDate()))
-  const [endDate, setEndDate] = useState(new Date())
+  const [startDate, setStartDate] = useState(new Date(calculateDate(true)))
+  const [endDate, setEndDate] = useState(new Date(calculateDate(false)))
   const [showModal, setShowModal] = useState(false)
   const [sliderValue, setSliderValue] = useState(50)
   const compareDates = (a, b) => {
@@ -26,16 +34,14 @@ const SearchBar = ({ searchTweets }) => {
     )
   }
   const formattedData = () => {
-    let startString = `${startDate.getFullYear()}-${
-      startDate.getMonth() + 1
-    }-${startDate.getDate()}T00:00:00.000Z`
+    let startString = `${startDate.getFullYear()}-${startDate.getMonth() + 1
+      }-${startDate.getDate()}T00:00:00.000Z`
 
     let today = new Date()
     console.log(compareDates(today, endDate))
     let endString = !compareDates(today, endDate)
-      ? `${endDate.getFullYear()}-${
-          endDate.getMonth() + 1
-        }-${endDate.getDate()}T23:59:59.000Z`
+      ? `${endDate.getFullYear()}-${endDate.getMonth() + 1
+      }-${endDate.getDate()}T23:59:59.000Z`
       : endDate.toISOString()
     return `/date/${startString}/${endString}`
   }
@@ -52,9 +58,9 @@ const SearchBar = ({ searchTweets }) => {
       <div id="elements">
         <div
           onClick={() => setShowModal(!showModal)}
-          className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-200 to-blue-800 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800"
+          className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-200 to-blue-800 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white text-white focus:ring-4 focus:outline-none focus:ring-green-200 focus:ring-green-800"
         >
-          <span className="relative cursor-pointer px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+          <span className="relative cursor-pointer px-5 py-2.5 transition-all ease-in duration-75 bg-white bg-gray-900 rounded-md group-hover:bg-opacity-0">
             Filters
           </span>
         </div>
@@ -81,13 +87,13 @@ const SearchBar = ({ searchTweets }) => {
           onChange={(e) => {
             setTextValue(e.target.value)
           }}
-          className="block p-2.5 rounded-xl	indent-3 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-l-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
+          className="block p-2.5 rounded-xl	indent-3 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-l-gray-700  border-gray-600 placeholder-gray-400 text-white focus:border-blue-500"
           placeholder="Search on twitterMan..."
           required
         />
         <button
           type="submit"
-          className="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
         >
           <svg
             aria-hidden="true"

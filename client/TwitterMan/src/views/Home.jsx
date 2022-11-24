@@ -43,7 +43,7 @@ const Home = () => {
       let res = await fetch(url)
       res = await res.json()
       setTweetsData(res)
-      // await setSentiment(res
+      // await setSentiment(res)
     } catch (e) {
       console.log(e)
     }
