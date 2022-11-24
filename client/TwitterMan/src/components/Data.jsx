@@ -7,16 +7,16 @@ function DataRangePicker(props) {
   console.log(props.setEndDate)
   return (
     <div id="dateRangePickerId flex flex-1 rounded">
-      <div className=" rounded   flex-shrink-0 z-10 inline-flex w-full items-center text-sm font-medium  text-gray-900 bg-gray-100    focus:outline-none  bg-gray-700   text-white ">
+      <div className=" rounded   flex-shrink-0 z-10 inline-flex w-full items-center text-sm font-medium  text-gray-900 focus:outline-none   text-white ">
         <div className="relative">
           <DatePicker
             selected={props.startDate}
             onChange={(date) => {
               props.setStartDate(date)
             }}
-            className="text- rounded w-120 h-30 cursor-pointer m-3 bg-gray-800	p-1.5 text-center	"
+            className="text- rounded w-100 h-30 cursor-pointer m-1 bg-gray-800	p-1.5 text-center	"
           />
-          <div className="flex absolute inset-y-0  left-1 items-center pl-5 pointer-events-none">
+          <div className="flex absolute inset-y-0   items-center pl-5 pointer-events-none">
             <svg
               aria-hidden="true"
               className="w-5 h-5 text-white"
@@ -33,7 +33,7 @@ function DataRangePicker(props) {
           </div>
         </div>
 
-        <span className="mx-4 text-white">to</span>
+        <span className=" ml-2 text-white">to</span>
         <div className="relative">
           <DatePicker
             selected={props.endDate}

@@ -36,7 +36,7 @@ const TweetCard = ({ data }) => {
   return (
     <article
       id={data.id}
-      className="place-self-start mb-4 break-inside px-6 py-4 rounded-xl flex flex-col text-sm bg-white bg-slate-800 text-white"
+      className="place-self-start  transition hover:-translate-y-1 mb-4 break-inside px-6 py-4 rounded-xl flex flex-col text-sm bg-white bg-slate-800 text-white"
     >
       <div className="flex pb-5 items-start justify-between">
         <div className="flex">
