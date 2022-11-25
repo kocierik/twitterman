@@ -7,6 +7,7 @@ import * as Const from '../utils'
 
 const Home = () => {
   const [tweetsData, setTweetsData] = useState([])
+  const [tweetsDataFilter, setTweetsDataFilter] = useState([])
   const [sentimentIcon, setSentimentIcon] = useState(null)
   const [sliderValue, setSliderValue] = useState(null)
   const setSentiment = async (tweets) => {
@@ -25,7 +26,7 @@ const Home = () => {
       })
       res = await res.json()
       console.log(res)
-      tweetsWithSentiment = tweets.map((v, k) => {
+      tweetsWithSentiment = tweets?.map((v, k) => {
         v.sentiment = res['sentiments'][k]
         return v
       })
@@ -42,20 +43,28 @@ const Home = () => {
         textValue + formattedDates
       )
       let res = await fetch(url)
+      console.log(res)
       res = await res.json()
-      if (sliderValue) {
-        console.log('res ', res)
-        console.log('sentimentIcon ', sentimentIcon)
-        const filterSentiment = res.filter(item => item.sentiment == sentimentIcon)
-        setTweetsData(filterSentiment)
-      } else {
-        setTweetsData(res)
-      }
-      await setSentiment(res)
+      res = await setSentiment(res)
+      setTweetsData(res)
+      setTweetsDataFilter(res)
     } catch (e) {
       console.log(e)
     }
   }
+
+  const filterSentiment = () => {
+    if (sentimentIcon) {
+      const filterSentimentData = tweetsData.filter(item => item.sentiment == sentimentIcon)
+      setTweetsDataFilter(filterSentimentData)
+    }
+  }
+
+  useEffect(() => {
+    filterSentiment()
+    console.log('ok')
+  }, [sliderValue, tweetsData])
+
 
   const loadMore = async () => {
     try {
@@ -63,8 +72,11 @@ const Home = () => {
       let res = await fetch(url)
       res = await res.json()
       let sentimentRes = await setSentiment(res)
-      // setTweetsData((last) => [...last, ...res])
-      setTweetsData((last) => [...last, ...sentimentRes])
+      if (sentimentRes) {
+        setTweetsData((last) => [...last, ...sentimentRes])
+        console.log('set')
+      }
+      console.log('finito')
     } catch (e) {
       console.log(e)
     }
@@ -81,7 +93,7 @@ const Home = () => {
           <SearchBar searchTweets={searchTweets} sliderValue={sliderValue} setSliderValue={setSliderValue} sentimentIcon={sentimentIcon} setSentimentIcon={setSentimentIcon} />
         </div>
         <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
-          {tweetsData?.map((tweet, i) => {
+          {tweetsDataFilter?.map((tweet, i) => {
             return <TweetCard data={tweet} key={i} />
           })}
         </div>

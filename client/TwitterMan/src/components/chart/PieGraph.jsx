@@ -9,11 +9,7 @@ const PieGraph = ({ tweets }) => {
   const [sentimentData, SetSentimentData] = useState([]);
 
   const getSentiment = (tws) => {
-    var data = {
-      // positive: "",
-      // neutral: "",
-      // negative: "",
-    };
+    var data = {};
 
     tws.map((tw) => {
       if (data[tw.sentiment] == undefined) {
@@ -38,7 +34,7 @@ const PieGraph = ({ tweets }) => {
 
   return (
     <PieChart width={250} height={300}>
-      <Legend verticalAlign="bottom" height={36}/>
+      <Legend verticalAlign="bottom" height={36} />
       <Pie
         data={sentimentData}
         cx="50%"
