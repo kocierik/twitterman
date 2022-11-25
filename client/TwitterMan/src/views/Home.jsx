@@ -54,16 +54,19 @@ const Home = () => {
   }
 
   const filterSentiment = () => {
+    console.log(sentimentIcon)
     if (sentimentIcon) {
       const filterSentimentData = tweetsData.filter(item => item.sentiment == sentimentIcon)
       setTweetsDataFilter(filterSentimentData)
+    } else {
+      setTweetsDataFilter(tweetsData)
     }
   }
 
   useEffect(() => {
     filterSentiment()
     console.log('ok')
-  }, [sliderValue, tweetsData])
+  }, [tweetsData, sentimentIcon])
 
 
   const loadMore = async () => {
@@ -90,7 +93,7 @@ const Home = () => {
         className="App min-h-full px-5 dark:bg-gray-900 pt-16 pb-16  flex flex-col	gap-5"
       >
         <div className="flex justify-center">
-          <SearchBar searchTweets={searchTweets} sliderValue={sliderValue} setSliderValue={setSliderValue} sentimentIcon={sentimentIcon} setSentimentIcon={setSentimentIcon} />
+          <SearchBar tweetsData={tweetsData} setTweetsDataFilter={setTweetsDataFilter} searchTweets={searchTweets} sliderValue={sliderValue} setSliderValue={setSliderValue} sentimentIcon={sentimentIcon} setSentimentIcon={setSentimentIcon} />
         </div>
         <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
           {tweetsDataFilter?.map((tweet, i) => {

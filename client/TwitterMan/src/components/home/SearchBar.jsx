@@ -19,7 +19,7 @@ const calculateDate = (isStartDate) => {
   }
 }
 
-const SearchBar = ({ searchTweets, sliderValue, setSliderValue, sentimentIcon, setSentimentIcon }) => {
+const SearchBar = ({ setTweetsDataFilter, tweetsData, searchTweets, sliderValue, setSliderValue, sentimentIcon, setSentimentIcon }) => {
   const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
   const [textValue, setTextValue] = useState('')
   const [startDate, setStartDate] = useState(new Date(calculateDate(true)))
@@ -45,6 +45,17 @@ const SearchBar = ({ searchTweets, sliderValue, setSliderValue, sentimentIcon, s
       : endDate.toISOString()
     return `/date/${startString}/${endString}`
   }
+
+  const resetFilter = () => {
+    setSentimentIcon(null)
+    setSelectValue(Const.TWEET_USERNAME)
+    setStartDate(new Date(calculateDate(true)))
+    setEndDate(new Date(calculateDate(false)))
+    // setTweetsDataFilter(tweetsData)
+    // props.setShowModal(false)
+  }
+
+
 
   return (
     <form
@@ -79,6 +90,8 @@ const SearchBar = ({ searchTweets, sliderValue, setSliderValue, sentimentIcon, s
           sliderValue={sliderValue}
           sentimentIcon={sentimentIcon}
           setSentimentIcon={setSentimentIcon}
+          resetFilter={resetFilter}
+          setTweetsDataFilter={setTweetsDataFilter}
         />
       )}
 

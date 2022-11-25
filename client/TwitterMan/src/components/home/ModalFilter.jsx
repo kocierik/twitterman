@@ -103,13 +103,24 @@ const ModalFilter = (props) => {
                 className="w-full h-2 mb-5 bg-gray-200 rounded-lg appearance-none cursor-pointer bg-gray-600"
               />
             </div>
-            <div className="flex items-center justify-start w-full">
-              <button
-                onClick={() => props.setShowModal(false)}
-                className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 transition duration-150 ease-in-out hover:bg-indigo-600 bg-indigo-700 rounded text-white px-8 py-2 text-sm"
-              >
-                Submit
-              </button>
+            <div className="flex gap-5 items-center justify-start w-full">
+              <div>
+                <button
+                  onClick={() => props.setShowModal(false)}
+                  className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 transition duration-150 ease-in-out hover:bg-indigo-600 bg-indigo-700 rounded text-white px-8 py-2 text-sm"
+                >
+                  Submit
+                </button>
+              </div>
+              <div>
+                <button
+                  onClick={() => { props.resetFilter(); props.setTweetsDataFilter(props.tweetsData); props.setSliderValue(null) }}
+                  className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 transition duration-150 ease-in-out hover:bg-red-600 bg-red-700 rounded text-white px-8 py-2 text-sm"
+                >
+                  Reset
+                </button>
+              </div>
+
             </div>
             <button
               className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-white-400 hover:text-white-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600"
