@@ -39,7 +39,7 @@ const Home = () => {
 
   const searchTweets = async (selectValue, textValue) => {
     try {
-      const url = Const.stringFormat(Const.SERVER_URL + selectValue, textValue)
+      const url = Const.stringFormat(Const.SERVER_URL + selectValue, 15, textValue)
       let res = await fetch(url)
       res = await res.json()
       setTweetsData(await setSentiment(res));
@@ -50,7 +50,7 @@ const Home = () => {
 
   const loadMore = async () => {
     try {
-      const url = Const.SERVER_URL + Const.TWEET_LOAD
+      const url = Const.stringFormat(Const.SERVER_URL + Const.TWEET_LOAD, 15)
       let res = await fetch(url);
       res = await res.json();
       let sentimentRes = await setSentiment(res);
