@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import * as Const from '../../utils'
 import Data from '../Data'
+
 const ModalFilter = (props) => {
+  
   const [sliderValue, setSliderValue] = useState(null)
   const evaluateRangeInput = (value) => {
     props.setSliderValue(value)
@@ -63,6 +65,7 @@ const ModalFilter = (props) => {
               </label>
             </div>
             <select
+              defaultValue={props.selectValue}
               onChange={(choice) => {
                 props.setSelectValue(choice.target.value)
               }}
