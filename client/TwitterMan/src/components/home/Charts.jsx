@@ -6,8 +6,6 @@ import WordCloud from '../chart/WordCloud'
 const Charts = ({ tweetsData }) => {
   return (
     <div
-      // TODO: fix zoom-in
-      // data-aos="zoom-in" 
       className="flex flex-col  md:flex-row gap-5 flex-1 p-5 justify-center"
     >
       <div
@@ -20,7 +18,7 @@ const Charts = ({ tweetsData }) => {
         </h5>
 
         <div className="flex flex-1 justify-center">
-          <PieGraph tweets={tweetsData}/>
+          <PieGraph tweets={tweetsData} />
         </div>
       </div>
       <div

@@ -38,7 +38,6 @@ const SearchBar = ({ setTweetsDataFilter, tweetsData, searchTweets, sliderValue,
       }-${startDate.getDate()}T00:00:00.000Z`
 
     let today = new Date()
-    console.log(compareDates(today, endDate))
     let endString = !compareDates(today, endDate)
       ? `${endDate.getFullYear()}-${endDate.getMonth() + 1
       }-${endDate.getDate()}T23:59:59.000Z`
@@ -54,8 +53,6 @@ const SearchBar = ({ setTweetsDataFilter, tweetsData, searchTweets, sliderValue,
     // setTweetsDataFilter(tweetsData)
     // props.setShowModal(false)
   }
-
-
 
   return (
     <form

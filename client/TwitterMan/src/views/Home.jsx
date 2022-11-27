@@ -7,10 +7,11 @@ import * as Const from '../utils'
 
 const Home = () => {
   const [tweetsData, setTweetsData] = useState([])
-  const [tweetsDataFilter, setTweetsDataFilter] = useState([])
+  const [tweetsDataFiltered, setTweetsDataFiltered] = useState([])
   const [sentimentIcon, setSentimentIcon] = useState(null)
   const [sliderValue, setSliderValue] = useState(null)
-  const setSentiment = async (tweets) => {
+
+  const fetchSentiment = async (tweets) => {
     let tweetsWithSentiment = []
     try {
       var data = []
@@ -25,7 +26,6 @@ const Home = () => {
         body: JSON.stringify(data),
       })
       res = await res.json()
-      console.log(res)
       tweetsWithSentiment = tweets?.map((v, k) => {
         v.sentiment = res['sentiments'][k]
         return v
@@ -43,29 +43,30 @@ const Home = () => {
         textValue + formattedDates
       )
       let res = await fetch(url)
-      console.log(res)
       res = await res.json()
-      res = await setSentiment(res)
-      setTweetsData(res)
-      setTweetsDataFilter(res)
+      if (res) {
+        res = await fetchSentiment(res)
+        setTweetsData(res)
+        setTweetsDataFiltered(res)
+      } else {
+        alert("Tweets not found")
+      }
     } catch (e) {
       console.log(e)
     }
   }
 
   const filterSentiment = () => {
-    console.log(sentimentIcon)
     if (sentimentIcon) {
       const filterSentimentData = tweetsData.filter(item => item.sentiment == sentimentIcon)
-      setTweetsDataFilter(filterSentimentData)
+      setTweetsDataFiltered(filterSentimentData)
     } else {
-      setTweetsDataFilter(tweetsData)
+      setTweetsDataFiltered(tweetsData)
     }
   }
 
   useEffect(() => {
     filterSentiment()
-    console.log('ok')
   }, [tweetsData, sentimentIcon])
 
 
@@ -74,12 +75,12 @@ const Home = () => {
       const url = Const.SERVER_URL + Const.TWEET_LOAD
       let res = await fetch(url)
       res = await res.json()
-      let sentimentRes = await setSentiment(res)
-      if (sentimentRes) {
+      if (res) {
+        let sentimentRes = await fetchSentiment(res)
         setTweetsData((last) => [...last, ...sentimentRes])
-        console.log('set')
+      } else {
+        alert("No more tweets to load")
       }
-      console.log('finito')
     } catch (e) {
       console.log(e)
     }
@@ -93,10 +94,10 @@ const Home = () => {
         className="App min-h-full px-5 dark:bg-gray-900 pt-16 pb-16  flex flex-col	gap-5"
       >
         <div className="flex justify-center">
-          <SearchBar tweetsData={tweetsData} setTweetsDataFilter={setTweetsDataFilter} searchTweets={searchTweets} sliderValue={sliderValue} setSliderValue={setSliderValue} sentimentIcon={sentimentIcon} setSentimentIcon={setSentimentIcon} />
+          <SearchBar tweetsData={tweetsData} setTweetsDataFilter={setTweetsDataFiltered} searchTweets={searchTweets} sliderValue={sliderValue} setSliderValue={setSliderValue} sentimentIcon={sentimentIcon} setSentimentIcon={setSentimentIcon} />
         </div>
         <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
-          {tweetsDataFilter?.map((tweet, i) => {
+          {tweetsDataFiltered?.map((tweet, i) => {
             return <TweetCard data={tweet} key={i} />
           })}
         </div>
@@ -112,12 +113,12 @@ const Home = () => {
           )}
         </div>
       </div>
-      {tweetsData?.length > 0 && (
+      {tweetsDataFiltered?.length > 0 && (
         <div className="p-10 dark:bg-gray-900">
           <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
             Charts
           </div>
-          <Charts tweetsData={tweetsData} />
+          <Charts tweetsData={tweetsDataFiltered} />
         </div>
       )}
       {tweetsData?.length > 0 && (
@@ -125,7 +126,7 @@ const Home = () => {
           <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
             TweetMaps
           </div>
-          <Maps tweetsData={tweetsData} />
+          <Maps tweetsData={tweetsDataFiltered} />
         </div>
       )}
     </>

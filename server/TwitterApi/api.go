@@ -1,7 +1,6 @@
 package TwitterApi
 
 import (
-	"fmt"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/database"
@@ -74,8 +73,7 @@ func GetTweetInfoById(id, start, end string) []utils.Tweet {
 
 // Get next page of last req
 func GetNextTokenReq() []utils.Tweet {
-	if !cmp.Equal(lastRequest, requestStruct{}) {
-		fmt.Println("NextTOKEN")
+	if !cmp.Equal(lastRequest, requestStruct{}) && lastRequest.NextToken != "" {
 		lastRequest.Params["next_token"] = lastRequest.NextToken
 
 		body := makeTwitterRequest("GET", lastRequest.EndPoint, lastRequest.Params)

@@ -12,10 +12,12 @@ const PieGraph = ({ tweets }) => {
     var data = {};
 
     tws.map((tw) => {
-      if (data[tw.sentiment] == undefined) {
-        data[tw.sentiment] = 1;
-      } else {
-        data[tw.sentiment] += 1;
+      if (tw.sentiment !== "") {
+        if (data[tw.sentiment] == undefined) {
+          data[tw.sentiment] = 1;
+        } else {
+          data[tw.sentiment] += 1;
+        }
       }
     });
 
@@ -47,7 +49,7 @@ const PieGraph = ({ tweets }) => {
         dataName="name"
         label
       >
-        {sentimentData.map((entry, index) =>
+        {sentimentData?.map((entry, index) =>
           (<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
         )}
       </Pie>
