@@ -5,7 +5,6 @@ import { Route, Routes } from 'react-router-dom'
 import Login from '../src/views/Login'
 import Register from '../src/views/Register'
 import Footer from './components/Footer'
-import TweetMaps from './views/TweetMaps'
 function App() {
   return (
     <>
@@ -15,7 +14,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/tweetMaps/:id" element={<TweetMaps />} />
         </Routes>
         <Footer />
       </div>
