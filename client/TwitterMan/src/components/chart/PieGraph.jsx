@@ -6,7 +6,7 @@ import { PieChart, Pie, Cell, Legend } from 'recharts'
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
 const PieGraph = ({ tweets }) => {
-  const [sentimentData, SetSentimentData] = useState([]);
+  const [sentimentData, setSentimentData] = useState([]);
 
   const getSentiment = (tws) => {
     var data = {};
@@ -31,8 +31,8 @@ const PieGraph = ({ tweets }) => {
   }
 
   useEffect(() => {
-    SetSentimentData(getSentiment(tweets));
-  }, [])
+    setSentimentData(getSentiment(tweets));
+  }, [tweets])
 
   return (
     <PieChart width={250} height={300}>
