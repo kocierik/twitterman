@@ -18,8 +18,8 @@ var corsEnabledURLs = []string{
 
 var endpointList = []endpoint{
 	// {"/tweet/:mode/:query/date/:start/:end", getTweets, "GET"},
-	{"/tweet/:mode/:query", getTweets, "GET"},
-	{"/tweet/loadNextPage", getNewPageTweets, "GET"},
+	{"/tweet/:results/:mode/:query", getTweets, "GET"},
+	{"/tweet/:results/loadNextPage", getNewPageTweets, "GET"},
 	{"/count/:mode/:query/:granularity", getTweetCount, "GET"},
 	{"/user/:username", getUserInfo, "GET"},
 	{"/login", loginApi, "POST"},
