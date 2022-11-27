@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react'
 import ReactWordcloud from 'react-wordcloud'
-import 'tippy.js/dist/tippy.css'
-import 'tippy.js/animations/scale.css'
 
 const WordCloud = ({ contentData }) => {
   useEffect(() => {
@@ -29,12 +27,10 @@ function getOccurencesFromTweets(contentData) {
 
   let words = []  // { [text: 'told', value: 64], ... }
   words = Array.from(wordsOccurences, ([word, value]) => {
-    if (value < 2)
-      return {};
     return { text: word, value: value };
   });
 
-  return words
+  return words.filter((word) => word.value > 2)
 }
 
 function getFormattedWordsList(content) {
