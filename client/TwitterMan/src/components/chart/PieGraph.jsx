@@ -6,20 +6,18 @@ import { PieChart, Pie, Cell, Legend } from 'recharts'
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
 const PieGraph = ({ tweets }) => {
-  const [sentimentData, SetSentimentData] = useState([]);
+  const [sentimentData, setSentimentData] = useState([]);
 
   const getSentiment = (tws) => {
-    var data = {
-      // positive: "",
-      // neutral: "",
-      // negative: "",
-    };
+    var data = {};
 
     tws.map((tw) => {
-      if (data[tw.sentiment] == undefined) {
-        data[tw.sentiment] = 1;
-      } else {
-        data[tw.sentiment] += 1;
+      if (tw.sentiment !== "") {
+        if (data[tw.sentiment] == undefined) {
+          data[tw.sentiment] = 1;
+        } else {
+          data[tw.sentiment] += 1;
+        }
       }
     });
 
@@ -33,12 +31,12 @@ const PieGraph = ({ tweets }) => {
   }
 
   useEffect(() => {
-    SetSentimentData(getSentiment(tweets));
-  }, [])
+    setSentimentData(getSentiment(tweets));
+  }, [tweets])
 
   return (
     <PieChart width={250} height={300}>
-      <Legend verticalAlign="bottom" height={36}/>
+      <Legend verticalAlign="bottom" height={36} />
       <Pie
         data={sentimentData}
         cx="50%"
@@ -51,7 +49,7 @@ const PieGraph = ({ tweets }) => {
         dataName="name"
         label
       >
-        {sentimentData.map((entry, index) =>
+        {sentimentData?.map((entry, index) =>
           (<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
         )}
       </Pie>

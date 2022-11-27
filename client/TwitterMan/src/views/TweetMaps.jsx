@@ -8,14 +8,12 @@ const TweetMaps = () => {
   const params = useParams()
 
   const getPosition = async () => {
-    // console.log(params)
     const url = Const.stringFormat(
       Const.SERVER_URL + Const.TWEET_ID,
       params?.id
     )
     const dataPosition = await fetch(url)
     const resp = await dataPosition.json()
-    // console.log(resp)
     setGeo(resp)
   }
   useEffect(() => {
