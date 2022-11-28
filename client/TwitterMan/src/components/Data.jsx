@@ -13,6 +13,9 @@ function DataRangePicker(props) {
             onChange={(date) => {
               props.setStartDate(date)
             }}
+            filterDate = {(date) => {
+              return new Date() > date;
+            }}
             className="text- rounded w-100 h-30 cursor-pointer m-1 bg-gray-800	p-1.5 text-center	"
           />
           <div className="flex absolute inset-y-0   items-center pl-5 pointer-events-none">
@@ -38,6 +41,10 @@ function DataRangePicker(props) {
             selected={props.endDate}
             onChange={(date) => {
               props.setEndDate(date)
+            }}
+
+            filterDate = {(date) => {
+              return new Date() > date;
             }}
             className=" rounded w-120 h-30 cursor-pointer m-3 bg-gray-800	p-1.5 text-center"
           />
