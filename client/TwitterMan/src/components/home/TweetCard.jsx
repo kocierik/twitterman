@@ -6,7 +6,7 @@ import Setting from './Setting'
 const TweetCard = ({ data }) => {
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
-  const [sentimentIcon, setSentimetIcon] = useState("?")
+  const [sentimentIcon, setSentimetIcon] = useState('?')
   const settingInfoDescription = [
     {
       name: 'Maps',
@@ -15,15 +15,15 @@ const TweetCard = ({ data }) => {
   ]
   useEffect(() => {
     switch (data.sentiment) {
-      case "positive":
-        setSentimetIcon('😀');
-        break;
-      case "neutral":
-        setSentimetIcon('😐');
-        break;
-      case "negative":
-        setSentimetIcon('🙁');
-        break;
+      case 'positive':
+        setSentimetIcon('😀')
+        break
+      case 'neutral':
+        setSentimetIcon('😐')
+        break
+      case 'negative':
+        setSentimetIcon('🙁')
+        break
     }
   }, [data])
 
@@ -109,12 +109,8 @@ const TweetCard = ({ data }) => {
           </span>
         </div>
         <div className="inline-flex items-center">
-          <span className="m-2">
-            {sentimentIcon}
-          </span>
-          <span className="font-bold">
-            {data.sentiment}
-          </span>
+          <span className="m-2">{sentimentIcon}</span>
+          <span className="font-bold">{data.sentiment}</span>
         </div>
       </div>
     </article>

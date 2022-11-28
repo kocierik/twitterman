@@ -10,7 +10,7 @@ const Register = () => {
   const navigate = useNavigate()
 
   async function submitRegister(e) {
-    e.preventDefault();
+    e.preventDefault()
     try {
       let res = await fetch(`${SERVER_URL}/register`, {
         method: 'POST',
@@ -23,13 +23,13 @@ const Register = () => {
           email: email.current.value,
           password: password.current.value,
         }),
-      });
+      })
       res = await res.json()
       console.log(res)
 
       if (!res.success) {
         alert(res.message)
-        return;
+        return
       }
       navigate('/')
       // TODO: Handle when you are registered correctly, maybe navigate('/home')
@@ -61,7 +61,11 @@ const Register = () => {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Sign up with an account
             </h1>
-            <form className="space-y-4 md:space-y-6" method="POST" onSubmit={submitRegister}>
+            <form
+              className="space-y-4 md:space-y-6"
+              method="POST"
+              onSubmit={submitRegister}
+            >
               <div>
                 <label
                   htmlFor="email"

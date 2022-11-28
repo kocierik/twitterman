@@ -3,7 +3,7 @@ import twitterman from '../assets/twitterman.png'
 
 const Footer = () => {
   return (
-    <footer className="p-4 flex flex-col bg-white rounded-lg shadow md:px-6 md:py-8 bg-gray-900" >
+    <footer className="p-4 flex flex-col bg-white rounded-lg shadow md:px-6 md:py-8 bg-gray-900">
       <div className="sm:flex sm:items-center sm:justify-between">
         <a className="flex items-center mb-4 sm:mb-0">
           <img src={twitterman} alt="Twitterman logo" className="mr-3 h-8" />
@@ -42,7 +42,7 @@ const Footer = () => {
         </a>
         . All Rights Reserved.
       </span>
-    </footer >
+    </footer>
   )
 }
 

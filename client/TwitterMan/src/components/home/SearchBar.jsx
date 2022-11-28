@@ -19,7 +19,15 @@ const calculateDate = (isStartDate) => {
   }
 }
 
-const SearchBar = ({ setTweetsDataFilter, tweetsData, searchTweets, sliderValue, setSliderValue, sentimentIcon, setSentimentIcon }) => {
+const SearchBar = ({
+  setTweetsDataFilter,
+  tweetsData,
+  searchTweets,
+  sliderValue,
+  setSliderValue,
+  sentimentIcon,
+  setSentimentIcon,
+}) => {
   const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
   const [textValue, setTextValue] = useState('')
   const [startDate, setStartDate] = useState(new Date(calculateDate(true)))
@@ -34,13 +42,15 @@ const SearchBar = ({ setTweetsDataFilter, tweetsData, searchTweets, sliderValue,
     )
   }
   const formattedData = () => {
-    let startString = `${startDate.getFullYear()}-${startDate.getMonth() + 1
-      }-${startDate.getDate()}T00:00:00.000Z`
+    let startString = `${startDate.getFullYear()}-${
+      startDate.getMonth() + 1
+    }-${startDate.getDate()}T00:00:00.000Z`
 
     let today = new Date()
     let endString = !compareDates(today, endDate)
-      ? `${endDate.getFullYear()}-${endDate.getMonth() + 1
-      }-${endDate.getDate()}T23:59:59.000Z`
+      ? `${endDate.getFullYear()}-${
+          endDate.getMonth() + 1
+        }-${endDate.getDate()}T23:59:59.000Z`
       : endDate.toISOString()
     return `/date/${startString}/${endString}`
   }

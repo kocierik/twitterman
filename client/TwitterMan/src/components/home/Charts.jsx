@@ -5,9 +5,7 @@ import WordCloud from '../chart/WordCloud'
 
 const Charts = ({ tweetsData }) => {
   return (
-    <div
-      className="flex flex-col  md:flex-row gap-5 flex-1 p-5 justify-center"
-    >
+    <div className="flex flex-col  md:flex-row gap-5 flex-1 p-5 justify-center">
       <div
         href="#"
         className="block p-6 max-w-sm  rounded-lg border border-gray-200 shadow-md  bg-gray-800 border-gray-700 "
@@ -48,6 +46,5 @@ const Charts = ({ tweetsData }) => {
     </div>
   )
 }
-
 
 export default Charts
