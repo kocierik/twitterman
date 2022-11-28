@@ -61,18 +61,20 @@ func InsertTweetList(twts []utils.Tweet) {
 	}
 }
 
-func GetTweetsByTwitterId(id string) []utils.Tweet {
+func GetTweetsByTwitterId(id, start, end string) []utils.Tweet {
 	myDict := bson.M{
-		"id": primitive.Regex{Pattern: "^" + id + "$", Options: "i"},
+		"id":        primitive.Regex{Pattern: "^" + id + "$", Options: "i"},
+		"timestamp": bson.M{"$gte": start, "$lte": end},
 	}
 	res := find(myDict, "Tweets")
 	binded := bindType[[]utils.Tweet](res)
 	return binded
 }
 
-func GetTweetsByUsername(username string) []utils.Tweet {
+func GetTweetsByUsername(username, start, end string) []utils.Tweet {
 	myDict := bson.M{
-		"username": primitive.Regex{Pattern: "^" + username + "$", Options: "i"},
+		"username":  primitive.Regex{Pattern: "^" + username + "$", Options: "i"},
+		"timestamp": bson.M{"$gte": start, "$lte": end},
 	}
 	res := find(myDict, "Tweets")
 	log.Println(res)
@@ -80,9 +82,10 @@ func GetTweetsByUsername(username string) []utils.Tweet {
 	return binded
 }
 
-func GetTweetsByKeyword(keyword string) []utils.Tweet {
+func GetTweetsByKeyword(keyword, start, end string) []utils.Tweet {
 	myDict := bson.M{
-		"content": primitive.Regex{Pattern: keyword, Options: "i"},
+		"content":   primitive.Regex{Pattern: keyword, Options: "i"},
+		"timestamp": bson.M{"$gte": start, "$lte": end},
 	}
 	log.Print(myDict)
 	res := find(myDict, "Tweets")
