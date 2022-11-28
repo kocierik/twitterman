@@ -3,7 +3,6 @@ import * as Const from '../../utils'
 import Data from '../Data'
 
 const ModalFilter = (props) => {
-  
   const [sliderValue, setSliderValue] = useState(null)
   const evaluateRangeInput = (value) => {
     props.setSliderValue(value)
@@ -117,13 +116,16 @@ const ModalFilter = (props) => {
               </div>
               <div>
                 <button
-                  onClick={() => { props.resetFilter(); props.setTweetsDataFilter(props.tweetsData); props.setSliderValue(null) }}
+                  onClick={() => {
+                    props.resetFilter()
+                    props.setTweetsDataFilter(props.tweetsData)
+                    props.setSliderValue(null)
+                  }}
                   className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700 transition duration-150 ease-in-out hover:bg-red-600 bg-red-700 rounded text-white px-8 py-2 text-sm"
                 >
                   Reset
                 </button>
               </div>
-
             </div>
             <button
               className="cursor-pointer absolute top-0 right-0 mt-4 mr-5 text-white-400 hover:text-white-600 transition duration-150 ease-in-out rounded focus:ring-2 focus:outline-none focus:ring-gray-600"

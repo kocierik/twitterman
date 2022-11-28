@@ -3,35 +3,35 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { PieChart, Pie, Cell, Legend } from 'recharts'
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28']
 
 const PieGraph = ({ tweets }) => {
-  const [sentimentData, setSentimentData] = useState([]);
+  const [sentimentData, setSentimentData] = useState([])
 
   const getSentiment = (tws) => {
-    var data = {};
+    var data = {}
 
     tws.map((tw) => {
-      if (tw.sentiment !== "") {
+      if (tw.sentiment !== '') {
         if (data[tw.sentiment] == undefined) {
-          data[tw.sentiment] = 1;
+          data[tw.sentiment] = 1
         } else {
-          data[tw.sentiment] += 1;
+          data[tw.sentiment] += 1
         }
       }
-    });
+    })
 
-    var sentimentDataReturn = [];
+    var sentimentDataReturn = []
 
     for (var k in data) {
       sentimentDataReturn.push({ name: k, value: data[k] })
-    };
+    }
 
-    return sentimentDataReturn;
+    return sentimentDataReturn
   }
 
   useEffect(() => {
-    setSentimentData(getSentiment(tweets));
+    setSentimentData(getSentiment(tweets))
   }, [tweets])
 
   return (
@@ -49,9 +49,9 @@ const PieGraph = ({ tweets }) => {
         dataName="name"
         label
       >
-        {sentimentData?.map((entry, index) =>
-          (<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)
-        )}
+        {sentimentData?.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+        ))}
       </Pie>
     </PieChart>
   )
