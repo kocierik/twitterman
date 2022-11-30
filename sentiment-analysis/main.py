@@ -16,12 +16,12 @@ def get_sentiment():
   if (content_type == 'application/json'):
     data = request.json
     for d in data:
-      lang_code = Detector(d["text"]).language.code
+      lang_code = Detector(d["text"], quiet=True).language.code
       if lang_code == "it":
         res = it_analyzer.predict([d["text"]])
         res_list.append(res[0])
       elif lang_code == "en":
-        res = en_analyzer.polarity_scores(d["text"])
+        res = en_analyzer.polarity_scores([d["text"]])
         res = "positive" if res["compound"] > 0.5 else ("negative" if res["compound"] < -0.5 else "neutral")
         res_list.append(res)
       else:
@@ -29,7 +29,7 @@ def get_sentiment():
         res_list.append("")
 
     
-    return res_list
+    return {"sentiments":res_list}
   else:
     return 'Content-Type not supported!'
 

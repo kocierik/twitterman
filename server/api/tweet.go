@@ -25,8 +25,8 @@ func getTweets(c *gin.Context) {
 	max_results := c.Param("results")
 	mode := c.Param("mode")
 	query := c.Param("query")
-	// start := c.Param("start")
-	// end := c.Param("end")
+	start := c.Param("start")
+	end := c.Param("end")
 	var twRet any
 
 	if !isModeCorrect(c, mode) {
@@ -34,19 +34,16 @@ func getTweets(c *gin.Context) {
 	}
 
 	if mode == "id" {
-		twRet = TwitterApi.GetTweetInfoById(query)
+		twRet = TwitterApi.GetTweetInfoById(query, start, end)
 	} else {
 		switch mode {
 		case "keyword":
-			break
 		case "hashtag":
 			query = "#" + query
-			break
 		case "user":
 			query = "from:" + query
-			break
 		}
-		twRet = TwitterApi.GetTwsByQuery(mode, query, max_results)
+		twRet = TwitterApi.GetTwsByQuery(mode, query, max_results, start, end)
 	}
 
 	utils.SendOkResponse(c, twRet)

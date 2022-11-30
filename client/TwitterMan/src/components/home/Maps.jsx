@@ -13,13 +13,21 @@ const Maps = ({ tweetsData }) => {
     <>
       <Map height={500} defaultCenter={[50.879, 4.6997]} defaultZoom={5}>
         {data?.map((tweet, i) => {
-          return (
-            <Marker
-              key={i}
-              width={50}
-              anchor={[tweet?.geo?.coordinates?.x, tweet?.geo?.coordinates?.y]}
-            />
-          )
+          if (
+            tweet?.geo?.coordinates?.x != null &&
+            tweet?.geo?.coordinates?.y != null
+          ) {
+            return (
+              <Marker
+                key={i}
+                width={50}
+                anchor={[
+                  tweet?.geo?.coordinates?.x,
+                  tweet?.geo?.coordinates?.y,
+                ]}
+              />
+            )
+          }
         })}
       </Map>
     </>
