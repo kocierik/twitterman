@@ -28,7 +28,7 @@ const Charts = ({ tweetsData }) => {
           <hr className="my-3 mx-auto h-1 bg-gray-100 rounded border-0  bg-gray-700" />
         </h5>
         <div className="flex flex-1 justify-center items-end">
-          <BarGraph />
+          <BarGraph tweets={tweetsData} frequency={1440} />
         </div>
       </div>
       <div
