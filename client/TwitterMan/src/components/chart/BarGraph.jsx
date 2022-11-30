@@ -1,13 +1,6 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-} from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 
 const BarGraph = ({ tweets, frequency }) => {
   const [data, setData] = useState([])
@@ -48,12 +41,26 @@ const BarGraph = ({ tweets, frequency }) => {
   // prede la prima data e l'ultima dai tweet e costruisce un array di date ad intervalli dati dalla frequenza
   const getDateListWithFreq = () => {
     var dateWithFreqList = []
-    var firstDate = newDate(tweets[0].timestamp)
+    var firstDate = newDate(
+      Math.min.apply(
+        null,
+        tweets.map((tw) => {
+          return newDate(tw.timestamp)
+        })
+      )
+    )
     firstDate.setHours(0, 0, 0, 0)
-    var lastDate = newDate(tweets[tweets.length - 1].timestamp)
-    lastDate.setHours(23, 59, 59)
+    var lastDate = newDate(
+      Math.max.apply(
+        null,
+        tweets.map((tw) => {
+          return newDate(tw.timestamp)
+        })
+      )
+    )
+    lastDate.setDate(lastDate.getDate() + 1) // a day offset
+    lastDate.setHours(0, 0, 0)
     dateWithFreqList.push(firstDate)
-    console.log(lastDate)
 
     var nextFrequencyDate = addMinutes(frequency, firstDate)
     while (nextFrequencyDate < lastDate) {
@@ -86,23 +93,28 @@ const BarGraph = ({ tweets, frequency }) => {
     })
 
     // formattiamo i dati per come li vuole la libreria
+    var zeroDates = []
     var dataReturned = []
     for (const [key, value] of Object.entries(tmp)) {
-      dataReturned.push({ name: key, number: value })
+      if (zeroDates.length >= 0 && value === 0) {
+        zeroDates.push(key)
+      } else if (zeroDates.length > 0 && value !== 0) {
+        if (zeroDates.length === 1)
+          dataReturned.push({ name: zeroDates[0], number: 0 })
+        else
+          dataReturned.push({
+            name: `${zeroDates[0]} - ${zeroDates[zeroDates.length - 1]}`,
+            number: 0,
+          })
+        zeroDates = []
+      }
+      if (value !== 0) dataReturned.push({ name: key, number: value })
     }
 
-    return dataReturned.slice(0,-1)
-  }
-
-  const sortTweets = () => {
-    tweets.sort((a, b) => {
-      return new Date(a.timestamp) - new Date(b.timestamp)
-    })
+    return dataReturned
   }
 
   useEffect(() => {
-    sortTweets()
-
     setData(elaborateFrequency())
   }, [tweets, frequency])
 
