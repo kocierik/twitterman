@@ -2,7 +2,6 @@ package api
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -15,13 +14,9 @@ import (
 
 func sendTestRequest(method, url string, body io.Reader) ([]byte, *httptest.ResponseRecorder) {
 	req, _ := http.NewRequest(method, url, body)
-	fmt.Println("\n+++++++++++PORCOIDO+++++")
-	fmt.Println(req)
 	res := httptest.NewRecorder()
 	utils.Router.ServeHTTP(res, req)
 
-	fmt.Println("\n+++++++++++PORCOIDO+++++")
-	fmt.Println(res)
 	responseData, _ := ioutil.ReadAll(res.Body)
 	return responseData, res
 }
@@ -61,7 +56,6 @@ func TestGetTweetById(t *testing.T) {
 	assert.Equal(t, tmpMock, result)
 }
 
-/*
 func TestGetTweetsByHashtag(t *testing.T) {
 	initApiTest()
 
@@ -72,6 +66,7 @@ func TestGetTweetsByHashtag(t *testing.T) {
 	assert.Equal(t, 1, 1)
 }
 
+/*
 func TestGetTweetsByKeyword(t *testing.T) {
 	initApiTest()
 
