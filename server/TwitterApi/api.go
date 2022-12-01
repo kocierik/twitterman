@@ -1,8 +1,11 @@
 package TwitterApi
 
 import (
+	"time"
+
 	"git.hjkl.gq/team7/twitterman/server/database"
 	"git.hjkl.gq/team7/twitterman/server/utils"
+	"github.com/google/go-cmp/cmp"
 	"golang.org/x/exp/slices"
 )
 
@@ -24,7 +27,7 @@ var mediaField = "url,height,width,preview_image_url"
 var placeField = "geo"
 
 // Last request made by this package
-var lastRequest requestStruct
+var lastRequest = requestStruct{}
 
 /* Utils function for getting user information */
 
@@ -40,10 +43,12 @@ func GetUserInfoByUsername(username string) TwitterUserStruct {
 	return result.Data
 }
 
-func GetTweetInfoById(id string) []utils.Tweet {
+func GetTweetInfoById(id, start, end string) []utils.Tweet {
 	endpoint := utils.TwitterApi + "/tweets"
 
 	q := baseQuery("ids", id)
+	q["start_time"] = start
+	q["end_time"] = end
 
 	body := makeTwitterRequest("GET", endpoint, q)
 
@@ -52,7 +57,7 @@ func GetTweetInfoById(id string) []utils.Tweet {
 	ret := castTweetStructToMyTweet(result)
 
 	// Get other results from cache
-	cache := searchCache("id", id)
+	cache := searchCache("id", id, start, end)
 
 	// Save new results in cache
 	database.InsertTweetList(ret)
@@ -68,41 +73,66 @@ func GetTweetInfoById(id string) []utils.Tweet {
 
 // Get next page of last req
 func GetNextTokenReq() []utils.Tweet {
-	lastRequest.Params["next_token"] = lastRequest.NextToken
+	if !cmp.Equal(lastRequest, requestStruct{}) && lastRequest.NextToken != "" {
+		lastRequest.Params["next_token"] = lastRequest.NextToken
 
-	body := makeTwitterRequest("GET", lastRequest.EndPoint, lastRequest.Params)
+		body := makeTwitterRequest("GET", lastRequest.EndPoint, lastRequest.Params)
 
-	result := utils.UnmarshalToJson[DataTweet](body)
+		result := utils.UnmarshalToJson[DataTweet](body)
 
-	lastRequest.NextToken = result.Meta.NextToken
+		lastRequest.NextToken = result.Meta.NextToken
 
-	ret := castTweetStructToMyTweet(result)
+		ret := castTweetStructToMyTweet(result)
 
-	// Save new query in cache
-	database.InsertTweetList(ret)
+		// Save new query in cache
+		database.InsertTweetList(ret)
 
-	return ret
+		return ret
+	}
+	return nil
+}
+
+func checkDates(start, end string) (string, string, bool) {
+	now := time.Now()
+	sstart, _ := time.Parse("2006-01-_2T15:04:05.000Z", start)
+	eend, _ := time.Parse("2006-01-_2T15:04:05.000Z", end)
+	week_before := now.AddDate(0, 0, -7) // in Format va questa data perché gli sviluppatori di go sono dei pazzi furenti
+	shouldRequest := true
+
+	//if end date is before
+	if eend.Before(week_before) {
+		shouldRequest = false
+	} else {
+		if sstart.Before(week_before) {
+			start = week_before.Format("2006-01-_2T15:04:05Z")
+		}
+	}
+
+	return start, end, shouldRequest
 }
 
 // Get recent tweets by query
-func GetTwsByQuery(mode, query string) []utils.Tweet {
+func GetTwsByQuery(mode, query, start, end string) []utils.Tweet {
+	var ret []utils.Tweet
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
-
 	q := baseQuery("query", query)
 
-	body := makeTwitterRequest("GET", endpoint, q)
+	// fmt.Println(start, end)
+	newstart, newend, shouldRequest := checkDates(start, end)
 
-	result := utils.UnmarshalToJson[DataTweet](body)
-
-	lastRequest = requestStruct{EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
-
-	ret := castTweetStructToMyTweet(result)
+	if shouldRequest {
+		q["start_time"] = newstart
+		q["end_time"] = newend
+		body := makeTwitterRequest("GET", endpoint, q)
+		result := utils.UnmarshalToJson[DataTweet](body)
+		lastRequest = requestStruct{EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
+		ret = castTweetStructToMyTweet(result)
+		// Save new query in cache
+		database.InsertTweetList(ret)
+	}
 
 	// Get other results from cache
-	cache := searchCache(mode, query)
-
-	// Save new query in cache
-	database.InsertTweetList(ret)
+	cache := searchCache(mode, query, start, end)
 
 	for _, k := range cache {
 		if slices.IndexFunc(ret, func(v utils.Tweet) bool { return (v.TwitterId == k.TwitterId) }) == -1 {

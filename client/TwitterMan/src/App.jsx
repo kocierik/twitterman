@@ -6,6 +6,7 @@ import Login from '../src/views/Login'
 import Register from '../src/views/Register'
 import Footer from './components/Footer'
 import TweetMaps from './views/TweetMaps'
+
 function App() {
   return (
     <>
