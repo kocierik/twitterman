@@ -2,9 +2,6 @@ import React, { useEffect } from 'react'
 import ReactWordcloud from 'react-wordcloud'
 
 const WordCloud = ({ contentData }) => {
-  useEffect(() => {
-    // console.log(contentData)
-  }, [])
 
   const callbacks = {
     getWordTooltip: (word) =>

@@ -3,7 +3,7 @@ import BarGraph from '../chart/BarGraph'
 import PieGraph from '../chart/PieGraph'
 import WordCloud from '../chart/WordCloud'
 
-const Charts = ({ tweetsData }) => {
+const Charts = ({ tweetsData, frequency }) => {
   return (
     <div className="flex flex-col  md:flex-row gap-5 flex-1 p-5 justify-center">
       <div
@@ -28,7 +28,7 @@ const Charts = ({ tweetsData }) => {
           <hr className="my-3 mx-auto h-1 bg-gray-100 rounded border-0  bg-gray-700" />
         </h5>
         <div className="flex flex-1 justify-center items-end">
-          <BarGraph />
+          <BarGraph tweets={tweetsData} frequency={frequency} />
         </div>
       </div>
       <div
