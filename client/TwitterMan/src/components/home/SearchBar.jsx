@@ -4,16 +4,9 @@ import '../format-style.css'
 import ModalFilter from './ModalFilter'
 
 const calculateDate = (isStartDate) => {
-  if (isStartDate) {
-    const date = new Date()
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate() - 7
-    return new Date([year, month, day].join('-'))
-  } else {
-    const date = new Date()
-    return date
-  }
+  const date = new Date()
+  if (isStartDate) date.setDate(date.getDate() - 7)
+  return date
 }
 
 const SearchBar = ({
