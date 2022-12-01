@@ -12,6 +12,7 @@ const Home = () => {
   const [tweetsDataFiltered, setTweetsDataFiltered] = useState([])
   const [sentimentIcon, setSentimentIcon] = useState(null)
   const [sliderValue, setSliderValue] = useState(null)
+  const [frequencyValue, setFrequencyValue] = useState(1440)
 
   const fetchSentiment = async (tweets) => {
     let tweetsWithSentiment = []
@@ -20,7 +21,7 @@ const Home = () => {
       for (const k in tweets) {
         data.push({ text: tweets[k].content })
       }
-      let res = await fetch('http://localhost:55555/sentiment', {
+      let res = await fetch('http://localhost:5555/sentiment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,6 +48,11 @@ const Home = () => {
       let res = await fetch(url)
       res = await res.json()
       if (res) {
+        res.forEach((tw) => {
+          var s = tw.content + ' '
+          tw.content = s.replace(/(http|https)(.*?)( )/g, '')
+        })
+
         res = await fetchSentiment(res)
         setTweetsData(res)
         setTweetsDataFiltered(res)
@@ -98,13 +104,14 @@ const Home = () => {
       >
         <div className="flex justify-center">
           <SearchBar
-            tweetsData={tweetsData}
+            // tweetsData={tweetsData}
             setTweetsDataFilter={setTweetsDataFiltered}
             searchTweets={searchTweets}
             sliderValue={sliderValue}
             setSliderValue={setSliderValue}
             sentimentIcon={sentimentIcon}
             setSentimentIcon={setSentimentIcon}
+            setFrequencyValue={setFrequencyValue}
           />
           {tweetsData?.length ? (
             <HideTweets showTweets={showTweets} setShowTweets={setShowTweets} />
@@ -137,7 +144,7 @@ const Home = () => {
           <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
             Charts
           </div>
-          <Charts tweetsData={tweetsDataFiltered} />
+          <Charts tweetsData={tweetsDataFiltered} frequency={frequencyValue} />
         </div>
       )}
       {tweetsData?.length > 0 && (

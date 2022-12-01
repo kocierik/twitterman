@@ -77,7 +77,6 @@ func GetTweetsByUsername(username, start, end string) []utils.Tweet {
 		"timestamp": bson.M{"$gte": start, "$lte": end},
 	}
 	res := find(myDict, "Tweets")
-	log.Println(res)
 	binded := bindType[[]utils.Tweet](res)
 	return binded
 }
@@ -87,7 +86,6 @@ func GetTweetsByKeyword(keyword, start, end string) []utils.Tweet {
 		"content":   primitive.Regex{Pattern: keyword, Options: "i"},
 		"timestamp": bson.M{"$gte": start, "$lte": end},
 	}
-	log.Print(myDict)
 	res := find(myDict, "Tweets")
 	binded := bindType[[]utils.Tweet](res)
 	return binded

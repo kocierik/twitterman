@@ -1,8 +1,6 @@
 package TwitterApi
 
 import (
-	"log"
-
 	"git.hjkl.gq/team7/twitterman/server/database"
 	"git.hjkl.gq/team7/twitterman/server/utils"
 )
@@ -20,6 +18,5 @@ func searchCache(key, value, start, end string) []utils.Tweet {
 		retValue = database.GetTweetsByKeyword(value, start, end)
 	}
 
-	log.Print(retValue)
 	return retValue
 }

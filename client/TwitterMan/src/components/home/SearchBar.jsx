@@ -1,37 +1,29 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as Const from '../../utils'
 import '../format-style.css'
 import ModalFilter from './ModalFilter'
 
 const calculateDate = (isStartDate) => {
-  if (isStartDate) {
-    const date = new Date()
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate() - 7
-    return [year, month, day].join('-')
-  } else {
-    const date = new Date()
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    return [year, month, day].join('-')
-  }
+  const date = new Date()
+  if (isStartDate) date.setDate(date.getDate() - 7)
+  return date
 }
 
 const SearchBar = ({
   setTweetsDataFilter,
-  tweetsData,
   searchTweets,
   sliderValue,
   setSliderValue,
   sentimentIcon,
   setSentimentIcon,
+  setFrequencyValue,
 }) => {
   const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
+  const [selectTimeString, setSelectTimeString] = useState('days')
+  const [selectTimeNumber, setSelectTimeNumber] = useState(1)
   const [textValue, setTextValue] = useState('')
-  const [startDate, setStartDate] = useState(new Date(calculateDate(true)))
-  const [endDate, setEndDate] = useState(new Date(calculateDate(false)))
+  const [startDate, setStartDate] = useState(calculateDate(true))
+  const [endDate, setEndDate] = useState(calculateDate(false))
   const [showModal, setShowModal] = useState(false)
 
   const compareDates = (a, b) => {
@@ -64,6 +56,22 @@ const SearchBar = ({
     // props.setShowModal(false)
   }
 
+  useEffect(() => {
+    if (selectTimeNumber) {
+      var freq = selectTimeNumber
+      // convert in minutes because yes
+      if (selectTimeString === 'days') {
+        freq *= 24 * 60
+      } else if (selectTimeString === 'hours') {
+        freq *= 60
+      } else if (selectTimeString === 'minutes') {
+      } else {
+        freq = 1440 // one day
+      }
+      setFrequencyValue(freq)
+    }
+  }, [selectTimeNumber])
+
   return (
     <form
       style={{ width: '100vh' }}
@@ -87,6 +95,10 @@ const SearchBar = ({
         <ModalFilter
           selectValue={selectValue}
           setSelectValue={setSelectValue}
+          selectTimeString={selectTimeString}
+          setSelectTimeString={setSelectTimeString}
+          selectTimeNumber={selectTimeNumber}
+          setSelectTimeNumber={setSelectTimeNumber}
           showModal={showModal}
           setShowModal={setShowModal}
           endDate={endDate}

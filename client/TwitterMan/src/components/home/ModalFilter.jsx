@@ -53,14 +53,14 @@ const ModalFilter = (props) => {
               </svg>
             </div>
             <div className="flex flex-col">
-              <h1 className="text-white-800 font-lg font-bold tracking-normal leading-tight mb-4">
-                Filters
+              <h1 className="text-white-800 font-xl font-bold tracking-normal leading-tight mb-4">
+                Query filters
               </h1>
               <label
                 htmlFor="name"
                 className="text-white-800 flex flex-col mb-3 text-sm font-bold leading-tight tracking-normal"
               >
-                Select Filter
+                Query type
               </label>
             </div>
             <select
@@ -68,13 +68,13 @@ const ModalFilter = (props) => {
               onChange={(choice) => {
                 props.setSelectValue(choice.target.value)
               }}
-              className="rounded-xl  cursor-pointer	 h-10 flex-shrink-0 z-10 inline-flex w-full items-center py-2.5 px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg   focus:outline-none  bg-gray-700   text-white border-gray-600"
+              className="rounded-xl  cursor-pointer	 h-10 flex-shrink-0 z-10 inline-flex w-full items-center py-2.5 px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300 focus:outline-none  bg-gray-700   text-white border-gray-600"
             >
               <option value={Const.TWEET_USERNAME}>username</option>
               <option value={Const.TWEET_HASHTAG}>hashtag</option>
               <option value={Const.TWEET_KEYWORD}>keyword</option>
             </select>
-            <div className="rounded-xl mt-5	 mb-5  z-10 w-full items-center  text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300     bg-gray-700   text-white border-gray-600">
+            <div className="rounded-xl mt-5	 mb-5  z-10 w-full items-center  text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300 bg-gray-700 text-white border-gray-600">
               <label
                 htmlFor="Range date"
                 className="text-white-800 mt-5  flex flex-col  text-sm font-bold px-4 leading-tight tracking-normal"
@@ -90,7 +90,35 @@ const ModalFilter = (props) => {
                 />
               </div>
             </div>
-            <div className="rounded-xl m3-5	 mb-5  z-10 w-full items-center py-2.5 px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300 rounded-l-lg     bg-gray-700   text-white border-gray-600">
+            <div className="text-sm font-bold leading-tight tracking-normal">
+              Settings on tweets
+            </div>
+            <div className="mt-2">
+              <label className="place-self-center">Histogram frequency</label>
+              <div className="flex">
+                <input
+                  defaultValue={props.selectTimeNumber}
+                  min={1}
+                  onChange={(choice) => {
+                    props.setSelectTimeNumber(choice.target.value)
+                  }}
+                  className="rounded-l-xl cursor-pointer py-2.5 px-4 bg-gray-100 border border-gray-300  focus:outline-none  bg-gray-700 text-white border-gray-600 w-24 "
+                  type={'number'}
+                />
+                <select
+                  defaultValue={props.selectTimeString}
+                  onChange={(choice) => {
+                    props.setSelectTimeString(choice.target.value)
+                  }}
+                  className="rounded-r-xl cursor-pointer flex-shrink-0 inline-flex items-center py-2.5 px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300 focus:outline-none  bg-gray-700   text-white border-gray-600"
+                >
+                  <option value="days">days</option>
+                  <option value="hours">hours</option>
+                  <option value="minutes">minutes</option>
+                </select>
+              </div>
+            </div>
+            <div className="rounded-xl mt-4 mb-4 z-10 w-full items-center py-2.5 px-4 text-sm font-medium  text-gray-900 bg-gray-100 border border-gray-300  bg-gray-700   text-white border-gray-600">
               <label
                 htmlFor="default-range"
                 className="block mb-2 text-sm font-medium text-gray-900 text-white"
