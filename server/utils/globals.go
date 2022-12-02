@@ -9,10 +9,9 @@ import (
 
 const ServerPort = "8080"
 const ServerUrl = "localhost"
+const TwitterApi string = "https://api.twitter.com/2"
 
 var DbUrl = os.Getenv("DATABASE_URL")
-
-const TwitterApi string = "https://api.twitter.com/2"
 
 var Client *http.Client
 

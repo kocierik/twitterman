@@ -23,6 +23,17 @@ var collectionList [2]string = [2]string{"Users", "Tweets"}
 
 var nullUser = utils.User{ID: primitive.ObjectID{}, Email: "", Username: "", Password: "", SavedTweetsId: []string{}}
 
+type queryTypeInterface interface {
+	GetKey() string
+}
+
+func bindType[T any](res *mongo.Cursor) T {
+	var currentFoundValue T
+	err := res.All(ctx, &currentFoundValue)
+	utils.TestError(err, "bind type after find error: ")
+	return currentFoundValue
+}
+
 func GetUserByEmail(email string) (utils.User, error) {
 	query := bson.M{"email": email}
 	res := find(query, "Users")
@@ -37,13 +48,6 @@ func GetUserByEmail(email string) (utils.User, error) {
 	}
 }
 
-func bindType[T any](res *mongo.Cursor) T {
-	var currentFoundValue T
-	err := res.All(ctx, &currentFoundValue)
-	utils.TestError(err, "bind type after find error: ")
-	return currentFoundValue
-}
-
 func GetUserById(id primitive.ObjectID) (utils.User, error) {
 	query := bson.M{"_id": id}
 	res := find(query, "Users")
@@ -55,18 +59,9 @@ func GetUserById(id primitive.ObjectID) (utils.User, error) {
 	}
 }
 
-func InsertTweetList(twts []utils.Tweet) {
-	for _, t := range twts {
-		insert(t, "Tweets")
-	}
-}
-
-func GetTweetsByTwitterId(id string, start, end time.Time) []utils.Tweet {
-	sstart := start.Format("2006-01-02T15:04:05Z")
-	eend := end.Format("2006-01-02T15:04:05Z")
+func GetTweetsByTwitterId(id string) []utils.Tweet {
 	myDict := bson.M{
-		"id":        primitive.Regex{Pattern: id, Options: "i"},
-		"timestamp": bson.M{"$gte": sstart, "$lte": eend},
+		"id": primitive.Regex{Pattern: id, Options: "i"},
 	}
 	res := find(myDict, "Tweets")
 	binded := bindType[[]utils.Tweet](res)
@@ -108,16 +103,9 @@ func InsertUser(email, username, password string, tweets []string) {
 	insert(user, "Users")
 }
 
-func InitDbTest() {
-	dbname = "test"
-	client = nil
-	Connect()
-	defer Disconnect()
-
-	// Clear database
-	for _, col := range collectionList {
-		_, err := client.Database(dbname).Collection(col).DeleteMany(ctx, bson.D{})
-		utils.TestError(err, "InitDbTest clear function error on collection:"+col)
+func InsertTweetList(twts []utils.Tweet) {
+	for _, t := range twts {
+		insert(t, "Tweets")
 	}
 }
 
@@ -126,10 +114,10 @@ func Connect() {
 	if client != nil && client.Ping(ctx, nil) == nil {
 		return
 	}
-	client, err = mongo.NewClient(options.Client().ApplyURI(utils.DbUrl))
+	ctx = context.Background()
+	clientOptions := options.Client().ApplyURI("mongodb://root:root@localhost:27017")
+	client, err = mongo.Connect(ctx, clientOptions)
 	utils.TestError(err, "database.Connect function, new client error")
-	err = client.Connect(context.Background())
-	utils.TestError(err, "database.Connect function, connection error")
 }
 
 func Disconnect() {
@@ -143,10 +131,6 @@ func find(query interface{}, collection string) *mongo.Cursor {
 	cursor, err := col.Find(ctx, query)
 	utils.TestError(err, "find function")
 	return cursor
-}
-
-type queryTypeInterface interface {
-	GetKey() string
 }
 
 func insert[T queryTypeInterface](query T, collection string) {
@@ -163,4 +147,17 @@ func insert[T queryTypeInterface](query T, collection string) {
 	col := client.Database(dbname).Collection(collection)
 	_, err := col.UpdateOne(ctx, updateQuery, bson.M{"$set": query}, &options.UpdateOptions{Upsert: &mytrue})
 	utils.TestError(err, "insert function")
+}
+
+func InitDbTest() {
+	dbname = "test"
+	client = nil
+	Connect()
+	// defer Disconnect()
+
+	// Clear database
+	for _, col := range collectionList {
+		_, err := client.Database(dbname).Collection(col).DeleteMany(ctx, bson.D{})
+		utils.TestError(err, "InitDbTest clear function error on collection:"+col)
+	}
 }
