@@ -44,7 +44,8 @@ const Home = () => {
     try {
       const url = Const.stringFormat(
         Const.SERVER_URL + selectValue,
-        rfp, textValue + formattedDates
+        rfp,
+        textValue + formattedDates
       )
       let res = await fetch(url)
       res = await res.json()
@@ -119,7 +120,12 @@ const Home = () => {
           ) : null}
         </div>
         {showTweets && tweetsDataFiltered?.length ? (
-          <TweetsSection tweetsDataFiltered={tweetsDataFiltered} loadMore={loadMore} rfp={rfp} setRfp={setRfp} />
+          <TweetsSection
+            tweetsDataFiltered={tweetsDataFiltered}
+            loadMore={loadMore}
+            rfp={rfp}
+            setRfp={setRfp}
+          />
         ) : null}
       </div>
 
