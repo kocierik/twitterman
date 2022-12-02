@@ -1,4 +1,4 @@
-FROM node
+FROM node:alpine
 WORKDIR /app
 COPY client/TwitterMan/* /app/
 RUN npm install --force
