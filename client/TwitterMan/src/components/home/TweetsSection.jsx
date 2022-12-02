@@ -25,7 +25,7 @@ const TweetsSection = ({ tweetsDataFiltered, loadMore, rfp, setRfp }) => {
     ) {
       items.push(
         <li
-          class={
+          className={
             page === currentPage
               ? 'relative block py-1.5 px-3 rounded border-0 bg-blue-600 outline-none transition-all duration-300 rounded text-white shadow-md focus:shadow-md'
               : 'relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 rounded text-slate-200 focus:shadow-none'
@@ -46,19 +46,24 @@ const TweetsSection = ({ tweetsDataFiltered, loadMore, rfp, setRfp }) => {
 
   return (
     <div>
-      <div className="flex justify-center align-baseline mb-5">
+      <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
+        {currentTweets?.map((tweet, i) => {
+          return <TweetCard data={tweet} key={i} />
+        })}
+      </div>
+
+      <div className="flex justify-center align-baseline mt-5">
         <nav
-          class="mr-2 border border-slate-500 rounded-lg "
+          className="mr-2 border border-slate-500 rounded-lg "
           aria-label="Page navigation"
         >
-          <ul class="flex list-style-none">
+          <ul className="flex list-style-none">
             <li>
               <a
-                class={`relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 rounded ${
-                  currentPage === 1
-                    ? 'pointer-events-none text-gray-500'
-                    : ' text-slate-200'
-                } hover:text-gray-800 hover:bg-gray-200 focus:shadow-none`}
+                className={`relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 rounded ${currentPage === 1
+                  ? 'pointer-events-none text-gray-500'
+                  : ' text-slate-200'
+                  } hover:text-gray-800 hover:bg-gray-200 focus:shadow-none`}
                 onClick={() => changePage(currentPage - 1)}
               >
                 Previous
@@ -67,7 +72,7 @@ const TweetsSection = ({ tweetsDataFiltered, loadMore, rfp, setRfp }) => {
             {getPageNumberItems()}
             <li>
               <a
-                class="relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 rounded text-slate-200 hover:text-gray-800 hover:bg-gray-200 focus:shadow-none"
+                className="relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 text-slate-200 hover:text-gray-800 hover:bg-gray-200 focus:shadow-none"
                 onClick={() => changePage(currentPage + 1)}
               >
                 Next
@@ -78,7 +83,7 @@ const TweetsSection = ({ tweetsDataFiltered, loadMore, rfp, setRfp }) => {
         <select
           id="rfp"
           onChange={changeRfp}
-          class="w-12 max-w-xs text-sm text-white text-center rounded-lg bg-gray-500/60 focus:border-blue-600 focus:outline-none"
+          className="w-12 max-w-xs text-sm text-white text-center rounded-lg bg-gray-500/60 focus:border-blue-600 focus:outline-none"
         >
           <option value="15" selected>
             15
@@ -87,11 +92,6 @@ const TweetsSection = ({ tweetsDataFiltered, loadMore, rfp, setRfp }) => {
           <option value="50">50</option>
           <option value="100">100</option>
         </select>
-      </div>
-      <div className="box-border m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
-        {currentTweets?.map((tweet, i) => {
-          return <TweetCard data={tweet} key={i} />
-        })}
       </div>
     </div>
   )
