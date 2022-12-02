@@ -16,3 +16,6 @@ data
 .vscode
 create-env.sh
 venv
+
+server/mongo-seed/tweets-data.json
+server/mongo-seed/user-data.json
