@@ -1,6 +1,6 @@
 FROM node
 WORKDIR /client/twitterman/
-COPY package.json .
+COPY client/twitterman/package.json .
 RUN npm install --force
 COPY . .
 EXPOSE 5173
