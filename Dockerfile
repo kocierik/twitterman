@@ -1,6 +1,6 @@
 FROM node
 WORKDIR /app
-COPY client/TwitterMan/* .
+COPY client/TwitterMan/* /app/
 RUN npm install --force
 COPY . .
 EXPOSE 5173
