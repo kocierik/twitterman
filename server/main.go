@@ -12,5 +12,5 @@ func main() {
 
 	utils.InitHttpClient()
 	api.InitApi()
-	utils.Router.Run(utils.ServerUrl + ":" + utils.ServerPort)
+	utils.Router.Run("0.0.0.0:" + utils.ServerPort)
 }

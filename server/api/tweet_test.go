@@ -59,7 +59,7 @@ func TestGetTweetById(t *testing.T) {
 func TestGetTweetsByHashtag(t *testing.T) {
 	initApiTest()
 	var dummy = []byte{}
-	response, res := sendTestRequest("GET", "/tweet/hashtag/estremamentespecifico", bytes.NewBuffer(dummy))
+	response, res := sendTestRequest("GET", "/tweet/15/hashtag/estremamentespecifico/date/2022-11-25T20:39:08.913Z/2022-12-02T22:59:59.914Z", bytes.NewBuffer(dummy))
 
 	mockResponse := `[
 		{

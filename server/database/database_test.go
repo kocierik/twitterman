@@ -1,18 +1,19 @@
 package database
 
 import (
+	"context"
 	"testing"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
-
-	"github.com/stretchr/testify/assert"
+	"github.com/go-playground/assert/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func TestDatabaseConnect(t *testing.T) {
 	Connect()
-	defer Disconnect()
-	err := client.Ping(ctx, nil)
+	defer client.Disconnect(ctx)
+
+	err := client.Ping(context.Background(), nil)
 	assert.Equal(t, err, nil)
 }
 
@@ -46,4 +47,6 @@ func TestInsertandGetUser(t *testing.T) {
 	userId, err := GetUserById(userEmail.ID)
 	utils.TestError(err, "Test GetUserById function error")
 	assert.Equal(t, userEmail, userId)
+
+	Disconnect()
 }
