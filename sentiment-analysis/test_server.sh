@@ -1,1 +1,1 @@
-curl -X POST -H "Content-type: application/json" --json "[{\"text\":\"im very happy right now\"},{\"text\":\"i want to die\"},{\"text\":\"sono triste\"},{\"text\":\"mi piace nuotare nel mare\"}]" "http://localhost:5555/sentiment"
+curl -X POST -H "Content-type: application/json" --json "[{\"text\":\"im very happy right now\"},{\"text\":\"i want to die\"},{\"text\":\"sono triste\"},{\"text\":\"mi piace nuotare nel mare\"}]" "http://localhost:5556/sentiment"

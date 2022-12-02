@@ -22,6 +22,7 @@ example:
   - tweet/keyword/mondo
 */
 func getTweets(c *gin.Context) {
+	max_results := c.Param("results")
 	mode := c.Param("mode")
 	query := c.Param("query")
 	start := c.Param("start")
@@ -42,7 +43,7 @@ func getTweets(c *gin.Context) {
 		case "user":
 			query = "from:" + query
 		}
-		twRet = TwitterApi.GetTwsByQuery(mode, query, start, end)
+		twRet = TwitterApi.GetTwsByQuery(mode, query, max_results, start, end)
 	}
 
 	utils.SendOkResponse(c, twRet)
@@ -63,7 +64,8 @@ func getUserInfo(c *gin.Context) {
 Load 10 new different tweets of the last query done
 */
 func getNewPageTweets(c *gin.Context) {
-	ret := TwitterApi.GetNextTokenReq()
+	max_results := c.Param("results")
+	ret := TwitterApi.GetNextTokenReq(max_results)
 
 	utils.SendOkResponse(c, ret)
 }

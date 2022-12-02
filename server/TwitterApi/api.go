@@ -72,9 +72,10 @@ func GetTweetInfoById(id, start, end string) []utils.Tweet {
 }
 
 // Get next page of last req
-func GetNextTokenReq() []utils.Tweet {
+func GetNextTokenReq(max_results string) []utils.Tweet {
 	if !cmp.Equal(lastRequest, requestStruct{}) && lastRequest.NextToken != "" {
 		lastRequest.Params["next_token"] = lastRequest.NextToken
+		lastRequest.Params["max_results"] = max_results
 
 		body := makeTwitterRequest("GET", lastRequest.EndPoint, lastRequest.Params)
 
@@ -112,10 +113,10 @@ func checkDates(start, end string) (string, string, bool) {
 }
 
 // Get recent tweets by query
-func GetTwsByQuery(mode, query, start, end string) []utils.Tweet {
+func GetTwsByQuery(mode, query, max_results string, start, end string) []utils.Tweet {
 	var ret []utils.Tweet
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
-	q := baseQuery("query", query)
+	q := utils.Dict{"query": query, "max_results": max_results}
 
 	// fmt.Println(start, end)
 	newstart, newend, shouldRequest := checkDates(start, end)
