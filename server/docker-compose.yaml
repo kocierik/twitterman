@@ -9,7 +9,3 @@ services:
       - 27017:27017
     volumes:
       - ./data:/data/db
-  mongo-seed:
-    build: ./mongo-seed
-    depends_on:
-      - mongodb_container

@@ -34,17 +34,11 @@ const SearchBar = ({
     )
   }
   const formattedData = () => {
-    let startString = `${startDate.getFullYear()}-${
-      startDate.getMonth() + 1
-    }-${startDate.getDate()}T00:00:00.000Z`
-
     let today = new Date()
-    let endString = !compareDates(today, endDate)
-      ? `${endDate.getFullYear()}-${
-          endDate.getMonth() + 1
-        }-${endDate.getDate()}T23:59:59.000Z`
-      : endDate.toISOString()
-    return `/date/${startString}/${endString}`
+    if(!compareDates(today, endDate))
+      endDate.setHours(23, 59, 59)
+
+    return `/date/${startDate.toISOString()}/${endDate.toISOString()}`
   }
 
   const resetFilter = () => {

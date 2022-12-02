@@ -1,6 +1,8 @@
 package api
 
 import (
+	"time"
+
 	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
 	"git.hjkl.gq/team7/twitterman/server/utils"
 
@@ -25,8 +27,16 @@ func getTweets(c *gin.Context) {
 	max_results := c.Param("results")
 	mode := c.Param("mode")
 	query := c.Param("query")
-	start := c.Param("start")
-	end := c.Param("end")
+	start, err := time.Parse(time.RFC3339, c.Param("start"))
+	if err != nil {
+		utils.SendErrorResponse(c)
+		return // TODO
+	}
+	end, err := time.Parse(time.RFC3339, c.Param("end"))
+	if err != nil {
+		utils.SendErrorResponse(c)
+		return // TODO
+	}
 	var twRet any
 
 	if !isModeCorrect(c, mode) {
@@ -67,37 +77,5 @@ func getNewPageTweets(c *gin.Context) {
 	max_results := c.Param("results")
 	ret := TwitterApi.GetNextTokenReq(max_results)
 
-	utils.SendOkResponse(c, ret)
-}
-
-/*
-Get tweets granularity
-Possible mode: hashtag/keyword/user
-Possible granularity: day/hour/minute
-*/
-func getTweetCount(c *gin.Context) {
-	mode := c.Param("mode")
-	query := c.Param("query")
-	// start := c.Param("start")
-	// end := c.Param("end")
-	granularity := c.Param("granularity")
-	var ret any
-
-	if !isModeCorrect(c, mode) || !isGranularityCorrect(c, granularity) {
-		return
-	}
-
-	switch mode {
-	case "keyword":
-		break
-	case "hashtag":
-		query = "#" + query
-		break
-	case "user":
-		query = "from:" + query
-		break
-	}
-
-	ret = TwitterApi.GetTwCount(query, granularity)
 	utils.SendOkResponse(c, ret)
 }

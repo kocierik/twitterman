@@ -43,12 +43,12 @@ func GetUserInfoByUsername(username string) TwitterUserStruct {
 	return result.Data
 }
 
-func GetTweetInfoById(id, start, end string) []utils.Tweet {
+func GetTweetInfoById(id string, start, end time.Time) []utils.Tweet {
 	endpoint := utils.TwitterApi + "/tweets"
 
 	q := baseQuery("ids", id)
-	q["start_time"] = start
-	q["end_time"] = end
+	q["start_time"] = start.Add(time.Second * time.Duration(30)).Add(time.Hour * time.Duration(2)).Format(time.RFC3339)
+	q["end_time"] = end.Add(time.Second * time.Duration(30)).Format(time.RFC3339)
 
 	body := makeTwitterRequest("GET", endpoint, q)
 
@@ -93,19 +93,17 @@ func GetNextTokenReq(max_results string) []utils.Tweet {
 	return nil
 }
 
-func checkDates(start, end string) (string, string, bool) {
+func checkDates(start, end time.Time) (time.Time, time.Time, bool) {
 	now := time.Now()
-	sstart, _ := time.Parse("2006-01-_2T15:04:05.000Z", start)
-	eend, _ := time.Parse("2006-01-_2T15:04:05.000Z", end)
-	week_before := now.AddDate(0, 0, -7) // in Format va questa data perché gli sviluppatori di go sono dei pazzi furenti
+	week_before := now.AddDate(0, 0, -7)
 	shouldRequest := true
 
 	//if end date is before
-	if eend.Before(week_before) {
+	if end.Before(week_before) {
 		shouldRequest = false
 	} else {
-		if sstart.Before(week_before) {
-			start = week_before.Format("2006-01-_2T15:04:05Z")
+		if start.Before(week_before) {
+			start = week_before
 		}
 	}
 
@@ -113,7 +111,7 @@ func checkDates(start, end string) (string, string, bool) {
 }
 
 // Get recent tweets by query
-func GetTwsByQuery(mode, query, max_results string, start, end string) []utils.Tweet {
+func GetTwsByQuery(mode, query, max_results string, start, end time.Time) []utils.Tweet {
 	var ret []utils.Tweet
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
 	q := utils.Dict{"query": query, "max_results": max_results}
@@ -122,8 +120,8 @@ func GetTwsByQuery(mode, query, max_results string, start, end string) []utils.T
 	newstart, newend, shouldRequest := checkDates(start, end)
 
 	if shouldRequest {
-		q["start_time"] = newstart
-		q["end_time"] = newend
+		q["start_time"] = newstart.Add(time.Second * time.Duration(30)).Add(time.Hour * time.Duration(2)).Format(time.RFC3339)
+		q["end_time"] = newend.Add(time.Second * time.Duration(-30)).Format(time.RFC3339)
 		body := makeTwitterRequest("GET", endpoint, q)
 		result := utils.UnmarshalToJson[DataTweet](body)
 		lastRequest = requestStruct{EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}

@@ -10,15 +10,15 @@ import (
 )
 
 func TestDatabaseConnect(t *testing.T) {
-	connect()
-	defer disconnect()
+	Connect()
+	defer Disconnect()
 	err := client.Ping(ctx, nil)
 	assert.Equal(t, err, nil)
 }
 
 func TestDatabaseDisconnect(t *testing.T) {
-	connect()
-	disconnect()
+	Connect()
+	Disconnect()
 	err := client.Ping(ctx, nil)
 	assert.NotEqual(t, err, nil)
 }
