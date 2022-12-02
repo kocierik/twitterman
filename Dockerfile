@@ -1,5 +1,5 @@
 FROM node
-WORKDIR /client/twitterman/
+WORKDIR /app
 COPY client/Twitterman/package.json .
 RUN npm install --force
 COPY . .
