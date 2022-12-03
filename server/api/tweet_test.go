@@ -2,7 +2,6 @@ package api
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -49,8 +48,6 @@ func TestGetTweetById(t *testing.T) {
 			}
 		}
 	]`
-
-	fmt.Println(string(response))
 
 	result := utils.UnmarshalToJson[[]utils.Tweet](response)
 	tmpMock := utils.UnmarshalToJson[[]utils.Tweet]([]byte(mockResponse))

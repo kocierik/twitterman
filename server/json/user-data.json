@@ -1,0 +1,32 @@
+[{
+  "_id": {
+    "$oid": "636d406da8b480243f13731b"
+  },
+  "email": "asd@asd",
+  "username": "asd",
+  "password": "asd",
+  "tweets": []
+},{
+  "_id": {
+    "$oid": "636e0acbffab2cf995668e0f"
+  },
+  "email": "geno@geno",
+  "username": "geno",
+  "password": "geno",
+  "tweets": []
+},{
+  "_id": {
+    "$oid": "63713aca2a94fc191545c18a"
+  },
+  "email": "aldo@aldo",
+  "username": "aldo",
+  "password": "aldo",
+  "tweets": []
+},{
+  "_id": {
+    "$oid": "63757a20c4488f04c6ab689b"
+  },
+  "email": "banana@banana",
+  "password": "booooh",
+  "username": "ElonIsDestroyingTwitter #elongoat #ElonMuskIsaGiantTurd #ElonMusk #muskrat #ElonMuskIsATroll #Elon #TwitterTakeover"
+}]
