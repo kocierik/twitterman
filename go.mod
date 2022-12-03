@@ -5,6 +5,7 @@ go 1.19
 require github.com/gin-gonic/gin v1.8.1
 
 require (
+	github.com/go-playground/assert/v2 v2.0.1
 	github.com/google/go-cmp v0.5.8
 	github.com/paulmach/go.geojson v1.4.0
 	go.mongodb.org/mongo-driver v1.10.3
