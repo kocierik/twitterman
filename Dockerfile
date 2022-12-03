@@ -13,6 +13,7 @@ RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.6/community' >> /etc/apk/repos
 RUN apk update
 RUN apk add --no-cache mongodb
 RUN apk add --no-cache mongodb-tools
+RUN apk add --no-cache build-base
 
 COPY . ./app
 WORKDIR ./app
