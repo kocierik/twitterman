@@ -1,65 +1,97 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
+import TextField from '@mui/material/TextField';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useEffect } from 'react';
-import { PieChart, Pie, Cell} from 'recharts'
-import { searchTweets } from '../utils'
+import { PieChart, Pie, Cell } from 'recharts'
+import { SERVER_URL } from '../utils'
 
-
-const Eredita = ()=>{
-
-    async function getQuizzettone(){
-        let today = new Date();
-        let todayString = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()-7}`
-        let tw = await searchTweets(`/tweet/user/{0}`, 'quizzettone', `/date/${todayString}T00:00:00.000Z/${today.toISOString()}`);
-        for(let t of tw){
-            console.log(t.content);
+const fetchSentiment = async (tweets) => {
+    let tweetsWithSentiment = []
+    try {
+        var data = []
+        for (const k in tweets) {
+            data.push({ text: tweets[k].content })
         }
+        let res = await fetch('http://localhost:5556/sentiment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+        res = await res.json()
+        tweetsWithSentiment = tweets?.map((v, k) => {
+            v.sentiment = res['sentiments'][k]
+            return v
+        })
+    } catch (e) {
+        alert(e)
     }
+    return tweetsWithSentiment
+}
 
-    useEffect(()=>{
-        getQuizzettone();
-    }, [])
+const searchTweets = async (selectValue, textValue, formattedDates) => {
+    let final = null;
+    try {
+        let res = await fetch(`${SERVER_URL}${selectValue}90${textValue}${formattedDates}`)
+        res = await res.json()
+        console.log(res);
+        if (!res.message) {
+            res.forEach((tw) => {
+                var s = tw.content + ' '
+                tw.content = s.replace(/(http|https)(.*?)( )/g, '')
+            })
 
-    const [dailyword, setDailyword] = useState(null);
-    const stats = [{name:"giusti",value:10}, {name:"sbagliati", value:50}];
+            res = await fetchSentiment(res)
+            final = res;
+        } else {
+            alert(res ? res.message : 'Tweets not found')
+        }
+    } catch (e) {
+        console.log(e)
+    }
+    return final;
+}
+
+const EreditaScreen = ({ result }) => {
+    const [stats, setStats] = useState([{ name: "giusti", value: 10 }, { name: "sbagliati", value: 50 }])
     const cx = 180;
     const cy = 150;
     const COLORS = ['#00C49F', '#FF8042'];
+
     const renderLabel = ({
         x, y, name, value
-      }) => {
+    }) => {
         return (
             <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
                 {`${name} (${value})`}
             </text>
         );
-      };
-    return(
+    };
+
+    return (
         <div className='flex flex-col justify-center text-white'>
             <div className="text-center">
                 <h1 className='text-5xl text-center pt-20 pb-5'>Parola del giorno:</h1>
-                <p className='bold text-2xl'>PAROLA</p>
+                <p className='bold text-2xl'>{result.word}</p>
             </div>
             <div className="text-center flex justify-center p-5">
                 <table>
                     <tbody>
-                        <tr>
-                            <td className='p-3'>1</td>
-                            <td className='p-3'>gianni</td>
-                            <td className='p-3'>10:58</td>
-                            <td className='p-3'><a href="#">http://lol</a></td>
-                        </tr>
-                        <tr>
-                            <td className='p-3'>2</td>
-                            <td className='p-3'>mario</td>
-                            <td className='p-3'>11:43</td>
-                            <td className='p-3'><a href="#">http://lol2</a></td>
-                        </tr>
-                        <tr>
-                            <td className='p-3'>3</td>
-                            <td className='p-3'>mandolfo</td>
-                            <td className='p-3'>12:33</td>
-                            <td className='p-3'><a href="#">http://lol3</a></td>
-                        </tr>
+                        {
+                            result.winners.map((p) => {
+                                return (
+                                    <tr key={p.position}>
+                                        <td className='p-3'>{p.position}</td>
+                                        <td className='p-3'>{p.name}</td>
+                                        <td className='p-3'>{p.time}</td>
+                                        <td className='p-3'>{p.url}</td>
+                                    </tr>
+                                )
+                            })
+                        }
                     </tbody>
                 </table>
             </div>
@@ -75,6 +107,95 @@ const Eredita = ()=>{
                 </PieChart>
             </div>
         </div>
+    )
+}
+
+const Eredita = () => {
+    const [ereditaResultJson, setEreditaResultJson] = useState(null);
+
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const color = "#ffffff";
+
+
+    async function getQuizzettone() {
+        
+        let mydata = null;
+        let flag = true;
+        let keys = ["$m", "$y", "$M", "$D", "$s", "$H"]
+        for (let k of keys){
+            flag = selectedDate[k] != undefined && flag
+        }
+        if(flag){
+            const format = (myint)=>{
+                return myint > 9 ? myint : "0" + myint.toString()
+            }
+            let todayString = `${selectedDate["$y"]}-${parseInt(format(selectedDate["$M"]))+1}-${format(selectedDate["$D"])}`
+            let secs = `${format(selectedDate["$H"])}:${format(selectedDate["$m"])}:${format(selectedDate["$s"])}.000Z`
+            let tw = await searchTweets(`/tweet/`, '/user/quizzettone', `/date/${todayString}T00:00:00.000Z/${todayString}T${secs}`);
+            if(tw != null){
+                for (let t of tw) {
+                    if(t.content.includes("Per #leredità su Twitter, i campioni più veloci della #ghigliottina sono:")){
+                        if(mydata == null) {
+                            mydata = {};
+                        }
+                        const splitted = t.content.split("\n");
+                        mydata.winners = [];
+                        for(let i = 2; i<=4; i++){
+                            let w = {};
+                            let s = splitted[i].split(" ");
+                            w.position = i-1;
+                            w.name = s[1];
+                            w.time = s[3];
+                            w.url = "";
+                            mydata.winners.push(w);
+                        }
+                    }else if(t.content.includes("La #parola della #ghigliottina de #leredita di oggi è:")){
+                        if(mydata == null){
+                            mydata = {};
+                        }
+                        let rightword = t.content.split("La #parola della #ghigliottina de #leredita di oggi è:")[1].split(" ")[1];
+                        mydata.word = rightword.substring(0, rightword.length - 3);
+                    }
+                }
+            }
+        }
+        return mydata;
+    }
+
+    async function init() {
+        let res = await getQuizzettone();
+        setEreditaResultJson(res);
+    }
+
+    useEffect(() => {
+        init();
+    }, [selectedDate])
+
+    useEffect(() => {
+        init();
+    }, [])
+
+    return (
+        <>
+            <div className='flex justify-center align-center pt-5'>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                        label="Seleziona giorno"
+                        value={selectedDate}
+                        onChange={(newValue) => {
+                            setSelectedDate(newValue);
+                        }}
+                        renderInput={(params) => <TextField {...params} sx={{
+                            svg: { color },
+                            input: { color },
+                            label: { color },
+                        }}
+                        />}
+                    />
+                </LocalizationProvider>
+            </div>
+            {ereditaResultJson != null? <EreditaScreen result={ereditaResultJson} /> : <h1 className='text-5xl text-center pt-20 pb-5 text-white'>Oggi non hanno giocato all'eredita</h1>}
+        </>
     )
 }
 

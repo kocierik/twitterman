@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"time"
 
@@ -16,7 +17,6 @@ import (
 
 var client *mongo.Client
 var ctx context.Context
-var cancel context.CancelFunc
 var dbname string = "twitterman"
 
 var collectionList [2]string = [2]string{"Users", "Tweets"}
@@ -61,33 +61,38 @@ func InsertTweetList(twts []utils.Tweet) {
 	}
 }
 
-func GetTweetsByTwitterId(id, start, end string) []utils.Tweet {
+func GetTweetsByTwitterId(id string, start, end time.Time) []utils.Tweet {
+	sstart := start.Format("2006-01-02T15:04:05Z")
+	eend := end.Format("2006-01-02T15:04:05Z")
 	myDict := bson.M{
-		"id":        primitive.Regex{Pattern: "^" + id + "$", Options: "i"},
-		"timestamp": bson.M{"$gte": start, "$lte": end},
+		"id":        primitive.Regex{Pattern: id, Options: "i"},
+		"timestamp": bson.M{"$gte": sstart, "$lte": eend},
 	}
 	res := find(myDict, "Tweets")
 	binded := bindType[[]utils.Tweet](res)
 	return binded
 }
 
-func GetTweetsByUsername(username, start, end string) []utils.Tweet {
+func GetTweetsByUsername(username string, start, end time.Time) []utils.Tweet {
+	sstart := start.Format("2006-01-02T15:04:05Z")
+	eend := end.Format("2006-01-02T15:04:05Z")
+	fmt.Println(sstart, eend)
 	myDict := bson.M{
-		"username":  primitive.Regex{Pattern: "^" + username + "$", Options: "i"},
-		"timestamp": bson.M{"$gte": start, "$lte": end},
+		"username":  primitive.Regex{Pattern: username, Options: "i"},
+		"timestamp": bson.M{"$gte": sstart, "$lte": eend},
 	}
 	res := find(myDict, "Tweets")
-	log.Println(res)
 	binded := bindType[[]utils.Tweet](res)
 	return binded
 }
 
-func GetTweetsByKeyword(keyword, start, end string) []utils.Tweet {
+func GetTweetsByKeyword(keyword string, start, end time.Time) []utils.Tweet {
+	sstart := start.Format("2006-01-02T15:04:05Z")
+	eend := end.Format("2006-01-02T15:04:05Z")
 	myDict := bson.M{
 		"content":   primitive.Regex{Pattern: keyword, Options: "i"},
-		"timestamp": bson.M{"$gte": start, "$lte": end},
+		"timestamp": bson.M{"$gte": sstart, "$lte": eend},
 	}
-	log.Print(myDict)
 	res := find(myDict, "Tweets")
 	binded := bindType[[]utils.Tweet](res)
 	return binded
@@ -106,8 +111,8 @@ func InsertUser(email, username, password string, tweets []string) {
 func InitDbTest() {
 	dbname = "test"
 	client = nil
-	connect()
-	defer disconnect()
+	Connect()
+	defer Disconnect()
 
 	// Clear database
 	for _, col := range collectionList {
@@ -116,27 +121,23 @@ func InitDbTest() {
 	}
 }
 
-func connect() {
+func Connect() {
 	var err error
 	if client != nil && client.Ping(ctx, nil) == nil {
 		return
 	}
 	client, err = mongo.NewClient(options.Client().ApplyURI(utils.DbUrl))
 	utils.TestError(err, "database.Connect function, new client error")
-	ctx, cancel = context.WithTimeout(context.Background(), 10*time.Second)
-	err = client.Connect(ctx)
+	err = client.Connect(context.Background())
 	utils.TestError(err, "database.Connect function, connection error")
 }
 
-func disconnect() {
-	defer cancel()
+func Disconnect() {
 	err := client.Disconnect(ctx)
 	utils.TestError(err, "database.Disconnect function, some error")
 }
 
 func find(query interface{}, collection string) *mongo.Cursor {
-	connect()
-	defer disconnect()
 	log.Println(dbname, collection, query)
 	col := client.Database(dbname).Collection(collection)
 	cursor, err := col.Find(ctx, query)
@@ -159,8 +160,6 @@ func insert[T queryTypeInterface](query T, collection string) {
 		updateQuery = bson.M{}
 	}
 	mytrue := true
-	connect()
-	defer disconnect()
 	col := client.Database(dbname).Collection(collection)
 	_, err := col.UpdateOne(ctx, updateQuery, bson.M{"$set": query}, &options.UpdateOptions{Upsert: &mytrue})
 	utils.TestError(err, "insert function")

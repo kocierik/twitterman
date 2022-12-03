@@ -1,8 +1,11 @@
 package TwitterApi
 
 import (
+	"time"
+
 	"git.hjkl.gq/team7/twitterman/server/database"
 	"git.hjkl.gq/team7/twitterman/server/utils"
+	"github.com/google/go-cmp/cmp"
 	"golang.org/x/exp/slices"
 )
 
@@ -24,7 +27,7 @@ var mediaField = "url,height,width,preview_image_url"
 var placeField = "geo"
 
 // Last request made by this package
-var lastRequest requestStruct
+var lastRequest = requestStruct{}
 
 /* Utils function for getting user information */
 
@@ -40,12 +43,12 @@ func GetUserInfoByUsername(username string) TwitterUserStruct {
 	return result.Data
 }
 
-func GetTweetInfoById(id, start, end string) []utils.Tweet {
+func GetTweetInfoById(id string, start, end time.Time) []utils.Tweet {
 	endpoint := utils.TwitterApi + "/tweets"
 
 	q := baseQuery("ids", id)
-	q["start_time"] = start
-	q["end_time"] = end
+	q["start_time"] = start.Add(time.Second * time.Duration(30)).Add(time.Hour * time.Duration(2)).Format(time.RFC3339)
+	q["end_time"] = end.Add(time.Second * time.Duration(30)).Format(time.RFC3339)
 
 	body := makeTwitterRequest("GET", endpoint, q)
 
@@ -69,44 +72,66 @@ func GetTweetInfoById(id, start, end string) []utils.Tweet {
 }
 
 // Get next page of last req
-func GetNextTokenReq() []utils.Tweet {
-	lastRequest.Params["next_token"] = lastRequest.NextToken
+func GetNextTokenReq(max_results string) []utils.Tweet {
+	if !cmp.Equal(lastRequest, requestStruct{}) && lastRequest.NextToken != "" {
+		lastRequest.Params["next_token"] = lastRequest.NextToken
+		lastRequest.Params["max_results"] = max_results
 
-	body := makeTwitterRequest("GET", lastRequest.EndPoint, lastRequest.Params)
+		body := makeTwitterRequest("GET", lastRequest.EndPoint, lastRequest.Params)
 
-	result := utils.UnmarshalToJson[DataTweet](body)
+		result := utils.UnmarshalToJson[DataTweet](body)
 
-	lastRequest.NextToken = result.Meta.NextToken
+		lastRequest.NextToken = result.Meta.NextToken
 
-	ret := castTweetStructToMyTweet(result)
+		ret := castTweetStructToMyTweet(result)
 
-	// Save new query in cache
-	database.InsertTweetList(ret)
+		// Save new query in cache
+		database.InsertTweetList(ret)
 
-	return ret
+		return ret
+	}
+	return nil
+}
+
+func checkDates(start, end time.Time) (time.Time, time.Time, bool) {
+	now := time.Now()
+	week_before := now.AddDate(0, 0, -7)
+	shouldRequest := true
+
+	//if end date is before
+	if end.Before(week_before) {
+		shouldRequest = false
+	} else {
+		if start.Before(week_before) {
+			start = week_before
+		}
+	}
+
+	return start, end, shouldRequest
 }
 
 // Get recent tweets by query
-func GetTwsByQuery(mode, query, start, end string) []utils.Tweet {
+func GetTwsByQuery(mode, query, max_results string, start, end time.Time) []utils.Tweet {
+	var ret []utils.Tweet
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
+	q := utils.Dict{"query": query, "max_results": max_results}
 
-	q := baseQuery("query", query)
-	q["start_time"] = start
-	q["end_time"] = end
+	// fmt.Println(start, end)
+	newstart, newend, shouldRequest := checkDates(start, end)
 
-	body := makeTwitterRequest("GET", endpoint, q)
-
-	result := utils.UnmarshalToJson[DataTweet](body)
-
-	lastRequest = requestStruct{EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
-
-	ret := castTweetStructToMyTweet(result)
+	if shouldRequest {
+		q["start_time"] = newstart.Add(time.Second * time.Duration(30)).Add(time.Hour * time.Duration(2)).Format(time.RFC3339)
+		q["end_time"] = newend.Add(time.Second * time.Duration(-30)).Format(time.RFC3339)
+		body := makeTwitterRequest("GET", endpoint, q)
+		result := utils.UnmarshalToJson[DataTweet](body)
+		lastRequest = requestStruct{EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
+		ret = castTweetStructToMyTweet(result)
+		// Save new query in cache
+		database.InsertTweetList(ret)
+	}
 
 	// Get other results from cache
 	cache := searchCache(mode, query, start, end)
-
-	// Save new query in cache
-	database.InsertTweetList(ret)
 
 	for _, k := range cache {
 		if slices.IndexFunc(ret, func(v utils.Tweet) bool { return (v.TwitterId == k.TwitterId) }) == -1 {

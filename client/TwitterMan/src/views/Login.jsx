@@ -5,12 +5,12 @@ import twitterman from '../assets/twitterman.png'
 const SERVER_URL = 'http://localhost:8080'
 
 const Login = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const email = useRef()
   const password = useRef()
 
   const submitLogin = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       let res = await fetch(`${SERVER_URL}/login`, {
         method: 'POST',
@@ -28,9 +28,9 @@ const Login = () => {
         throw res.message
       }
       // TODO: handle when you are logged in on the frontend.
-      navigate("/");
+      navigate('/')
     } catch (e) {
-      alert(e);
+      alert(e)
     }
   }
 
@@ -57,7 +57,11 @@ const Login = () => {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Sign in to your account
             </h1>
-            <form className="space-y-4 md:space-y-6" method="POST" onSubmit={submitLogin}>
+            <form
+              className="space-y-4 md:space-y-6"
+              method="POST"
+              onSubmit={submitLogin}
+            >
               <div>
                 <label
                   htmlFor="email"
