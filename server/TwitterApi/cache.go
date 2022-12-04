@@ -10,8 +10,6 @@ import (
 func searchCache(key, value string, start, end time.Time) []utils.Tweet {
 	retValue := []utils.Tweet{}
 	switch key {
-	case "id":
-		retValue = database.GetTweetsByTwitterId(value, start, end)
 	case "user":
 		retValue = database.GetTweetsByUsername(value[5:], start, end) // remove "from:"
 	case "hashtag":
@@ -20,5 +18,10 @@ func searchCache(key, value string, start, end time.Time) []utils.Tweet {
 		retValue = database.GetTweetsByKeyword(value, start, end)
 	}
 
+	return retValue
+}
+
+func searchTwCache(id string) []utils.Tweet {
+	retValue := database.GetTweetsByTwitterId(id)
 	return retValue
 }

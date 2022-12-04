@@ -43,18 +43,23 @@ func getTweets(c *gin.Context) {
 		return
 	}
 
-	if mode == "id" {
-		twRet = TwitterApi.GetTweetInfoById(query, start, end)
-	} else {
-		switch mode {
-		case "keyword":
-		case "hashtag":
-			query = "#" + query
-		case "user":
-			query = "from:" + query
-		}
-		twRet = TwitterApi.GetTwsByQuery(mode, query, max_results, start, end)
+	switch mode {
+	case "keyword":
+	case "hashtag":
+		query = "#" + query
+	case "user":
+		query = "from:" + query
 	}
+
+	twRet = TwitterApi.GetTwsByQuery(mode, query, max_results, start, end)
+
+	utils.SendOkResponse(c, twRet)
+}
+
+/* get a tweet by id */
+func getTweetById(c *gin.Context) {
+	query := c.Param("query")
+	twRet := TwitterApi.GetTweetInfoById(query)
 
 	utils.SendOkResponse(c, twRet)
 }
@@ -64,7 +69,6 @@ Get user info (id,name,username,profile_image_url)
 */
 func getUserInfo(c *gin.Context) {
 	username := c.Param("username")
-
 	usr := TwitterApi.GetUserInfoByUsername(username)
 
 	utils.SendOkResponse(c, usr)
