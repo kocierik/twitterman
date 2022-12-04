@@ -21,7 +21,7 @@ const Home = () => {
       for (const k in tweets) {
         data.push({ text: tweets[k].content })
       }
-      let res = await fetch('http://localhost:55555/sentiment', {
+      let res = await fetch('http://localhost:5555/sentiment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
