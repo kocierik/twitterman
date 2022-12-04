@@ -36,7 +36,7 @@ const fetchSentiment = async (tweets) => {
     return tweetsWithSentiment
 }
 
-const searchTweets = async (selectValue, textValue, formattedDates, rfp) => {
+const searchTweets = async (selectValue, textValue, formattedDates, rfp, setTweetsData, setTweetsDataFiltered) => {
     try {
         const url = stringFormat(
             SERVER_URL + selectValue,

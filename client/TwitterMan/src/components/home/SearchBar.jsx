@@ -73,7 +73,7 @@ const SearchBar = ({
       className="flex mb-5"
       onSubmit={async(event) => {
         event.preventDefault()
-        setTweetsData(await Const.searchTweets(selectValue, textValue, formattedData(), rfp));
+        setTweetsData(await Const.searchTweets(selectValue, textValue, formattedData(), rfp, setTweetsData, setTweetsDataFilter));
       }}
     >
       <div id="elements">

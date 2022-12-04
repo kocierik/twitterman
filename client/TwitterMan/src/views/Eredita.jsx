@@ -37,7 +37,6 @@ const searchTweets = async (selectValue, textValue, formattedDates) => {
     try {
         let res = await fetch(`${SERVER_URL}${selectValue}90${textValue}${formattedDates}`)
         res = await res.json()
-        console.log(res);
         if (!res.message) {
             res.forEach((tw) => {
                 var s = tw.content + ' '
@@ -55,8 +54,7 @@ const searchTweets = async (selectValue, textValue, formattedDates) => {
     return final;
 }
 
-const EreditaScreen = ({ result }) => {
-    const [stats, setStats] = useState([{ name: "giusti", value: 10 }, { name: "sbagliati", value: 50 }])
+const EreditaScreen = ({ result, stats }) => {
     const cx = 180;
     const cy = 150;
     const COLORS = ['#00C49F', '#FF8042'];
@@ -112,45 +110,87 @@ const EreditaScreen = ({ result }) => {
 
 const Eredita = () => {
     const [ereditaResultJson, setEreditaResultJson] = useState(null);
-
+    const [stats, setStats] = useState([{ name: "giusti", value: 0 }, { name: "sbagliati", value: 0 }]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const color = "#ffffff";
 
+    const format = (myint) => {
+        return myint > 9 ? myint : "0" + myint.toString()
+    }
 
-    async function getQuizzettone() {
-        
-        let mydata = null;
+    function formatDate(mydate) {
+        let formattedDate = `${mydate["$y"]}-${parseInt(format(mydate["$M"])) + 1}-${format(mydate["$D"])}`;
+        let start = `${formattedDate}T00:00:00.000Z`;
+        let end = "";
+        let today = new Date();
+        if (mydate["$y"] == today.getFullYear() && mydate["$M"] == today.getMonth() && mydate["$D"] == today.getDate()) {
+            end = `${formattedDate}T${format(mydate["$H"])}:${format(mydate["$m"])}:${format(mydate["$s"])}.000Z`;
+        } else {
+            end = `${formattedDate}T23:59:59.000Z`
+        }
+        return `${start}/${end}`;
+    }
+
+    function checkNullDate(mydate) {
         let flag = true;
         let keys = ["$m", "$y", "$M", "$D", "$s", "$H"]
-        for (let k of keys){
-            flag = selectedDate[k] != undefined && flag
+        for (let k of keys) {
+            flag = mydate[k] != undefined && flag
         }
-        if(flag){
-            const format = (myint)=>{
-                return myint > 9 ? myint : "0" + myint.toString()
-            }
-            let todayString = `${selectedDate["$y"]}-${parseInt(format(selectedDate["$M"]))+1}-${format(selectedDate["$D"])}`
-            let secs = `${format(selectedDate["$H"])}:${format(selectedDate["$m"])}:${format(selectedDate["$s"])}.000Z`
-            let tw = await searchTweets(`/tweet/`, '/user/quizzettone', `/date/${todayString}T00:00:00.000Z/${todayString}T${secs}`);
-            if(tw != null){
+        return flag;
+    }
+
+    async function getStats(rightWord) {
+        if (checkNullDate(selectedDate)) {
+            let giuste = 0;
+            let sbagliate = 0;
+            let tw = await searchTweets(`/tweet/`, '/hashtag/ghigliottina', `/date/${formatDate(selectedDate)}`);
+            if (tw != null) {
                 for (let t of tw) {
-                    if(t.content.includes("Per #leredità su Twitter, i campioni più veloci della #ghigliottina sono:")){
-                        if(mydata == null) {
+                    let split = t.content.split(" ");
+                    let finalsplit = [];
+                    for (let s of split) {
+                        s = s.replace("\n", "");
+                        if (s != "" && !s.includes("#")) {
+                            finalsplit.push(s.replace("?", "").toUpperCase())
+                        }
+                    }
+                    if (finalsplit.length == 1) {
+                        if (rightWord == finalsplit[0]) {
+                            giuste++;
+                        } else {
+                            sbagliate++;
+                        }
+                    }
+                }
+            }
+            return [{ name: "giusti", value: giuste }, { name: "sbagliati", value: sbagliate }]
+        }
+    }
+
+    async function getQuizzettone() {
+        let mydata = null;
+        if (checkNullDate(selectedDate)) {
+            let tw = await searchTweets(`/tweet/`, '/user/quizzettone', `/date/${formatDate(selectedDate)}`);
+            if (tw != null) {
+                for (let t of tw) {
+                    if (t.content.includes("Per #leredità su Twitter, i campioni più veloci della #ghigliottina sono:")) {
+                        if (mydata == null) {
                             mydata = {};
                         }
                         const splitted = t.content.split("\n");
                         mydata.winners = [];
-                        for(let i = 2; i<=4; i++){
+                        for (let i = 2; i <= 4; i++) {
                             let w = {};
                             let s = splitted[i].split(" ");
-                            w.position = i-1;
+                            w.position = i - 1;
                             w.name = s[1];
                             w.time = s[3];
                             w.url = "";
                             mydata.winners.push(w);
                         }
-                    }else if(t.content.includes("La #parola della #ghigliottina de #leredita di oggi è:")){
-                        if(mydata == null){
+                    } else if (t.content.includes("La #parola della #ghigliottina de #leredita di oggi è:")) {
+                        if (mydata == null) {
                             mydata = {};
                         }
                         let rightword = t.content.split("La #parola della #ghigliottina de #leredita di oggi è:")[1].split(" ")[1];
@@ -166,6 +206,16 @@ const Eredita = () => {
         let res = await getQuizzettone();
         setEreditaResultJson(res);
     }
+
+    async function stats_async() {
+        if (ereditaResultJson != null) {
+            setStats(await getStats(ereditaResultJson.word));
+        }
+    }
+
+    useEffect(() => {
+        stats_async();
+    }, [ereditaResultJson])
 
     useEffect(() => {
         init();
@@ -194,7 +244,7 @@ const Eredita = () => {
                     />
                 </LocalizationProvider>
             </div>
-            {ereditaResultJson != null? <EreditaScreen result={ereditaResultJson} /> : <h1 className='text-5xl text-center pt-20 pb-5 text-white'>Oggi non hanno giocato all'eredita</h1>}
+            {ereditaResultJson != null ? <EreditaScreen result={ereditaResultJson} stats={stats} /> : <h1 className='text-5xl text-center pt-20 pb-5 text-white'>Oggi non hanno giocato all'eredita</h1>}
         </>
     )
 }
