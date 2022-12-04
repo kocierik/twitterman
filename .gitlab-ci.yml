@@ -17,7 +17,7 @@ build:
 
 golang-check:
   stage: test
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  image: golang:latest
   script:
     - go vet $(go list ./... | grep -wv utils)
     - GIN_MODE=release go test -v -coverprofile=coverage.out $(go list ./... | grep -wv utils)

@@ -115,7 +115,7 @@ func Connect() {
 		return
 	}
 	ctx = context.Background()
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	clientOptions := options.Client().ApplyURI(utils.DbUrl)
 	client, err = mongo.Connect(ctx, clientOptions)
 	utils.TestError(err, "database.Connect function, new client error")
 }
