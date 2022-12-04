@@ -2,8 +2,7 @@ import React, { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import twitterman from '../assets/twitterman.png'
-const SERVER_URL = 'http://localhost:8080'
-
+import {SERVER_URL} from '../utils'
 const Login = () => {
   const navigate = useNavigate()
   const email = useRef()

@@ -22,7 +22,7 @@ const Home = () => {
       for (const k in tweets) {
         data.push({ text: tweets[k].content })
       }
-      let res = await fetch('http://localhost:5556/sentiment', {
+      let res = await fetch(Const.SENTIMENT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
