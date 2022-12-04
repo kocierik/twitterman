@@ -43,31 +43,20 @@ func GetUserInfoByUsername(username string) TwitterUserStruct {
 	return result.Data
 }
 
-func GetTweetInfoById(id string, start, end time.Time) []utils.Tweet {
+func GetTweetInfoById(id string) []utils.Tweet {
 	endpoint := utils.TwitterApi + "/tweets"
 
 	q := baseQuery("ids", id)
-	q["start_time"] = start.Add(time.Second * time.Duration(30)).Add(time.Hour * time.Duration(2)).Format(time.RFC3339)
-	q["end_time"] = end.Add(time.Second * time.Duration(30)).Format(time.RFC3339)
+	ret := searchTwCache(id)
 
-	body := makeTwitterRequest("GET", endpoint, q)
-
-	result := utils.UnmarshalToJson[DataTweet](body)
-
-	ret := castTweetStructToMyTweet(result)
-
-	// Get other results from cache
-	cache := searchCache("id", id, start, end)
-
-	// Save new results in cache
-	database.InsertTweetList(ret)
-
-	// remove duplicates from result
-	for _, k := range cache {
-		if slices.IndexFunc(ret, func(v utils.Tweet) bool { return (v.TwitterId == k.TwitterId) }) == -1 {
-			ret = append(ret, k)
-		}
+	if ret == nil {
+		body := makeTwitterRequest("GET", endpoint, q)
+		result := utils.UnmarshalToJson[DataTweet](body)
+		ret = castTweetStructToMyTweet(result)
+		// Save new results in cache
+		database.InsertTweetList(ret)
 	}
+
 	return ret
 }
 
