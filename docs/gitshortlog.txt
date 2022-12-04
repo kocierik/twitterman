@@ -1,6 +1,0 @@
-    62	geno <gabrigeno@gmail.com>
-    60	kocierik <kocierik@gmail.com>
-    14	takenX10 <frau.alessandro01@gmail.com>
-    10	Gabriele Genovese <gabriele.genovese2@studio.unibo.it>
-     3	Erik Koci <erik.koci@studio.unibo.it>
-     1	ManuelArto <43347768+ManuelArto@users.noreply.github.com>

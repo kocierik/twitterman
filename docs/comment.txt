@@ -1,0 +1,14 @@
+PROGETTO REALIZZATO IN GO(!)
+
+13 novembre
+no code!
+taiga(in uso)
+mattermost in uso
+
+4 dicembre
+Molti commit, anche in co-author, con Genovese che fa la parte del leone, altri con poco movimento apparente (tipo Frau)
+Presente sonarQube (manca output)
+mattermost in uso
+Taiga in uso (wiki con documenti)
+Di test nessuna traccia
+
