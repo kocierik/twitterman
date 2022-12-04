@@ -3,8 +3,6 @@ package database
 import (
 	"context"
 	"errors"
-	"fmt"
-	"log"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
@@ -71,7 +69,6 @@ func GetTweetsByTwitterId(id string) []utils.Tweet {
 func GetTweetsByUsername(username string, start, end time.Time) []utils.Tweet {
 	sstart := start.Format("2006-01-02T15:04:05Z")
 	eend := end.Format("2006-01-02T15:04:05Z")
-	fmt.Println(sstart, eend)
 	myDict := bson.M{
 		"username":  primitive.Regex{Pattern: username, Options: "i"},
 		"timestamp": bson.M{"$gte": sstart, "$lte": eend},
@@ -126,7 +123,7 @@ func Disconnect() {
 }
 
 func find(query interface{}, collection string) *mongo.Cursor {
-	log.Println(dbname, collection, query)
+	// log.Println(dbname, collection, query)
 	col := client.Database(dbname).Collection(collection)
 	cursor, err := col.Find(ctx, query)
 	utils.TestError(err, "find function")

@@ -14,9 +14,9 @@ func SendNotFoundResponse(c *gin.Context) {
 	c.AbortWithStatus(http.StatusNotFound)
 }
 
-func SendErrorResponse(c *gin.Context) {
+func SendErrorResponse(c *gin.Context, errorMsg string) {
 	c.JSON(400, gin.H{
 		"success": false,
-		"message": "Something went wrong",
+		"message": errorMsg,
 	})
 }

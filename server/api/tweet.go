@@ -24,18 +24,18 @@ example:
   - tweet/keyword/mondo
 */
 func getTweets(c *gin.Context) {
-	max_results := c.Param("results")
+	maxResults := c.Param("results")
 	mode := c.Param("mode")
 	query := c.Param("query")
 	start, err := time.Parse(time.RFC3339, c.Param("start"))
 	if err != nil {
-		utils.SendErrorResponse(c)
-		return // TODO
+		utils.SendErrorResponse(c, "start date format wrong")
+		return
 	}
 	end, err := time.Parse(time.RFC3339, c.Param("end"))
 	if err != nil {
-		utils.SendErrorResponse(c)
-		return // TODO
+		utils.SendErrorResponse(c, "end date format wrong")
+		return
 	}
 	var twRet any
 
@@ -51,7 +51,8 @@ func getTweets(c *gin.Context) {
 		query = "from:" + query
 	}
 
-	twRet = TwitterApi.GetTwsByQuery(mode, query, max_results, start, end)
+	// fmt.Println(mode, query, maxResults, start, end)
+	twRet = TwitterApi.GetTwsByQuery(mode, query, maxResults, start, end)
 
 	utils.SendOkResponse(c, twRet)
 }
@@ -59,14 +60,16 @@ func getTweets(c *gin.Context) {
 /* get a tweet by id */
 func getTweetById(c *gin.Context) {
 	query := c.Param("query")
-	twRet := TwitterApi.GetTweetInfoById(query)
+	twRet := TwitterApi.GetTweetById(query)
 
 	utils.SendOkResponse(c, twRet)
 }
 
 /*
 Get user info (id,name,username,profile_image_url)
-*/
+è buggata, visto che non la usiamo la commento
+se servirà la debuggeremo
+
 func getUserInfo(c *gin.Context) {
 	username := c.Param("username")
 	usr := TwitterApi.GetUserInfoByUsername(username)
@@ -74,12 +77,14 @@ func getUserInfo(c *gin.Context) {
 	utils.SendOkResponse(c, usr)
 }
 
+*/
+
 /*
-Load 10 new different tweets of the last query done
+Load new different tweets of the last query done
 */
 func getNewPageTweets(c *gin.Context) {
-	max_results := c.Param("results")
-	ret := TwitterApi.GetNextTokenReq(max_results)
+	maxResults := c.Param("results")
+	ret := TwitterApi.GetNextTokenReq(maxResults)
 
 	utils.SendOkResponse(c, ret)
 }
