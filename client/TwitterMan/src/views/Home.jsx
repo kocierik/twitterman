@@ -50,7 +50,7 @@ const Home = () => {
             setTweetsData={setTweetsData}
             rfp={rfp}
           />
-          {tweetsData?.length ? (
+          {tweetsDataFiltered?.length ? (
             <HideTweets showTweets={showTweets} setShowTweets={setShowTweets} />
           ) : null}
         </div>
