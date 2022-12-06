@@ -19,7 +19,7 @@ var dbname string = "twitterman"
 
 var collectionList [2]string = [2]string{"Users", "Tweets"}
 
-var nullUser = utils.User{ID: primitive.ObjectID{}, Email: "", Username: "", Password: "", SavedTweetsId: []string{}}
+var nullUser = utils.User{ID: primitive.ObjectID{}, Email: "", Username: "", Password: "", SavedFolders: []utils.TweetsFolder{}}
 
 type queryTypeInterface interface {
 	GetKey() string
@@ -90,12 +90,12 @@ func GetTweetsByKeyword(keyword string, start, end time.Time) []utils.Tweet {
 	return binded
 }
 
-func InsertUser(email, username, password string, tweets []string) {
+func InsertUser(email, username, password string, tweetsFolder []utils.TweetsFolder) {
 	user := utils.User{
-		Email:         email,
-		Username:      username,
-		Password:      password,
-		SavedTweetsId: tweets,
+		Email:        email,
+		Username:     username,
+		Password:     password,
+		SavedFolders: tweetsFolder,
 	}
 	insert(user, "Users")
 }

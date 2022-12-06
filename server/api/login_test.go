@@ -16,7 +16,7 @@ func TestLoginApi(t *testing.T) {
 	database.InitDbTest()
 	initApiTest()
 	// Insert user to database
-	database.InsertUser("aldo@aldo", "aldo", "aldo", []string{})
+	database.InsertUser("aldo@aldo", "aldo", "aldo", []utils.TweetsFolder{})
 
 	// Test Correct credentials
 	type login struct {
