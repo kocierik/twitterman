@@ -35,4 +35,4 @@ def get_sentiment():
 
 if __name__ == '__main__':
     # run app in debug mode on port 5556
-    app.run(debug=True, port=5556)
+    app.run(debug=False, port=5556)
