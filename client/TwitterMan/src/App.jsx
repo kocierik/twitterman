@@ -6,7 +6,8 @@ import Login from '../src/views/Login'
 import Register from '../src/views/Register'
 import Footer from './components/Footer'
 import TweetMaps from './views/TweetMaps'
-import Eredita from './views/Eredita'
+import SavedTweets from './views/SavedTweets'
+// import Eredita from './views/Eredita'
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/tweetMaps/:id" element={<TweetMaps />} />
-          <Route path="/eredita" element={<Eredita />} />
+          <Route path="/saved" element={<SavedTweets />} />
+          {/* <Route path="/eredita" element={<Eredita />} /> */}
         </Routes>
         <Footer />
       </div>

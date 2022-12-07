@@ -12,6 +12,10 @@ const TweetCard = ({ data }) => {
       name: 'Maps',
       setting: () => navigate(`/tweetMaps/${data.id}`),
     },
+    {
+      name: 'Save tweet',
+      setting: () => console.log('saved'),
+    },
   ]
   useEffect(() => {
     switch (data.sentiment) {
