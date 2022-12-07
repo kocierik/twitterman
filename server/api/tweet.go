@@ -100,3 +100,12 @@ func saveTweet(c *gin.Context) {
 	database.InsertSavedTweet(name, folder, id)
 	fmt.Println("finito endpoint")
 }
+
+func remSavedTweet(c *gin.Context) {
+	name := c.Param("name")
+	folder := c.Param("folder")
+	id := c.Param("id")
+
+	database.RemoveSavedTweet(name, folder, id)
+	fmt.Println("finito endpoint")
+}

@@ -137,6 +137,7 @@ func createFolder(name string, folder_name string) {
 	utils.TestError(err, "find function")
 }
 
+/* add tweet into the folder of said user, if the folder doesn't exists create it*/
 func InsertSavedTweet(name string, folder_name string, id string) {
 	res, _ := getUserByName(name)
 	folders := res.SavedFolders
@@ -152,6 +153,14 @@ func InsertSavedTweet(name string, folder_name string, id string) {
 	}
 	insertTweetIntoFolder(name, folder_name, id)
 
+}
+
+func RemoveSavedTweet(name string, folder_name string, id string) {
+	query := bson.M{"saved_folders.$.tweets": id}
+	col := client.Database(dbname).Collection("Users")
+	mytrue := true
+	_, err := col.UpdateOne(ctx, bson.M{"username": name, "saved_folders.name": folder_name}, bson.M{"$pull": query}, &options.UpdateOptions{Upsert: &mytrue})
+	utils.TestError(err, "save tweet into folder function")
 }
 
 func Connect() {
