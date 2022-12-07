@@ -7,31 +7,6 @@ import { useEffect } from 'react';
 import { PieChart, Pie, Cell } from 'recharts'
 import { SERVER_URL } from '../utils'
 
-const fetchSentiment = async (tweets) => {
-    let tweetsWithSentiment = []
-    try {
-        var data = []
-        for (const k in tweets) {
-            data.push({ text: tweets[k].content })
-        }
-        let res = await fetch('http://localhost:5556/sentiment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-        res = await res.json()
-        tweetsWithSentiment = tweets?.map((v, k) => {
-            v.sentiment = res['sentiments'][k]
-            return v
-        })
-    } catch (e) {
-        alert(e)
-    }
-    return tweetsWithSentiment
-}
-
 const searchTweets = async (selectValue, textValue, formattedDates) => {
     let final = null;
     try {
@@ -42,8 +17,6 @@ const searchTweets = async (selectValue, textValue, formattedDates) => {
                 var s = tw.content + ' '
                 tw.content = s.replace(/(http|https)(.*?)( )/g, '')
             })
-
-            res = await fetchSentiment(res)
             final = res;
         } else {
             alert(res ? res.message : 'Tweets not found')
@@ -79,7 +52,7 @@ const EreditaScreen = ({ result, stats }) => {
                 <table>
                     <tbody>
                         {
-                            result.winners.map((p) => {
+                            result.winners?.map((p) => {
                                 return (
                                     <tr key={p.position}>
                                         <td className='p-3'>{p.position}</td>
@@ -174,7 +147,7 @@ const Eredita = () => {
             let tw = await searchTweets(`/tweet/`, '/user/quizzettone', `/date/${formatDate(selectedDate)}`);
             if (tw != null) {
                 for (let t of tw) {
-                    if (t.content.includes("Per #leredità su Twitter, i campioni più veloci della #ghigliottina sono:")) {
+                    if (t.content && t.content.includes("Per #leredità su Twitter, i campioni più veloci della #ghigliottina sono:")) {
                         if (mydata == null) {
                             mydata = {};
                         }
