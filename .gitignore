@@ -16,4 +16,4 @@ data
 .vscode
 create-env.sh
 venv
-client/node-modules
+client/node_modules
