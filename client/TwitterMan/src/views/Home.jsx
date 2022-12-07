@@ -31,6 +31,21 @@ const Home = () => {
     }
   }
 
+  const filterSentiment = () => {
+    if (sentimentIcon) {
+      const filterSentimentData = tweetsData.filter(
+        (item) => item.sentiment == sentimentIcon
+      )
+      setTweetsDataFiltered(filterSentimentData)
+    } else {
+      setTweetsDataFiltered(tweetsData)
+    }
+  }
+
+  useEffect(() => {
+    filterSentiment()
+  }, [tweetsData, sentimentIcon])
+
   return (
     <>
       <div
@@ -74,7 +89,7 @@ const Home = () => {
           <Charts tweetsData={tweetsDataFiltered} frequency={frequencyValue} />
         </div>
       )}
-      {tweetsData?.length > 0 && (
+      {tweetsDataFiltered?.length > 0 && (
         <div className="p-10 dark:bg-gray-900">
           <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
             TweetMaps
