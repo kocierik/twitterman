@@ -120,10 +120,8 @@ func GetUserByName(name string) (utils.User, error) {
 /* finds the correct saved folder of a user and push the tweet id*/
 func insertTweetIntoFolder(name string, folder_name string, id string) {
 	query := bson.M{"saved_folders.$.tweets": id}
-	col := client.Database(dbname).Collection("Users")
-	mytrue := true
-	_, err := col.UpdateOne(ctx, bson.M{"username": name, "saved_folders.name": folder_name}, bson.M{"$push": query}, &options.UpdateOptions{Upsert: &mytrue})
-	utils.TestError(err, "save tweet into folder function")
+	updateQ := bson.M{"username": name, "saved_folders.name": folder_name}
+	insertMode(updateQ, bson.M{"$push": query}, "Users")
 }
 
 func createFolder(name string, folder_name string) {
@@ -131,40 +129,23 @@ func createFolder(name string, folder_name string) {
 		Name:   folder_name,
 		Tweets: []string{},
 	}
-	col := client.Database(dbname).Collection("Users")
-	mytrue := true
-	_, err := col.UpdateOne(ctx, bson.M{"username": name}, bson.M{"$push": bson.M{"saved_folders": folder}}, &options.UpdateOptions{Upsert: &mytrue})
-	utils.TestError(err, "find function")
+	insertMode(bson.M{"username": name}, bson.M{"$push": bson.M{"saved_folders": folder}}, "Users")
 }
 
 /* add tweet into the folder of said user, if the folder doesn't exists create it*/
 func InsertSavedTweet(name string, folder_name string, id string) {
-	res, _ := GetUserByName(name)
-	folders := res.SavedFolders
-	folder_exists := false
-	for _, a := range folders {
-		if a.Name == folder_name {
-			folder_exists = true
-		}
-	}
-
-	if !folder_exists {
+	folder := find(bson.M{"username": name, "saved_folders.name": folder_name}, "Users")
+	if len(bindType[[]utils.TweetsFolder](folder)) == 0 {
 		createFolder(name, folder_name)
 	}
 	insertTweetIntoFolder(name, folder_name, id)
 
 }
 
-func RemoveSavedTweet(name string, folder_name string, id string) {
+func RemoveSavedTweet(name string, folder_name string, id string) error {
 	query := bson.M{"saved_folders.$.tweets": id}
-	col := client.Database(dbname).Collection("Users")
-	mytrue := true
-	_, err := col.UpdateOne(ctx, bson.M{"username": name, "saved_folders.name": folder_name}, bson.M{"$pull": query}, &options.UpdateOptions{Upsert: &mytrue})
-	utils.TestError(err, "save tweet into folder function")
-}
-
-func GetFolders() {
-
+	updateQ := bson.M{"username": name, "saved_folders.name": folder_name}
+	return insertMode(updateQ, bson.M{"$pull": query}, "Users")
 }
 
 func Connect() {
@@ -201,10 +182,15 @@ func insert[T queryTypeInterface](query T, collection string) {
 	default:
 		updateQuery = bson.M{}
 	}
+	insertMode(updateQuery, bson.M{"$set": query}, collection)
+}
+
+func insertMode(updateQuery primitive.M, query primitive.M, collection string) error {
 	mytrue := true
 	col := client.Database(dbname).Collection(collection)
-	_, err := col.UpdateOne(ctx, updateQuery, bson.M{"$set": query}, &options.UpdateOptions{Upsert: &mytrue})
+	_, err := col.UpdateOne(ctx, updateQuery, query, &options.UpdateOptions{Upsert: &mytrue})
 	utils.TestError(err, "insert function")
+	return err
 }
 
 func InitDbTest() {

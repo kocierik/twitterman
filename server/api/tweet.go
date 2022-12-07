@@ -88,7 +88,10 @@ func getNewPageTweets(c *gin.Context) {
 	utils.SendOkResponse(c, ret)
 }
 
-/* save tweet into folder */
+/*
+save tweet into folder
+/user/bob/folder/capperus/add/1245678956
+*/
 func saveTweet(c *gin.Context) {
 	name := c.Param("username")
 	folder := c.Param("folderId")
@@ -102,7 +105,11 @@ func remSavedTweet(c *gin.Context) {
 	folder := c.Param("folderId")
 	id := c.Param("tweetId")
 
-	database.RemoveSavedTweet(name, folder, id)
+	err := database.RemoveSavedTweet(name, folder, id)
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
 }
 
 func getFolders(c *gin.Context) {
