@@ -1,9 +1,11 @@
 package api
 
 import (
+	"fmt"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
+	"git.hjkl.gq/team7/twitterman/server/database"
 	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
@@ -87,4 +89,23 @@ func getNewPageTweets(c *gin.Context) {
 	ret := TwitterApi.GetNextTokenReq(maxResults)
 
 	utils.SendOkResponse(c, ret)
+}
+
+/* save tweet into folder */
+func saveTweet(c *gin.Context) {
+	name := c.Param("name")
+	folder := c.Param("folder")
+	id := c.Param("id")
+
+	database.InsertSavedTweet(name, folder, id)
+	fmt.Println("finito endpoint")
+}
+
+func remSavedTweet(c *gin.Context) {
+	name := c.Param("name")
+	folder := c.Param("folder")
+	id := c.Param("id")
+
+	database.RemoveSavedTweet(name, folder, id)
+	fmt.Println("finito endpoint")
 }

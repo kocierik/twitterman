@@ -28,7 +28,7 @@ func TestInsertandGetUser(t *testing.T) {
 	InitDbTest()
 
 	// It insert the user
-	InsertUser("gianni@gianni", "gianni", "gianni", []string{})
+	InsertUser("gianni@gianni", "gianni", "gianni", []utils.TweetsFolder{})
 
 	// It returns an error if the email doesn't exist
 	_, err := GetUserByEmail("no-user-with-this-email")
