@@ -93,18 +93,18 @@ func getNewPageTweets(c *gin.Context) {
 
 /* save tweet into folder */
 func saveTweet(c *gin.Context) {
-	name := c.Param("name")
-	folder := c.Param("folder")
-	id := c.Param("id")
+	name := c.Param("username")
+	folder := c.Param("folderId")
+	id := c.Param("tweetId")
 
 	database.InsertSavedTweet(name, folder, id)
 	fmt.Println("finito endpoint")
 }
 
 func remSavedTweet(c *gin.Context) {
-	name := c.Param("name")
-	folder := c.Param("folder")
-	id := c.Param("id")
+	name := c.Param("username")
+	folder := c.Param("folderId")
+	id := c.Param("tweetId")
 
 	database.RemoveSavedTweet(name, folder, id)
 	fmt.Println("finito endpoint")
