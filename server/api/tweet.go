@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
@@ -67,19 +66,17 @@ func getTweetById(c *gin.Context) {
 	utils.SendOkResponse(c, twRet)
 }
 
-/*
-Get user info (id,name,username,profile_image_url)
-è buggata, visto che non la usiamo la commento
-se servirà la debuggeremo
-
 func getUserInfo(c *gin.Context) {
 	username := c.Param("username")
-	usr := TwitterApi.GetUserInfoByUsername(username)
+	usr, err := database.GetUserByName(username)
+
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
 
 	utils.SendOkResponse(c, usr)
 }
-
-*/
 
 /*
 Load new different tweets of the last query done
@@ -98,7 +95,6 @@ func saveTweet(c *gin.Context) {
 	id := c.Param("tweetId")
 
 	database.InsertSavedTweet(name, folder, id)
-	fmt.Println("finito endpoint")
 }
 
 func remSavedTweet(c *gin.Context) {
@@ -107,5 +103,16 @@ func remSavedTweet(c *gin.Context) {
 	id := c.Param("tweetId")
 
 	database.RemoveSavedTweet(name, folder, id)
-	fmt.Println("finito endpoint")
+}
+
+func getFolders(c *gin.Context) {
+	username := c.Param("username")
+	usr, err := database.GetUserByName(username)
+
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
+
+	utils.SendOkResponse(c, usr.SavedFolders)
 }

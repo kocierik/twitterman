@@ -106,7 +106,7 @@ func InsertTweetList(twts []utils.Tweet) {
 	}
 }
 
-func getUserByName(name string) (utils.User, error) {
+func GetUserByName(name string) (utils.User, error) {
 	query := bson.M{"username": name}
 	res := find(query, "Users")
 	binded := bindType[[]utils.User](res)
@@ -139,7 +139,7 @@ func createFolder(name string, folder_name string) {
 
 /* add tweet into the folder of said user, if the folder doesn't exists create it*/
 func InsertSavedTweet(name string, folder_name string, id string) {
-	res, _ := getUserByName(name)
+	res, _ := GetUserByName(name)
 	folders := res.SavedFolders
 	folder_exists := false
 	for _, a := range folders {
@@ -161,6 +161,10 @@ func RemoveSavedTweet(name string, folder_name string, id string) {
 	mytrue := true
 	_, err := col.UpdateOne(ctx, bson.M{"username": name, "saved_folders.name": folder_name}, bson.M{"$pull": query}, &options.UpdateOptions{Upsert: &mytrue})
 	utils.TestError(err, "save tweet into folder function")
+}
+
+func GetFolders() {
+
 }
 
 func Connect() {
