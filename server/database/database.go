@@ -106,6 +106,54 @@ func InsertTweetList(twts []utils.Tweet) {
 	}
 }
 
+func getUserByName(name string) (utils.User, error) {
+	query := bson.M{"username": name}
+	res := find(query, "Users")
+	binded := bindType[[]utils.User](res)
+	if len(binded) == 0 {
+		return nullUser, errors.New("No user with such username")
+	} else {
+		return binded[0], nil
+	}
+}
+
+/* finds the correct saved folder of a user and push the tweet id*/
+func insertTweetIntoFolder(name string, folder_name string, id string) {
+	query := bson.M{"saved_folders.$.tweets": id}
+	col := client.Database(dbname).Collection("Users")
+	mytrue := true
+	_, err := col.UpdateOne(ctx, bson.M{"username": name, "saved_folders.name": folder_name}, bson.M{"$push": query}, &options.UpdateOptions{Upsert: &mytrue})
+	utils.TestError(err, "save tweet into folder function")
+}
+
+func createFolder(name string, folder_name string) {
+	folder := utils.TweetsFolder{
+		Name:   folder_name,
+		Tweets: []string{},
+	}
+	col := client.Database(dbname).Collection("Users")
+	mytrue := true
+	_, err := col.UpdateOne(ctx, bson.M{"username": name}, bson.M{"$push": bson.M{"saved_folders": folder}}, &options.UpdateOptions{Upsert: &mytrue})
+	utils.TestError(err, "find function")
+}
+
+func InsertSavedTweet(name string, folder_name string, id string) {
+	res, _ := getUserByName(name)
+	folders := res.SavedFolders
+	folder_exists := false
+	for _, a := range folders {
+		if a.Name == folder_name {
+			folder_exists = true
+		}
+	}
+
+	if !folder_exists {
+		createFolder(name, folder_name)
+	}
+	insertTweetIntoFolder(name, folder_name, id)
+
+}
+
 func Connect() {
 	var err error
 	if client != nil && client.Ping(ctx, nil) == nil {
