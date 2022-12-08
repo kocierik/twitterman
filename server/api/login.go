@@ -53,7 +53,7 @@ func loginApi(c *gin.Context) {
 	param := bind[RequestBody](c)
 	// TODO: make the jwt
 	if isUser(param.Email, param.Password) {
-		c.SetCookie("AUTHORIZATION", "make.this.jwt", 3600, "", "", true, true)
+		c.SetCookie("AUTHORIZATION", param.Email, 3600, "", "", true, false)
 		c.JSON(200, gin.H{
 			"success": true,
 		})

@@ -6,6 +6,7 @@ import { Link, useLocation } from 'react-router-dom'
 import twitterman from '../assets/twitterman.png'
 import { useEffect } from 'react'
 import * as Const from '../utils'
+
 const navigation = [
   { name: 'Dashboard', href: '#', current: true, link: '/' },
   { name: 'Eredita', href: '/eredita', current: false, link: '/eredita' },
@@ -21,7 +22,7 @@ export default function Navbar() {
 
   useEffect(() => {
     Const.checkIfLogged(setIsLogged)
-  }, [])
+  }, [isLogged])
 
   return (
     <Disclosure as="nav" className="bg-gray-800">

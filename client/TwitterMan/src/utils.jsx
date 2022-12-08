@@ -22,6 +22,10 @@ const checkIfLogged = (setIsLogged) => {
   }
 }
 
+const logOut = () => {
+  Cookies.remove('AUTHORIZATION')
+}
+
 const fetchSentiment = async (tweets) => {
   let tweetsWithSentiment = []
   try {
@@ -92,4 +96,5 @@ export {
   fetchSentiment,
   getUserInfo,
   checkIfLogged,
+  logOut,
 }

@@ -28,7 +28,7 @@ const Login = () => {
         throw res.message
       }
       // TODO: handle when you are logged in on the frontend.
-      navigate('/')
+      navigate('/profile')
     } catch (e) {
       alert(e)
     }

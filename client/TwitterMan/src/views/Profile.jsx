@@ -1,11 +1,15 @@
 import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import TweetCard from '../components/home/TweetCard'
+
 import * as Const from '../utils'
 const Profile = () => {
   const [user, setUser] = useState()
-  const [showDelete, setShowDelete] = useState(true)
+  const [showDelete, setShowDelete] = useState(false)
+  const navigate = useNavigate()
+
   const getUserInfo = async () => {
     await Const.getUserInfo('genovese24', setUser)
   }
@@ -161,6 +165,17 @@ const Profile = () => {
                       className="text-white bg-gradient-to-r ml-5 from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
                     >
                       Delete Account
+                    </button>
+                    <button
+                      type="button"
+                      data-modal-toggle="popup-modal"
+                      onClick={() => {
+                        Const.logOut()
+                        navigate('/')
+                      }}
+                      className="text-white bg-gradient-to-r ml-5 from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                    >
+                      Log out
                     </button>
                   </div>
                   <div className="w-full text-white px-4 lg:order-1">
