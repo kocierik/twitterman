@@ -4,7 +4,6 @@ import (
 	"context"
 	"testing"
 
-	"git.hjkl.gq/team7/twitterman/server/utils"
 	"github.com/go-playground/assert/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
