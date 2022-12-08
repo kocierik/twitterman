@@ -6,7 +6,7 @@ const SavedTweets = () => {
 
   const getSavedTweets = async () => {
     try {
-      const url = '' //Const.stringFormat(Const.SERVER_URL + Const.???)
+      const url = Const.stringFormat(Const.SERVER_URL + Const.TWEET_SAVE)
       let res = await fetch(url)
       res = await res.json()
       setSavedTweets(res)

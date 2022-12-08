@@ -8,6 +8,7 @@ import Footer from './components/Footer'
 import TweetMaps from './views/TweetMaps'
 import SavedTweets from './views/SavedTweets'
 import Eredita from './views/Eredita'
+import Profile from './views/Profile'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/tweetMaps/:id" element={<TweetMaps />} />
           <Route path="/saved" element={<SavedTweets />} />
           <Route path="/eredita" element={<Eredita />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <Footer />
       </div>
