@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
@@ -67,19 +66,17 @@ func getTweetById(c *gin.Context) {
 	utils.SendOkResponse(c, twRet)
 }
 
-/*
-Get user info (id,name,username,profile_image_url)
-è buggata, visto che non la usiamo la commento
-se servirà la debuggeremo
-
 func getUserInfo(c *gin.Context) {
 	username := c.Param("username")
-	usr := TwitterApi.GetUserInfoByUsername(username)
+	usr, err := database.GetUserByName(username)
+
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
 
 	utils.SendOkResponse(c, usr)
 }
-
-*/
 
 /*
 Load new different tweets of the last query done
@@ -91,21 +88,38 @@ func getNewPageTweets(c *gin.Context) {
 	utils.SendOkResponse(c, ret)
 }
 
-/* save tweet into folder */
+/*
+save tweet into folder
+/user/bob/folder/capperus/add/1245678956
+*/
 func saveTweet(c *gin.Context) {
-	name := c.Param("name")
-	folder := c.Param("folder")
-	id := c.Param("id")
+	name := c.Param("username")
+	folder := c.Param("folderId")
+	id := c.Param("tweetId")
 
 	database.InsertSavedTweet(name, folder, id)
-	fmt.Println("finito endpoint")
 }
 
 func remSavedTweet(c *gin.Context) {
-	name := c.Param("name")
-	folder := c.Param("folder")
-	id := c.Param("id")
+	name := c.Param("username")
+	folder := c.Param("folderId")
+	id := c.Param("tweetId")
 
-	database.RemoveSavedTweet(name, folder, id)
-	fmt.Println("finito endpoint")
+	err := database.RemoveSavedTweet(name, folder, id)
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
+}
+
+func getFolders(c *gin.Context) {
+	username := c.Param("username")
+	usr, err := database.GetUserByName(username)
+
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
+
+	utils.SendOkResponse(c, usr.SavedFolders)
 }
