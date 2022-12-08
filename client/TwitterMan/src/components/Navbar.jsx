@@ -22,7 +22,6 @@ export default function Navbar() {
 
   useEffect(() => {
     Const.checkIfLogged(setIsLogged)
-    console.log(isLogged)
   }, [])
 
   return (

@@ -15,7 +15,6 @@ const stringFormat = (str, ...args) =>
   )
 
 const checkIfLogged = (setIsLogged) => {
-  console.log(Cookies.get())
   if (Cookies.get('AUTHORIZATION')) {
     setIsLogged(true)
   } else {
@@ -84,7 +83,6 @@ const searchTweets = async (
 const getUserInfo = async (username, setUserInfo) => {
   let res = await fetch(stringFormat(SERVER_URL + USER_INFO, username))
   res = await res.json()
-  console.log(res)
   setUserInfo(res)
 }
 
