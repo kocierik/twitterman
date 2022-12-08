@@ -24,6 +24,7 @@ example:
   - tweet/user/elonmusk
   - tweet/keyword/mondo
 */
+
 func getTweets(c *gin.Context) {
 	maxResults := c.Param("results")
 	mode := c.Param("mode")
