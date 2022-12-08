@@ -7,7 +7,7 @@ import Register from '../src/views/Register'
 import Footer from './components/Footer'
 import TweetMaps from './views/TweetMaps'
 import SavedTweets from './views/SavedTweets'
-import Eredita from './views/Eredita'
+// import Eredita from './views/Eredita'
 import Profile from './views/Profile'
 
 function App() {
@@ -21,7 +21,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/tweetMaps/:id" element={<TweetMaps />} />
           <Route path="/saved" element={<SavedTweets />} />
-          <Route path="/eredita" element={<Eredita />} />
+          {/* <Route path="/eredita" element={<Eredita />} /> */}
           <Route path="/profile" element={<Profile />} />
         </Routes>
         <Footer />

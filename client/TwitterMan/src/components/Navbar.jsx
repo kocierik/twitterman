@@ -22,6 +22,7 @@ export default function Navbar() {
 
   useEffect(() => {
     Const.checkIfLogged(setIsLogged)
+    console.log(isLogged)
   }, [])
 
   return (
@@ -93,17 +94,14 @@ export default function Navbar() {
                 </Link>
               )}
               {isLogged && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    // localStorage.removeItem('token')
-                    // localStorage.removeItem('userId')
-                    // window.location.reload(false)
-                  }}
-                  className=" hover:-translate-y-1 hover:scale-105 duration-300 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2 "
-                >
-                  Sign Out
-                </button>
+                <Link to="/profile">
+                  <button
+                    type="button"
+                    className=" hover:-translate-y-1 hover:scale-105 duration-300 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2 "
+                  >
+                    Profile
+                  </button>
+                </Link>
               )}
             </div>
           </div>

@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie'
+
 export const SERVER_URL = 'http://localhost:8080'
 export const TWEET_KEYWORD = '/tweet/{0}/keyword/{1}'
 export const TWEET_HASHTAG = '/tweet/{0}/hashtag/{1}'
@@ -13,7 +15,8 @@ const stringFormat = (str, ...args) =>
   )
 
 const checkIfLogged = (setIsLogged) => {
-  if (localStorage.getItem('token') != null) {
+  console.log(Cookies.get())
+  if (Cookies.get('AUTHORIZATION')) {
     setIsLogged(true)
   } else {
     setIsLogged(false)
