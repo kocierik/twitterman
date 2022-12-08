@@ -129,22 +129,28 @@ func insertTweetIntoFolder(name string, folderName string, id string) error {
 	return nil
 }
 
-func createFolder(name string, folderName string) {
+func createFolder(name string, folderName string) error {
 	folder := utils.TweetsFolder{
 		Name:   folderName,
 		Tweets: []string{},
 	}
-	insertMode(bson.M{"username": name}, bson.M{"$push": bson.M{"saved_folders": folder}}, "Users")
+	return insertMode(bson.M{"username": name}, bson.M{"$push": bson.M{"saved_folders": folder}}, "Users")
+}
+
+func deleteFolder(name string, folderName string) error {
+	return insertMode(bson.M{"username": name}, bson.M{"$pull": bson.M{"saved_folders": folderName}}, "Users")
 }
 
 /* add tweet into the folder of said user, if the folder doesn't exists create it*/
-func InsertSavedTweet(name string, folderName string, id string) {
+func InsertSavedTweet(name string, folderName string, id string) error {
 	folder := find(bson.M{"username": name, "saved_folders.name": folderName}, "Users")
 	if len(bindType[[]utils.TweetsFolder](folder)) == 0 {
-		createFolder(name, folderName)
+		err := createFolder(name, folderName)
+		if err != nil {
+			return err
+		}
 	}
-	insertTweetIntoFolder(name, folderName, id)
-
+	return insertTweetIntoFolder(name, folderName, id)
 }
 
 func RemoveSavedTweet(name string, folderName string, id string) error {

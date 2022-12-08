@@ -7,6 +7,10 @@ import (
 	"github.com/go-playground/assert/v2"
 )
 
+var testUsername string = "aldo"
+var testTwtId string = "12345678987654"
+var testFolder string = "testFolder"
+
 func TestDatabaseConnect(t *testing.T) {
 	Connect()
 	defer client.Disconnect(ctx)
@@ -47,4 +51,22 @@ func TestInsertandGetUser(t *testing.T) {
 	// assert.Equal(t, userEmail, userId)
 
 	//Disconnect()
+}
+
+func TestFolderUsage(t *testing.T) {
+	InitDbTest()
+
+	/* Test saving tweet */
+	err := InsertSavedTweet(testUsername, testFolder, testTwtId)
+	assert.Equal(t, err, nil)
+
+	/* delete tweet */
+	err = RemoveSavedTweet(testUsername, testFolder, testTwtId)
+	assert.Equal(t, err, nil)
+
+	/* delete folder*/
+	err = deleteFolder(testUsername, testFolder)
+	assert.Equal(t, err, nil)
+
+	Disconnect()
 }
