@@ -192,18 +192,15 @@ const Profile = () => {
                     </button>
                   </div>
                   <div className="w-full text-white px-4 lg:order-1">
-                    <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
-                      {user?.saved?.map((folder, i) => {
-                        // return <CardFolder titleFolder={tweet} key={i} />
-                        return (
-                          <CardFolder
-                            key={i}
-                            titleFolder={folder.name}
-                            tweets={folder.tweets}
-                          />
-                        )
-                      })}
-                    </div>
+                    {user?.saved?.map((folder, i) => {
+                      return (
+                        <CardFolder
+                          key={i}
+                          titleFolder={folder.name}
+                          tweets={folder.tweets}
+                        />
+                      )
+                    })}
                   </div>
                 </div>
               </div>
