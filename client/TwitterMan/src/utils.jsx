@@ -12,6 +12,14 @@ const stringFormat = (str, ...args) =>
     typeof args[number] != 'undefined' ? args[number] : match
   )
 
+const checkIfLogged = (setIsLogged) => {
+  if (localStorage.getItem('token') != null) {
+    setIsLogged(true)
+  } else {
+    setIsLogged(false)
+  }
+}
+
 const fetchSentiment = async (tweets) => {
   let tweetsWithSentiment = []
   try {
@@ -77,4 +85,10 @@ const getUserInfo = async (username, setUserInfo) => {
   setUserInfo(res)
 }
 
-export { stringFormat, searchTweets, fetchSentiment, getUserInfo }
+export {
+  stringFormat,
+  searchTweets,
+  fetchSentiment,
+  getUserInfo,
+  checkIfLogged,
+}

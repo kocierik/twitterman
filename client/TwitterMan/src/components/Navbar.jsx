@@ -4,6 +4,8 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import ProfileDropDown from './home/ProfileDropDown'
 import { Link, useLocation } from 'react-router-dom'
 import twitterman from '../assets/twitterman.png'
+import { useEffect } from 'react'
+import * as Const from '../utils'
 const navigation = [
   { name: 'Dashboard', href: '#', current: true, link: '/' },
   { name: 'Eredita', href: '/eredita', current: false, link: '/eredita' },
@@ -17,6 +19,10 @@ function classNames(...classes) {
 export default function Navbar() {
   const history = useLocation()
   const [isLogged, setIsLogged] = useState(false)
+
+  useEffect(() => {
+    Const.checkIfLogged(setIsLogged)
+  }, [])
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -86,7 +92,19 @@ export default function Navbar() {
                   </button>
                 </Link>
               )}
-              {isLogged && <ProfileDropDown />}
+              {isLogged && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    // localStorage.removeItem('token')
+                    // localStorage.removeItem('userId')
+                    // window.location.reload(false)
+                  }}
+                  className=" hover:-translate-y-1 hover:scale-105 duration-300 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2 "
+                >
+                  Sign Out
+                </button>
+              )}
             </div>
           </div>
           <Disclosure.Panel className="sm:hidden">
