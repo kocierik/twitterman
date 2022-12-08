@@ -3,20 +3,33 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TweetCard from '../components/home/TweetCard'
+import CardFolder from '../components/profile/CardFolder'
 
 import * as Const from '../utils'
 const Profile = () => {
   const [user, setUser] = useState()
+  const [savedUserTweets, setSavedUserTweets] = useState([])
   const [showDelete, setShowDelete] = useState(false)
   const navigate = useNavigate()
 
   const getUserInfo = async () => {
     await Const.getUserInfo('genovese24', setUser)
   }
+  const getSavedUserTweets = () => {
+    // console.log(user)
+    if (user) {
+      setSavedUserTweets(user.saved)
+      // console.log(user.saved)
+    }
+  }
 
   useEffect(() => {
     getUserInfo()
   }, [])
+
+  useEffect(() => {
+    getSavedUserTweets()
+  }, [user])
 
   return (
     <>
@@ -180,9 +193,16 @@ const Profile = () => {
                   </div>
                   <div className="w-full text-white px-4 lg:order-1">
                     <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
-                      {/* {user?.saved?.map((tweet, i) => {
-                        return <TweetCard data={tweet} key={i} />
-                      })} */}
+                      {user?.saved?.map((folder, i) => {
+                        // return <CardFolder titleFolder={tweet} key={i} />
+                        return (
+                          <CardFolder
+                            key={i}
+                            titleFolder={folder.name}
+                            tweets={folder.tweets}
+                          />
+                        )
+                      })}
                     </div>
                   </div>
                 </div>

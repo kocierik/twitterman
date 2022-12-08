@@ -16,7 +16,13 @@ const TweetCard = ({ data }) => {
         'genovese24',
         'preferiti',
         tweetId
-      )
+      ),
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
     )
     res = await res.json()
     console.log(res)
@@ -29,7 +35,7 @@ const TweetCard = ({ data }) => {
     },
     {
       name: 'Save tweet',
-      setting: () => saveTweet(data.id),
+      setting: async () => await saveTweet(data.id),
     },
   ]
   useEffect(() => {
