@@ -9,7 +9,6 @@ import * as Const from '../utils'
 const navigation = [
   { name: 'Dashboard', href: '#', current: true, link: '/' },
   { name: 'Eredita', href: '/eredita', current: false, link: '/eredita' },
-  { name: 'Tweet Salvati', href: '/saved', current: false, link: '/saved' },
 ]
 
 function classNames(...classes) {
