@@ -1,12 +1,27 @@
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import * as Const from '../../utils'
 import Setting from './Setting'
 
 const TweetCard = ({ data }) => {
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
   const [sentimentIcon, setSentimetIcon] = useState('?')
+
+  const saveTweet = async (tweetId) => {
+    let res = await fetch(
+      Const.stringFormat(
+        Const.SERVER_URL + Const.TWEET_SAVE,
+        'genovese24',
+        'preferiti',
+        tweetId
+      )
+    )
+    res = await res.json()
+    console.log(res)
+  }
+
   const settingInfoDescription = [
     {
       name: 'Maps',
@@ -14,7 +29,7 @@ const TweetCard = ({ data }) => {
     },
     {
       name: 'Save tweet',
-      setting: () => console.log('saved'),
+      setting: () => saveTweet(data.id),
     },
   ]
   useEffect(() => {
