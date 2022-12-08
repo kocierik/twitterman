@@ -56,6 +56,7 @@ func TestGetTweetById(t *testing.T) {
 
 func TestGetTweetsByHashtag(t *testing.T) {
 	initApiTest()
+	sendTestRequest("GET", "/tweet/id/1598367424365137934", nil)
 	response, res := sendTestRequest("GET", "/tweet/15/hashtag/estremamentespecifico/date/2022-11-25T20:39:08.913Z/2022-12-02T22:59:59.914Z", nil)
 
 	mockResponse := `[
@@ -90,6 +91,7 @@ func TestGetTweetsByHashtag(t *testing.T) {
 
 func TestGetTweetsByUsername(t *testing.T) {
 	initApiTest()
+	sendTestRequest("GET", "/tweet/id/1598367424365137934", nil)
 	response, res := sendTestRequest("GET", "/tweet/15/user/team7test/date/2022-11-29T00:00:00.000Z/2022-12-30T00:00:00.000Z", nil)
 
 	mockResponse := `[

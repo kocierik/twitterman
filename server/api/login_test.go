@@ -16,7 +16,7 @@ func TestLoginApi(t *testing.T) {
 	database.InitDbTest()
 	initApiTest()
 	// Insert user to database
-	database.InsertUser("aldo@aldo", "aldo", "aldo", []string{})
+	database.InsertUser("aldo@aldo", "aldo", "aldo", []utils.TweetsFolder{})
 
 	// Test Correct credentials
 	type login struct {
@@ -35,7 +35,7 @@ func TestLoginApi(t *testing.T) {
 
 	// test success
 	assert.Equal(t, `{"success":true}`, string(out))
-	assert.Equal(t, `AUTHORIZATION=make.this.jwt; Path=/; Max-Age=3600; HttpOnly; Secure`, res.Header().Get("Set-Cookie"))
+	assert.Equal(t, `AUTHORIZATION=aldo%40aldo; Path=/; Max-Age=3600; HttpOnly; Secure`, res.Header().Get("Set-Cookie"))
 
 	// Test incorrect credentials
 	body = login{
