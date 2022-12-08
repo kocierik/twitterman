@@ -118,38 +118,38 @@ func GetUserByName(name string) (utils.User, error) {
 }
 
 /* finds the correct saved folder of a user and push the tweet id*/
-func insertTweetIntoFolder(name string, folder_name string, id string) error {
-	duplicate := find(bson.M{"username": name, "saved_folders.name": folder_name, "saved_folders.tweets": id}, "Users")
+func insertTweetIntoFolder(name string, folderName string, id string) error {
+	duplicate := find(bson.M{"username": name, "saved_folders.name": folderName, "saved_folders.tweets": id}, "Users")
 	if len(bindType[[]utils.TweetsFolder](duplicate)) > 0 {
 		return errors.New("Duplicate tweet")
 	}
 	query := bson.M{"saved_folders.$.tweets": id}
-	updateQ := bson.M{"username": name, "saved_folders.name": folder_name}
+	updateQ := bson.M{"username": name, "saved_folders.name": folderName}
 	insertMode(updateQ, bson.M{"$push": query}, "Users")
 	return nil
 }
 
-func createFolder(name string, folder_name string) {
+func createFolder(name string, folderName string) {
 	folder := utils.TweetsFolder{
-		Name:   folder_name,
+		Name:   folderName,
 		Tweets: []string{},
 	}
 	insertMode(bson.M{"username": name}, bson.M{"$push": bson.M{"saved_folders": folder}}, "Users")
 }
 
 /* add tweet into the folder of said user, if the folder doesn't exists create it*/
-func InsertSavedTweet(name string, folder_name string, id string) {
-	folder := find(bson.M{"username": name, "saved_folders.name": folder_name}, "Users")
+func InsertSavedTweet(name string, folderName string, id string) {
+	folder := find(bson.M{"username": name, "saved_folders.name": folderName}, "Users")
 	if len(bindType[[]utils.TweetsFolder](folder)) == 0 {
-		createFolder(name, folder_name)
+		createFolder(name, folderName)
 	}
-	insertTweetIntoFolder(name, folder_name, id)
+	insertTweetIntoFolder(name, folderName, id)
 
 }
 
-func RemoveSavedTweet(name string, folder_name string, id string) error {
+func RemoveSavedTweet(name string, folderName string, id string) error {
 	query := bson.M{"saved_folders.$.tweets": id}
-	updateQ := bson.M{"username": name, "saved_folders.name": folder_name}
+	updateQ := bson.M{"username": name, "saved_folders.name": folderName}
 	return insertMode(updateQ, bson.M{"$pull": query}, "Users")
 }
 
