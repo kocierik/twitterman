@@ -120,7 +120,12 @@ const TweetCard = ({ data }) => {
           <span className="font-bold">{data.sentiment}</span>
         </div>
         {data.geo.id && (
-          <span className="flex flex-1 justify-end self-center">
+          <span
+            className="flex flex-1 justify-end self-center cursor-pointer"
+            onClick={() => {
+              navigate(`/tweetMaps/${data.id}`)
+            }}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
