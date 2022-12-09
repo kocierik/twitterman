@@ -81,3 +81,17 @@ func TestRegisterApi(t *testing.T) {
 	assert.Equal(t, `{"success":true}`, string(out))
 	// TODO: Test with invalid register fields
 }
+
+func TestDeleteUser(t *testing.T) {
+	initApiTest()
+	// Insert user to database
+	database.InitDbTest()
+	database.InsertUser("testUser@sium", "testUser", "testUser", []utils.TweetsFolder{})
+	database.InsertUser("aldo@aldo", "aldo", "aldo", []utils.TweetsFolder{})
+	sendTestRequest("POST", "/user/testUser/modify/delete", bytes.NewBuffer(nil))
+	usr, _ := database.GetUserByName("testUser")
+	log.Println(usr.Username == "")
+	assert.Equal(t, usr.Username, "")
+	usr2, _ := database.GetUserByName("aldo")
+	assert.Equal(t, usr2.Username, "aldo")
+}

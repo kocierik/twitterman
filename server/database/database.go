@@ -159,6 +159,11 @@ func RemoveSavedTweet(name string, folderName string, id string) error {
 	return insertMode(updateQ, bson.M{"$pull": query}, "Users")
 }
 
+func DeleteUser(username string) error {
+	query := bson.M{"username": username}
+	return delete(query, "Users")
+}
+
 func Connect() {
 	var err error
 	if client != nil && client.Ping(ctx, nil) == nil {
@@ -200,6 +205,13 @@ func insertMode(updateQuery primitive.M, query primitive.M, collection string) e
 	mytrue := true
 	col := client.Database(dbname).Collection(collection)
 	_, err := col.UpdateOne(ctx, updateQuery, query, &options.UpdateOptions{Upsert: &mytrue})
+	utils.TestError(err, "insert function")
+	return err
+}
+
+func delete(query primitive.M, collection string) error {
+	col := client.Database(dbname).Collection(collection)
+	_, err := col.DeleteOne(ctx, query)
 	utils.TestError(err, "insert function")
 	return err
 }

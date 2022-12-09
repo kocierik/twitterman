@@ -54,21 +54,20 @@ func TestInsertandGetUser(t *testing.T) {
 }
 
 func TestFolderUsage(t *testing.T) {
+	InitDbTest()
 
-	// InitDbTest()
+	/* Test saving tweet */
+	err := InsertSavedTweet(testUsername, testFolder, testTwtId)
+	assert.Equal(t, err, nil)
 
-	// /* Test saving tweet */
-	// err := InsertSavedTweet(testUsername, testFolder, testTwtId)
-	// assert.Equal(t, err, nil)
+	/* delete tweet */
+	err = RemoveSavedTweet(testUsername, testFolder, testTwtId)
+	assert.Equal(t, err, nil)
 
-	// /* delete tweet */
-	// err = RemoveSavedTweet(testUsername, testFolder, testTwtId)
-	// assert.Equal(t, err, nil)
+	/* delete folder*/
+	err = deleteFolder(testUsername, testFolder)
+	assert.Equal(t, err, nil)
 
-	// /* delete folder*/
-	// err = deleteFolder(testUsername, testFolder)
-	// assert.Equal(t, err, nil)
-
-	// Disconnect()
+	Disconnect()
 
 }
