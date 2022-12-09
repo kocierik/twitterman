@@ -91,3 +91,8 @@ func isLoggedIn(c *gin.Context) {
 		})
 	}
 }
+
+func logout(c *gin.Context) {
+	c.SetCookie("AUTHTOKEN", "", 0, "/", utils.ServerUrl, true, true)
+	c.Redirect(302, utils.ClientUrl)
+}
