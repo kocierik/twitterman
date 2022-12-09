@@ -20,7 +20,11 @@ var endpointList = []endpoint{
 	{"/tweet/:results/:mode/:query/date/:start/:end", getTweets, "GET"},
 	{"/tweet/id/:query", getTweetById, "GET"},
 	{"/tweet/:results/loadNextPage", getNewPageTweets, "GET"},
-	// {"/user/:username", getUserInfo, "GET"},
+	{"/user/:username/folder/:folderId/add/:tweetId", saveTweet, "POST"},
+	{"/user/:username/folder/:folderId/remove/:tweetId", remSavedTweet, "POST"},
+	{"/user/:username/folders", getFolders, "GET"},
+	{"/user/:username", getUserInfo, "GET"},
+	{"/user/:username/modify/:action", modifyUser, "POST"}, //action: delete"
 	{"/login", loginApi, "POST"},
 	{"/register", registerApi, "POST"},
 	{"/is_logged", isLoggedIn, "GET"},

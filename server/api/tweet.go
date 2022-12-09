@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
+	"git.hjkl.gq/team7/twitterman/server/database"
 	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,7 @@ example:
   - tweet/user/elonmusk
   - tweet/keyword/mondo
 */
+
 func getTweets(c *gin.Context) {
 	maxResults := c.Param("results")
 	mode := c.Param("mode")
@@ -65,19 +67,17 @@ func getTweetById(c *gin.Context) {
 	utils.SendOkResponse(c, twRet)
 }
 
-/*
-Get user info (id,name,username,profile_image_url)
-è buggata, visto che non la usiamo la commento
-se servirà la debuggeremo
-
 func getUserInfo(c *gin.Context) {
 	username := c.Param("username")
-	usr := TwitterApi.GetUserInfoByUsername(username)
+	usr, err := database.GetUserByName(username)
+
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
 
 	utils.SendOkResponse(c, usr)
 }
-
-*/
 
 /*
 Load new different tweets of the last query done
@@ -87,4 +87,56 @@ func getNewPageTweets(c *gin.Context) {
 	ret := TwitterApi.GetNextTokenReq(maxResults)
 
 	utils.SendOkResponse(c, ret)
+}
+
+/*
+save tweet into folder
+/user/bob/folder/capperus/add/1245678956
+*/
+func saveTweet(c *gin.Context) {
+	name := c.Param("username")
+	folder := c.Param("folderId")
+	id := c.Param("tweetId")
+
+	database.InsertSavedTweet(name, folder, id)
+}
+
+func remSavedTweet(c *gin.Context) {
+	name := c.Param("username")
+	folder := c.Param("folderId")
+	id := c.Param("tweetId")
+
+	err := database.RemoveSavedTweet(name, folder, id)
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
+}
+
+func getFolders(c *gin.Context) {
+	username := c.Param("username")
+	usr, err := database.GetUserByName(username)
+
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
+
+	utils.SendOkResponse(c, usr.SavedFolders)
+}
+
+func modifyUser(c *gin.Context) {
+	username := c.Param("username")
+	action := c.Param("action")
+
+	switch action {
+	case "delete":
+		err := database.DeleteUser(username)
+		if err != nil {
+			utils.SendErrorResponse(c, "Problem deleting user")
+		}
+
+	}
+
+	utils.SendOkResponse(c, nil)
 }

@@ -38,8 +38,8 @@ func registerApi(c *gin.Context) {
 		log.Fatalf("User already exist")
 	}
 
-	emptyguy := []string{}
-	database.InsertUser(param.Email, param.Username, param.Password, emptyguy)
+	standardFolder := utils.TweetsFolder{Name: "Preferiti", Tweets: []string{}}
+	database.InsertUser(param.Email, param.Username, param.Password, []utils.TweetsFolder{standardFolder})
 	if myjwt, err := utils.GenerateJWT(param.Email); err == nil {
 		c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false)
 		c.JSON(200, gin.H{
