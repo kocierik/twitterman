@@ -124,3 +124,19 @@ func getFolders(c *gin.Context) {
 
 	utils.SendOkResponse(c, usr.SavedFolders)
 }
+
+func modifyUser(c *gin.Context) {
+	username := c.Param("username")
+	action := c.Param("action")
+
+	switch action {
+	case "delete":
+		err := database.DeleteUser(username)
+		if err != nil {
+			utils.SendErrorResponse(c, "Problem deleting user")
+		}
+
+	}
+
+	utils.SendOkResponse(c, nil)
+}
