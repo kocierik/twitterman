@@ -31,4 +31,4 @@ sonarqube-check:
   only:
     - main # or the name of your main branch
     - test
-    - feature/task-33
+    - feature/task-31

@@ -117,6 +117,12 @@ func GetUserByName(name string) (utils.User, error) {
 	}
 }
 
+func ChangeField(username string, field string, content string) error {
+	query := bson.M{field: content}
+	updateQ := bson.M{"username": username}
+	return insertMode(updateQ, bson.M{"$set": query}, "Users")
+}
+
 /* finds the correct saved folder of a user and push the tweet id*/
 func insertTweetIntoFolder(name string, folderName string, id string) error {
 	duplicate := find(bson.M{"username": name, "saved_folders.name": folderName, "saved_folders.tweets": id}, "Users")
