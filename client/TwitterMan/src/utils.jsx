@@ -22,8 +22,9 @@ const checkIfLogged = (setIsLogged) => {
   }
 }
 
-const logOut = () => {
+const logOut = (setIsLogged) => {
   Cookies.remove('AUTHORIZATION')
+  setIsLogged(false)
 }
 
 const fetchSentiment = async (tweets) => {

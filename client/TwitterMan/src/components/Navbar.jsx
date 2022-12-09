@@ -1,10 +1,7 @@
-import { useState } from 'react'
 import { Disclosure } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import ProfileDropDown from './home/ProfileDropDown'
 import { Link, useLocation } from 'react-router-dom'
 import twitterman from '../assets/twitterman.png'
-import { useEffect } from 'react'
 import * as Const from '../utils'
 
 const navigation = [
@@ -16,13 +13,8 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Navbar() {
+export default function Navbar({ isLogged, setIsLogged }) {
   const history = useLocation()
-  const [isLogged, setIsLogged] = useState(false)
-
-  useEffect(() => {
-    Const.checkIfLogged(setIsLogged)
-  }, [isLogged])
 
   return (
     <Disclosure as="nav" className="bg-gray-800">
@@ -82,23 +74,31 @@ export default function Navbar() {
                   </div>
                 </div>
               </div>
-              {!isLogged && (
+              {isLogged ? (
+                <>
+                  <Link to="/profile">
+                    <button
+                      type="button"
+                      className=" hover:-translate-y-1 hover:scale-105 duration-300 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2 "
+                    >
+                      Profile
+                    </button>
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => Const.logOut(setIsLogged)}
+                    className=" hover:-translate-y-1 hover:scale-105 duration-300 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2 "
+                  >
+                    Log out
+                  </button>
+                </>
+              ) : (
                 <Link to="/login">
                   <button
                     type="button"
                     className=" hover:-translate-y-1 hover:scale-105 duration-300 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2 "
                   >
                     Sign in
-                  </button>
-                </Link>
-              )}
-              {isLogged && (
-                <Link to="/profile">
-                  <button
-                    type="button"
-                    className=" hover:-translate-y-1 hover:scale-105 duration-300 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2 "
-                  >
-                    Profile
                   </button>
                 </Link>
               )}

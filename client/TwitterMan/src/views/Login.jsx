@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import twitterman from '../assets/twitterman.png'
 const SERVER_URL = 'http://localhost:8080'
 
-const Login = () => {
+const Login = ({ setIsLogged }) => {
   const navigate = useNavigate()
   const email = useRef()
   const password = useRef()
@@ -28,7 +28,8 @@ const Login = () => {
         throw res.message
       }
       // TODO: handle when you are logged in on the frontend.
-      navigate('/profile')
+      setIsLogged(true)
+      navigate('/')
     } catch (e) {
       alert(e)
     }

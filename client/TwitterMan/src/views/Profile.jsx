@@ -4,13 +4,21 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TweetCard from '../components/home/TweetCard'
 import CardFolder from '../components/profile/CardFolder'
-
+import Cookies from 'js-cookie'
 import * as Const from '../utils'
+
 const Profile = () => {
   const [user, setUser] = useState()
   const [savedUserTweets, setSavedUserTweets] = useState([])
   const [showDelete, setShowDelete] = useState(false)
   const navigate = useNavigate()
+  const [token, setToken] = useState(Cookies.get('AUTHORIZATION'))
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/')
+    }
+  }, [])
 
   const getUserInfo = async () => {
     await Const.getUserInfo('genovese24', setUser)
@@ -160,7 +168,7 @@ const Profile = () => {
                       type="button"
                       className="text-white bg-gradient-to-r ml-5 from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
                     >
-                      Reimposta Password
+                      Modifica informazioni
                     </button>
                     <button
                       type="button"
@@ -178,17 +186,6 @@ const Profile = () => {
                       className="text-white bg-gradient-to-r ml-5 from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
                     >
                       Delete Account
-                    </button>
-                    <button
-                      type="button"
-                      data-modal-toggle="popup-modal"
-                      onClick={() => {
-                        Const.logOut()
-                        navigate('/')
-                      }}
-                      className="text-white bg-gradient-to-r ml-5 from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-                    >
-                      Log out
                     </button>
                   </div>
                   <div className="w-full text-white px-4 lg:order-1">
