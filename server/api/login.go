@@ -41,7 +41,7 @@ func registerApi(c *gin.Context) {
 	emptyguy := []string{}
 	database.InsertUser(param.Email, param.Username, param.Password, emptyguy)
 	if myjwt, err := utils.GenerateJWT(param.Email); err == nil {
-		c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, true, true)
+		c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false)
 		c.JSON(200, gin.H{
 			"success": true,
 		})
@@ -61,7 +61,7 @@ func loginApi(c *gin.Context) {
 	param := bind[RequestBody](c)
 	if isUser(param.Email, param.Password) {
 		if myjwt, err := utils.GenerateJWT(param.Email); err == nil {
-			c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, true, true)
+			c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false)
 			c.JSON(200, gin.H{
 				"success": true,
 			})
@@ -93,6 +93,8 @@ func isLoggedIn(c *gin.Context) {
 }
 
 func logout(c *gin.Context) {
-	c.SetCookie("AUTHTOKEN", "", 0, "/", utils.ServerUrl, true, true)
-	c.Redirect(302, utils.ClientUrl)
+	c.SetCookie("AUTHTOKEN", "null", 0, "/", utils.ServerUrl, false, false)
+	c.JSON(200, gin.H{
+		"success": true,
+	})
 }

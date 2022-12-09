@@ -23,8 +23,8 @@ var endpointList = []endpoint{
 	// {"/user/:username", getUserInfo, "GET"},
 	{"/login", loginApi, "POST"},
 	{"/register", registerApi, "POST"},
-	{"/is_logged", isLoggedIn, "POST"},
-	{"/logout", logout, "POST"},
+	{"/is_logged", isLoggedIn, "GET"},
+	{"/logout", logout, "GET"},
 }
 
 func cORSMiddleware() gin.HandlerFunc {

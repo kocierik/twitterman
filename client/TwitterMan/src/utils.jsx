@@ -1,3 +1,5 @@
+import {useState} from 'react'
+
 export const SERVER_URL = 'http://localhost:8080'
 export const TWEET_KEYWORD = '/tweet/{0}/keyword/{1}'
 export const TWEET_HASHTAG = '/tweet/{0}/hashtag/{1}'
@@ -62,4 +64,33 @@ const searchTweets = async (selectValue, textValue, formattedDates, rfp, setTwee
     }
 }
 
-export { stringFormat, searchTweets, fetchSentiment }
+async function isLoggedIn(){
+    try {
+        let res = await fetch(`${SERVER_URL}/is_logged`, {
+            credentials: "include"
+        });
+        res = await res.json();
+        if(res.success){
+            return true;
+        }else{
+            console.log("Login not possible: " + res.message);
+            return false;
+        }
+    } catch (err){
+        alert("Error when testing login: " + err)
+    }
+    return false;
+}
+
+async function logout(){
+    try {
+        let _ = await fetch(`${SERVER_URL}/logout`, {
+            credentials:"include"
+        });
+    }catch(err){
+        alert("error when logging out: "+err);
+    }
+    window.location.reload();
+}
+
+export { stringFormat, searchTweets, fetchSentiment, isLoggedIn, logout }

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import twitterman from '../assets/twitterman.png'
 import { SERVER_URL } from '../utils'
 
-const Register = () => {
+const Register = ({setIsLogged}) => {
   const email = useRef()
   const username = useRef()
   const password = useRef()
@@ -31,8 +31,8 @@ const Register = () => {
         alert(res.message)
         return
       }
+      setIsLogged(true);
       navigate('/')
-      // TODO: Handle when you are registered correctly, maybe navigate('/home')
     } catch (e) {
       alert(e)
     }
