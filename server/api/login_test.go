@@ -44,7 +44,7 @@ func TestLoginApi(t *testing.T) {
 	}
 
 	bodyMarshaled, err = json.Marshal(body)
-	utils.TestError(err, "(api_test.go) Cannot parse bodyMarshaled2")
+	utils.TestError(err, "(api_test.go) Cannot parse bodyMarshaled")
 
 	out, res = sendTestRequest("POST", "/login", bytes.NewBuffer(bodyMarshaled))
 

@@ -57,10 +57,10 @@ func CheckJWT(mytoken string) bool {
 	return token.Valid
 }
 
-func GenerateJWT(username string) (string, error) {
+func GenerateJWT(email string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, JwtClaims{
 		RegisteredClaims: jwt.RegisteredClaims{},
-		Email:            username,
+		Email:            email,
 	})
 
 	signedString, err := token.SignedString([]byte(JwtSecretKey))
