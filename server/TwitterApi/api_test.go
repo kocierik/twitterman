@@ -43,6 +43,17 @@ func TestGetTweetInfoById(t *testing.T) {
 	assert.Equal(t, tmpMock, twRet)
 }
 
+func TestRecentTweets(t *testing.T) {
+	database.Connect()
+	defer database.Disconnect()
+	utils.InitHttpClient()
+	end := time.Now()
+	start := end.AddDate(0, 0, -9)
+	twRet := GetTwsByQuery("hashtag", "#worldcup", "15", start, end)
+
+	assert.NotEqual(t, twRet, nil)
+}
+
 func TestGetTwsByHashtag(t *testing.T) {
 	database.Connect()
 	defer database.Disconnect()
@@ -194,7 +205,7 @@ func TestCaster(t *testing.T) {
 			Places: []geoTwitterStruct{{
 				Id:    "1",
 				Name:  "1",
-				Place: geojson.Feature{}}},
+				Place: geojson.Feature{BoundingBox: []float64{20.13521, 235.215, 22.13521, 237.215}}}},
 		},
 		Meta: TwitterMetaStruct{},
 	}
@@ -226,7 +237,7 @@ func TestCaster(t *testing.T) {
 			Geo: utils.GeoPosition{
 				Id:     "1",
 				Name:   "1",
-				Coords: nil,
+				Coords: utils.Dict{"x": 236.215, "y": 21.1352},
 			},
 		},
 	}
