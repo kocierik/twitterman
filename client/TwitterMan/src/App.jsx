@@ -14,7 +14,6 @@ function App() {
   const [isLogged, setIsLogged] = useState(false)
 
     async function init() {
-      console.log("checking bro")
       setIsLogged(await isLoggedIn());
     }
 

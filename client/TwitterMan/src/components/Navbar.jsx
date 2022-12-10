@@ -93,7 +93,6 @@ export default function Navbar({isLogged}) {
                 Logout
               </button>
               }
-              {isLogged && <ProfileDropDown />}
             </div>
           </div>
           <Disclosure.Panel className="sm:hidden">

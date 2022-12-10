@@ -6,8 +6,6 @@ require github.com/gin-gonic/gin v1.8.1
 
 require (
 	github.com/go-playground/assert/v2 v2.0.1
-	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/google/go-cmp v0.5.8
 	github.com/paulmach/go.geojson v1.4.0
 	go.mongodb.org/mongo-driver v1.10.3
@@ -35,6 +33,7 @@ require (
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.10.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
+	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect

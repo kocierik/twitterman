@@ -84,7 +84,7 @@ async function isLoggedIn(){
 
 async function logout(){
     try {
-        let _ = await fetch(`${SERVER_URL}/logout`, {
+        await fetch(`${SERVER_URL}/logout`, {
             credentials:"include"
         });
     }catch(err){

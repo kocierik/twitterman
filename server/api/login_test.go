@@ -35,7 +35,7 @@ func TestLoginApi(t *testing.T) {
 
 	// test success
 	assert.Equal(t, `{"success":true}`, string(out))
-	assert.Equal(t, `AUTHORIZATION=aldo%40aldo; Path=/; Max-Age=3600; HttpOnly; Secure`, res.Header().Get("Set-Cookie"))
+	assert.Equal(t, `AUTHTOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFbWFpbCI6ImFsZG9AYWxkbyIsIkF1dGhvcml6ZWQiOiIifQ.dust9uVBs695iWBurA-sJ5IUUVNirwTQ4ALZVjbNybQ; Path=/; Domain=localhost; Max-Age=3600`, res.Header().Get("Set-Cookie"))
 
 	// Test incorrect credentials
 	body = login{

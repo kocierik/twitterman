@@ -47,7 +47,6 @@ func InitHttpClient() {
 }
 
 func CheckJWT(mytoken string) bool {
-	log.Print(mytoken)
 	var claims JwtClaims
 	token, err := jwt.ParseWithClaims(mytoken, &claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(JwtSecretKey), nil

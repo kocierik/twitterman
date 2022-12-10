@@ -17,7 +17,7 @@ func bind[T any](c *gin.Context) T {
 
 func isUser(email string, password string) bool {
 	user, err := database.GetUserByEmail(email)
-	log.Print(err)
+	// log.Print(err)
 	if err != nil {
 		return false
 	}
