@@ -1,6 +1,6 @@
-import { plPL } from '@mui/x-date-pickers/locales';
 import { useEffect, useState } from 'react'
 import { SERVER_URL } from '../utils'
+import TweetCard from '../components/home/TweetCard'
 
 const searchTweets = async (selectValue, textValue, formattedDates) => {
     let final = null;
@@ -31,6 +31,7 @@ function formatDate() {
 
 function Fantacitorio() {
     const [punteggi, setPunteggi] = useState([]);
+    const [squadre, setSquadre] = useState([])
 
     async function trovaPunti() {
         let final = [];
@@ -50,8 +51,8 @@ function Fantacitorio() {
                                 p.score += punti;
                             }
                         }
-                        if (!flag){
-                            final.push({"name":nome, "score":punti})
+                        if (!flag) {
+                            final.push({ "name": nome, "score": punti })
                         }
                     } catch (err) {
                         console.log(err);
@@ -59,18 +60,31 @@ function Fantacitorio() {
                 }
             }
         }
-        final = final.sort((a, b)=>{
+        final = final.sort((a, b) => {
             return a.score < b.score;
         });
         console.log(final);
-        for(let i in final){
-            final[i]["position"] = parseInt(i)+1;
+        for (let i in final) {
+            final[i]["position"] = parseInt(i) + 1;
         }
         setPunteggi(final);
     }
 
+    async function trovaSquadre(){
+        let tw = await searchTweets(`/tweet/`, '/hashtag/fantacitorio', `/date/${formatDate()}`);
+        let final = [];
+        for(let t of tw){
+            if(t.media != null && t.media[0]!= null && t.media[0].width == 1024 && t.media[0].height == 512){
+                final.push(t)
+            }
+        }
+        console.log(final)
+        setSquadre(final);
+    }
+
     useEffect(() => {
         trovaPunti();
+        trovaSquadre();
     }, [])
 
     return (
@@ -99,6 +113,12 @@ function Fantacitorio() {
                         })}
                     </tbody>
                 </table>
+            </div>
+            <div className="text-center">
+                <h3 className='text-3xl text-center pt-20 pb-5'>Squadre registrate nell'ultima settimana</h3>
+            </div>
+            <div className="text-center flex flex-wrap justify-center p-5 m-4">
+                {squadre.map((s) => {return <TweetCard data={s} key={s.id} className="m-3 basis-3" />;})}
             </div>
         </div>
     )
