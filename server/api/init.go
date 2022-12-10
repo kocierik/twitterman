@@ -27,6 +27,8 @@ var endpointList = []endpoint{
 	{"/user/:username/modify/:action", modifyUser, "POST"}, //action: delete or update"
 	{"/login", loginApi, "POST"},
 	{"/register", registerApi, "POST"},
+	{"/is_logged", isLoggedIn, "GET"},
+	{"/logout", logout, "GET"},
 }
 
 func cORSMiddleware() gin.HandlerFunc {

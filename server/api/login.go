@@ -17,7 +17,7 @@ func bind[T any](c *gin.Context) T {
 
 func isUser(email string, password string) bool {
 	user, err := database.GetUserByEmail(email)
-	log.Print(err)
+	// log.Print(err)
 	if err != nil {
 		return false
 	}
@@ -40,9 +40,17 @@ func registerApi(c *gin.Context) {
 
 	standardFolder := utils.TweetsFolder{Name: "Preferiti", Tweets: []string{}}
 	database.InsertUser(param.Email, param.Username, param.Password, []utils.TweetsFolder{standardFolder})
-	c.JSON(200, gin.H{
-		"success": true,
-	})
+	if myjwt, err := utils.GenerateJWT(param.Email); err == nil {
+		c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false)
+		c.JSON(200, gin.H{
+			"success": true,
+		})
+	} else {
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": "error when generating token",
+		})
+	}
 }
 
 func loginApi(c *gin.Context) {
@@ -51,16 +59,42 @@ func loginApi(c *gin.Context) {
 		Password string `json:"password"`
 	}
 	param := bind[RequestBody](c)
-	// TODO: make the jwt
 	if isUser(param.Email, param.Password) {
-		c.SetCookie("AUTHORIZATION", param.Email, 3600, "", "", true, true)
-		c.JSON(200, gin.H{
-			"success": true,
-		})
+		if myjwt, err := utils.GenerateJWT(param.Email); err == nil {
+			c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false)
+			c.JSON(200, gin.H{
+				"success": true,
+			})
+		} else {
+			c.JSON(400, gin.H{
+				"success": false,
+				"message": "Can't generate jwt",
+			})
+		}
 	} else {
 		c.JSON(400, gin.H{
 			"success": false,
 			"message": "Something went wrong",
 		})
 	}
+}
+
+func isLoggedIn(c *gin.Context) {
+	if utils.IsLoggedIn(c) {
+		c.JSON(200, gin.H{
+			"success": true,
+		})
+	} else {
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": "jwt is not correct",
+		})
+	}
+}
+
+func logout(c *gin.Context) {
+	c.SetCookie("AUTHTOKEN", "null", 0, "/", utils.ServerUrl, false, false)
+	c.JSON(200, gin.H{
+		"success": true,
+	})
 }

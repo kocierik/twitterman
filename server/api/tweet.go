@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
@@ -137,8 +136,6 @@ func modifyUser(c *gin.Context) {
 	}
 
 	param := bind[RequestBody](c)
-
-	log.Println(param)
 
 	switch action {
 	case "delete":
