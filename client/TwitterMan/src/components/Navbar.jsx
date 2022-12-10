@@ -8,6 +8,7 @@ import { logout } from '../utils'
 const navigation = [
   { name: 'Dashboard', href: '#', current: true, link: '/' },
   { name: 'Eredita', href: '/eredita', current: false, link: '/eredita' },
+  { name: 'Fantacitorio', href: '/fantacitorio', current: false, link: '/fantacitorio' }
 ]
 
 function classNames(...classes) {

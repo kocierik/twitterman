@@ -7,6 +7,7 @@ import Register from '../src/views/Register'
 import Footer from './components/Footer'
 import TweetMaps from './views/TweetMaps'
 import Eredita from './views/Eredita'
+import Fantacitorio from './views/Fantacitorio'
 import { useEffect, useState } from 'react'
 import { isLoggedIn } from './utils'
 
@@ -31,6 +32,7 @@ function App() {
             <Route path="/register" element={<Register setIsLogged={setIsLogged} />} />
             <Route path="/tweetMaps/:id" element={<TweetMaps />} />
             <Route path="/eredita" element={<Eredita />} />
+            <Route path="/fantacitorio" element={<Fantacitorio />} />
           </Routes>
           <Footer />
         </div>
