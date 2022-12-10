@@ -90,7 +90,6 @@ func TestDeleteUser(t *testing.T) {
 	database.InsertUser("aldo@aldo", "aldo", "aldo", []utils.TweetsFolder{})
 	sendTestRequest("POST", "/user/testUser/modify/delete", bytes.NewBuffer(nil))
 	usr, _ := database.GetUserByName("testUser")
-	log.Println(usr.Username == "")
 	assert.Equal(t, usr.Username, "")
 	usr2, _ := database.GetUserByName("aldo")
 	assert.Equal(t, usr2.Username, "aldo")

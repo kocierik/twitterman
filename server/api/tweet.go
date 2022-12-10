@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
@@ -129,13 +130,42 @@ func modifyUser(c *gin.Context) {
 	username := c.Param("username")
 	action := c.Param("action")
 
+	type RequestBody struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+		Username string `json:"username"`
+	}
+
+	param := bind[RequestBody](c)
+
+	log.Println(param)
+
 	switch action {
 	case "delete":
 		err := database.DeleteUser(username)
 		if err != nil {
 			utils.SendErrorResponse(c, "Problem deleting user")
 		}
+	case "update":
 
+		if param.Email != "" {
+			err := database.ChangeField(username, "email", param.Email)
+			if err != nil {
+				utils.SendErrorResponse(c, "Problem changing email")
+			}
+		}
+		if param.Password != "" {
+			err := database.ChangeField(username, "password", param.Password)
+			if err != nil {
+				utils.SendErrorResponse(c, "Problem changing password")
+			}
+		}
+		if param.Username != "" {
+			err := database.ChangeField(username, "username", param.Username)
+			if err != nil {
+				utils.SendErrorResponse(c, "Problem changing username")
+			}
+		}
 	}
 
 	utils.SendOkResponse(c, nil)
