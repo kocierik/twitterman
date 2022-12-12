@@ -22,11 +22,6 @@ const checkIfLogged = (setIsLogged) => {
   }
 }
 
-const logOut = (setIsLogged) => {
-  Cookies.remove('AUTHORIZATION')
-  setIsLogged(false)
-}
-
 const fetchSentiment = async (tweets) => {
   let tweetsWithSentiment = []
   try {
@@ -91,11 +86,41 @@ const getUserInfo = async (username, setUserInfo) => {
   setUserInfo(res)
 }
 
+async function isLoggedIn() {
+  try {
+    let res = await fetch(`${SERVER_URL}/is_logged`, {
+      credentials: 'include',
+    })
+    res = await res.json()
+    if (res.success) {
+      return true
+    } else {
+      console.log('Login not possible: ' + res.message)
+      return false
+    }
+  } catch (err) {
+    alert('Error when testing login: ' + err)
+  }
+  return false
+}
+
+async function logout() {
+  try {
+    await fetch(`${SERVER_URL}/logout`, {
+      credentials: 'include',
+    })
+  } catch (err) {
+    alert('error when logging out: ' + err)
+  }
+  window.location.reload()
+}
+
 export {
   stringFormat,
   searchTweets,
   fetchSentiment,
+  isLoggedIn,
   getUserInfo,
   checkIfLogged,
-  logOut,
+  logout,
 }

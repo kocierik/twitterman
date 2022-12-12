@@ -27,48 +27,45 @@ func TestDatabaseDisconnect(t *testing.T) {
 }
 
 func TestInsertandGetUser(t *testing.T) {
-	//InitDbTest()
+	// InitDbTest()
 
-	// It insert the user
-	//InsertUser("gianni@gianni", "gianni", "gianni", []utils.TweetsFolder{})
+	// // It insert the user
+	// InsertUser("gianni@gianni", "gianni", "gianni", []utils.TweetsFolder{})
 
-	// It returns an error if the email doesn't exist
-	//_, err := GetUserByEmail("no-user-with-this-email")
-	//assert.NotEqual(t, err, nil)
+	// // It returns an error if the email doesn't exist
+	// _, err := GetUserByEmail("no-user-with-this-email")
+	// assert.NotEqual(t, err, nil)
 
-	// It returns the user if the mail does exist
-	//userEmail, err := GetUserByEmail("gianni@gianni")
-	//utils.TestError(err, "Test GetUserByEmail function error")
-	//assert.Equal(t, userEmail.Email, "gianni@gianni")
+	// // It returns the user if the mail does exist
+	// userEmail, err := GetUserByEmail("gianni@gianni")
+	// utils.TestError(err, "Test GetUserByEmail function error1")
+	// assert.Equal(t, userEmail.Email, "gianni@gianni")
 
-	// It returns an error if the ID doesn't exist
-	//_, err = GetUserById(primitive.NewObjectID())
-	//assert.NotEqual(t, err, nil)
+	// // It returns an error if the ID doesn't exist
+	// _, err = GetUserById(primitive.NewObjectID())
+	// assert.NotEqual(t, err, nil)
 
-	// It returns the user if the id exist
+	// // It returns the user if the id exist
 	// userId, err := GetUserById(userEmail.ID)
-	// utils.TestError(err, "Test GetUserById function error")
+	// utils.TestError(err, "Test GetUserById function error2")
 	// assert.Equal(t, userEmail, userId)
 
-	//Disconnect()
+	// Disconnect()
 }
 
 func TestFolderUsage(t *testing.T) {
+	InitDbTest()
+	defer Disconnect()
 
-	// InitDbTest()
+	/* Test saving tweet */
+	err := InsertSavedTweet(testUsername, testFolder, testTwtId)
+	assert.Equal(t, err, nil)
 
-	// /* Test saving tweet */
-	// err := InsertSavedTweet(testUsername, testFolder, testTwtId)
-	// assert.Equal(t, err, nil)
+	/* delete tweet */
+	err = RemoveSavedTweet(testUsername, testFolder, testTwtId)
+	assert.Equal(t, err, nil)
 
-	// /* delete tweet */
-	// err = RemoveSavedTweet(testUsername, testFolder, testTwtId)
-	// assert.Equal(t, err, nil)
-
-	// /* delete folder*/
-	// err = deleteFolder(testUsername, testFolder)
-	// assert.Equal(t, err, nil)
-
-	// Disconnect()
-
+	/* delete folder*/
+	err = deleteFolder(testUsername, testFolder)
+	assert.Equal(t, err, nil)
 }

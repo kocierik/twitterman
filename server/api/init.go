@@ -20,12 +20,15 @@ var endpointList = []endpoint{
 	{"/tweet/:results/:mode/:query/date/:start/:end", getTweets, "GET"},
 	{"/tweet/id/:query", getTweetById, "GET"},
 	{"/tweet/:results/loadNextPage", getNewPageTweets, "GET"},
-	{"/user/:username/folder/:folderId/add/:tweetId", saveTweet, "2"},
-	{"/user/:username/folder/:folderId/remove/:tweetId", remSavedTweet, "POST"},
+	{"/user/:username/folder/:folderId/add/:tweetId", saveTweet, "POST"},
+	{"/user/:username/folder/:folderId/:tweetId", remSavedTweet, "DELETE"},
 	{"/user/:username/folders", getFolders, "GET"},
 	{"/user/:username", getUserInfo, "GET"},
+	{"/user/:username/modify/:action", modifyUser, "POST"}, // action: delete or update
 	{"/login", loginApi, "POST"},
 	{"/register", registerApi, "POST"},
+	{"/is_logged", isLoggedIn, "GET"},
+	{"/logout", logout, "GET"},
 }
 
 func cORSMiddleware() gin.HandlerFunc {

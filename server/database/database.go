@@ -117,6 +117,12 @@ func GetUserByName(name string) (utils.User, error) {
 	}
 }
 
+func ChangeField(username string, field string, content string) error {
+	query := bson.M{field: content}
+	updateQ := bson.M{"username": username}
+	return insertMode(updateQ, bson.M{"$set": query}, "Users")
+}
+
 /* finds the correct saved folder of a user and push the tweet id*/
 func insertTweetIntoFolder(name string, folderName string, id string) error {
 	duplicate := find(bson.M{"username": name, "saved_folders.name": folderName, "saved_folders.tweets": id}, "Users")
@@ -157,6 +163,11 @@ func RemoveSavedTweet(name string, folderName string, id string) error {
 	query := bson.M{"saved_folders.$.tweets": id}
 	updateQ := bson.M{"username": name, "saved_folders.name": folderName}
 	return insertMode(updateQ, bson.M{"$pull": query}, "Users")
+}
+
+func DeleteUser(username string) error {
+	query := bson.M{"username": username}
+	return delete(query, "Users")
 }
 
 func Connect() {
@@ -200,6 +211,13 @@ func insertMode(updateQuery primitive.M, query primitive.M, collection string) e
 	mytrue := true
 	col := client.Database(dbname).Collection(collection)
 	_, err := col.UpdateOne(ctx, updateQuery, query, &options.UpdateOptions{Upsert: &mytrue})
+	utils.TestError(err, "insert function")
+	return err
+}
+
+func delete(query primitive.M, collection string) error {
+	col := client.Database(dbname).Collection(collection)
+	_, err := col.DeleteOne(ctx, query)
 	utils.TestError(err, "insert function")
 	return err
 }
