@@ -1,33 +1,24 @@
-import React from 'react'
-import { useEffect } from 'react'
-import { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import TweetCard from '../components/home/TweetCard'
 import CardFolder from '../components/profile/CardFolder'
-import Cookies from 'js-cookie'
 import * as Const from '../utils'
 
-const Profile = () => {
+const Profile = ({ isLogged }) => {
   const [user, setUser] = useState()
   const [savedUserTweets, setSavedUserTweets] = useState([])
   const [showDelete, setShowDelete] = useState(false)
   const navigate = useNavigate()
-  const [token, setToken] = useState(Cookies.get('AUTHORIZATION'))
 
   useEffect(() => {
-    if (!token) {
-      navigate('/')
-    }
+    if (!isLogged) navigate('/')
   }, [])
 
   const getUserInfo = async () => {
     await Const.getUserInfo('genovese24', setUser)
   }
   const getSavedUserTweets = () => {
-    // console.log(user)
     if (user) {
       setSavedUserTweets(user.saved)
-      // console.log(user.saved)
     }
   }
 

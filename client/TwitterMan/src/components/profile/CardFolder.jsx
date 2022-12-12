@@ -1,9 +1,7 @@
-import React from 'react'
-import { stringFormat } from '../../utils'
+import React,{ useEffect, useState} from 'react'
 import TweetCard from '../home/TweetCard'
 import * as Const from '../../utils'
-import { useEffect } from 'react'
-import { useState } from 'react'
+
 const CardFolder = ({ titleFolder, tweets }) => {
   const [tweetsSaved, setTweetsSaved] = useState([])
 
@@ -11,7 +9,7 @@ const CardFolder = ({ titleFolder, tweets }) => {
     if (tweets) {
       tweets?.map(async (tweet) => {
         let res = await fetch(
-          stringFormat(Const.SERVER_URL + Const.TWEET_ID, tweet)
+          Const.stringFormat(Const.SERVER_URL + Const.TWEET_ID, tweet)
         )
         res = await res.json()
         console.log(res)

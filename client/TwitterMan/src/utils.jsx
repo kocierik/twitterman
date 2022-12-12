@@ -1,5 +1,3 @@
-import Cookies from 'js-cookie'
-
 export const SERVER_URL = 'http://localhost:8080'
 export const TWEET_KEYWORD = '/tweet/{0}/keyword/{1}'
 export const TWEET_HASHTAG = '/tweet/{0}/hashtag/{1}'
@@ -13,14 +11,6 @@ const stringFormat = (str, ...args) =>
   str.replace(/{(\d+)}/g, (match, number) =>
     typeof args[number] != 'undefined' ? args[number] : match
   )
-
-const checkIfLogged = (setIsLogged) => {
-  if (Cookies.get('AUTHORIZATION')) {
-    setIsLogged(true)
-  } else {
-    setIsLogged(false)
-  }
-}
 
 const fetchSentiment = async (tweets) => {
   let tweetsWithSentiment = []
@@ -86,9 +76,9 @@ const getUserInfo = async (username, setUserInfo) => {
   setUserInfo(res)
 }
 
-async function isLoggedIn() {
+const isLoggedIn = async () => {
   try {
-    let res = await fetch(`${SERVER_URL}/is_logged`, {
+    let res = await fetch(`${SERVER_URL}/isLogged`, {
       credentials: 'include',
     })
     res = await res.json()
@@ -104,7 +94,7 @@ async function isLoggedIn() {
   return false
 }
 
-async function logout() {
+const logout = async () => {
   try {
     await fetch(`${SERVER_URL}/logout`, {
       credentials: 'include',
@@ -121,6 +111,5 @@ export {
   fetchSentiment,
   isLoggedIn,
   getUserInfo,
-  checkIfLogged,
   logout,
 }
