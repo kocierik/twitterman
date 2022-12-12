@@ -6,6 +6,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useEffect } from 'react';
 import { PieChart, Pie, Cell } from 'recharts'
 import { SERVER_URL } from '../utils'
+import Charts from '../components/home/ChartsEredita'
+import Maps from '../components/home/Maps'
 
 const searchTweets = async (selectValue, textValue, formattedDates) => {
     let final = null;
@@ -43,39 +45,63 @@ const EreditaScreen = ({ result, stats }) => {
     };
 
     return (
-        <div className='flex flex-col justify-center text-white'>
-            <div className="text-center">
-                <h1 className='text-5xl text-center pt-20 pb-5'>Parola del giorno:</h1>
-                <p className='bold text-2xl'>{result.word}</p>
-            </div>
-            <div className="text-center flex justify-center p-5">
-                <table>
-                    <tbody>
-                        {
-                            result.winners?.map((p) => {
-                                return (
-                                    <tr key={p.position}>
-                                        <td className='p-3'>{p.position}</td>
-                                        <td className='p-3'>{p.name}</td>
-                                        <td className='p-3'>{p.time}</td>
-                                        <td className='p-3'>{p.url}</td>
-                                    </tr>
-                                )
-                            })
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div className='text-center flex justify-center p-5'>
-                <PieChart width={350} height={500}>
-                    <Pie label={renderLabel} data={stats} cx={cx} cy={cy} outerRadius={80} innerRadius={60}>
-                        {
-                            stats.map((_, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))
-                        }
-                    </Pie>
-                </PieChart>
+        <div
+        data-aos="zoom-in"
+        data-aos-duration="700"
+        className="min-h-full px-5 dark:bg-gray-900 pt-1"
+        >
+            <div className='flex flex-col justify-center text-white'>
+                <div className="text-center">
+                    <h1 className='text-5xl text-center pt-20 pb-5'>Parola del giorno:</h1>
+                    <p className='bold text-2xl'>{result.word}</p>
+                </div>
+                <div className="text-center flex justify-center p-5">
+                    <table>
+                        <tbody>
+                            {
+                                result.winners?.map((p) => {
+                                    return (
+                                        <tr key={p.position}>
+                                            <td className='p-3'>{p.position}</td>
+                                            <td className='p-3'>{p.name}</td>
+                                            <td className='p-3'>{p.time}</td>
+                                            <td className='p-3'>{p.url}</td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div className='text-center flex justify-center p-5'>
+                    <PieChart width={350} height={500}>
+                        <Pie label={renderLabel} data={stats} cx={cx} cy={cy} outerRadius={80} innerRadius={60}>
+                            {
+                                stats.map((_, index) => (
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                ))
+                            }
+                        </Pie>
+                    </PieChart>
+                </div>
+
+                {result?.length > 0 && (
+                    <div className="p-10 dark:bg-gray-900">
+                    <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
+                        Charts
+                    </div>
+                        <Charts tweetsData={result} frequency={5} />
+                    </div>
+                )}
+                {result?.length > 0 && (
+                    <div className="p-10 dark:bg-gray-900">
+                    <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
+                        TweetMaps
+                    </div>
+                    <Maps tweetsData={result} />
+                    </div>
+                )}
             </div>
         </div>
     )
@@ -200,24 +226,30 @@ const Eredita = () => {
 
     return (
         <>
-            <div className='flex justify-center align-center pt-5'>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                        label="Seleziona giorno"
-                        value={selectedDate}
-                        onChange={(newValue) => {
-                            setSelectedDate(newValue);
-                        }}
-                        renderInput={(params) => <TextField {...params} sx={{
-                            svg: { color },
-                            input: { color },
-                            label: { color },
-                        }}
-                        />}
-                    />
-                </LocalizationProvider>
-            </div>
+            <div
+            data-aos="zoom-in"
+            data-aos-duration="700"
+            className="min-h-full px-5 dark:bg-gray-900 pt-5"
+            >
+                <div className='flex justify-center align-center pt-5'>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                            label="Seleziona giorno"
+                            value={selectedDate}
+                            onChange={(newValue) => {
+                                setSelectedDate(newValue);
+                            }}
+                            renderInput={(params) => <TextField {...params} sx={{
+                                svg: { color },
+                                input: { color },
+                                label: { color },
+                            }}
+                            />}
+                        />
+                    </LocalizationProvider>
+                </div>
             {ereditaResultJson != null ? <EreditaScreen result={ereditaResultJson} stats={stats} /> : <h1 className='text-5xl text-center pt-20 pb-5 text-white'>Oggi non hanno giocato all'eredita</h1>}
+            </div> 
         </>
     )
 }

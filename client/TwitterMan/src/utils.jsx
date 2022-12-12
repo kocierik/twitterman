@@ -51,7 +51,7 @@ const searchTweets = async (selectValue, textValue, formattedDates, rfp, setTwee
                 tw.content = s.replace(/(http|https)(.*?)( )/g, '')
             })
 
-            res = await fetchSentiment(res)
+            // res = await fetchSentiment(res)
             setTweetsData(res)
             setTweetsDataFiltered(res)
         } else {
