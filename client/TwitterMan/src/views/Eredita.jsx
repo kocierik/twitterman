@@ -7,6 +7,20 @@ import { useEffect } from 'react';
 import { PieChart, Pie, Cell } from 'recharts'
 import { SERVER_URL } from '../utils'
 
+const getUserInfo = async (selectValue, textValue) => {
+    let final = null;
+    try {
+        let res = await fetch(`${SERVER_URL}${selectValue}${textValue}`)
+        res = await res.json()
+        if (!res) {
+            alert('User info not found')
+        }
+        return res;
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 const searchTweets = async (selectValue, textValue, formattedDates) => {
     let final = null;
     try {
@@ -57,21 +71,23 @@ const EreditaScreen = ({ result, stats }) => {
                             <th>Username</th>
                             <th>Time</th>
                         </tr>
-                        
-                        
+
                         {
                             result.winners?.map((p) => {
                                 return (
                                     <>
-                                    <tr key={p.position}>
-                                        <td className='p-3 text-3xl'>{p.medal}</td>
-                                        <td className='p-3'><img className="rounded-full max-w-none w-12 h-12"
-                                                            src={p.propic} alt="avatar" /></td>
-                                        <td className='p-1'>{p.name}</td>
-                                        <td className='p-3'>{p.time}</td>
-                                        <td className='p-3'>{p.url}</td>
-                                    </tr>
-                                    
+                                        <tr key={p.position}>
+                                            <td className='p-3 text-3xl'>{p.medal}</td>
+                                            <td className='p-3'>
+                                                <a href={`https://twitter.com/${p.name.replace('@', '')}`} target="_blank">
+                                                    <img className="rounded-full max-w-none w-12 h-12" src={p.propic} alt="avatar" />
+                                                </a>
+                                            </td>
+                                            <td className='p-1'><a href={`https://twitter.com/${p.name.replace('@', '')}`} target="_blank">{p.name}</a></td>
+                                            <td className='p-3'>{p.time}</td>
+                                            <td className='p-3'>{p.url}</td>
+                                        </tr>
+
                                     </>
                                 )
                             })
@@ -135,8 +151,6 @@ const Eredita = () => {
             let tw = await searchTweets(`/tweet/`, '/hashtag/ghigliottina', `/date/${formatDate(selectedDate)}`);
             if (tw != null) {
                 for (let t of tw) {
-                    images[i] = t.propic;
-                    username[i] = t.username;
                     let split = t.content.split(" ");
                     let finalsplit = [];
                     for (let s of split) {
@@ -152,7 +166,6 @@ const Eredita = () => {
                             sbagliate++;
                         }
                     }
-                    i++;
                 }
             }
             return [{ name: "giusti", value: giuste }, { name: "sbagliati", value: sbagliate }]
@@ -163,15 +176,16 @@ const Eredita = () => {
         let mydata = null;
         if (checkNullDate(selectedDate)) {
             let tw = await searchTweets(`/tweet/`, '/user/quizzettone', `/date/${formatDate(selectedDate)}`);
+            console.log(tw)
             if (tw != null) {
                 for (let t of tw) {
                     if (t.content && t.content.includes("Per #leredità su Twitter, i campioni più veloci della #ghigliottina sono:")) {
                         if (mydata == null) {
-                            mydata = {};
+                            mydata = {};    
                         }
                         const splitted = t.content.split("\n");
                         mydata.winners = [];
-                        for (let i = 2; i <= 4; i++) {  
+                        for (let i = 2; i <= 4; i++) {
                             let w = {};
                             let s = splitted[i].split(" ");
                             w.medal = s[0];
@@ -179,14 +193,9 @@ const Eredita = () => {
                             w.name = s[1];
                             w.time = s[3];
                             w.url = "";
-                            //IMMAGINE DEL PROFILO 
-                            
-                            for(let c of username){
-                                if(s[1].includes(c)){
-                                    let index = username.indexOf(c);
-                                    w.propic = images[index];
-                                }
-                            }
+                            // call endpoint for user info to retrieve user propic
+                            let user_info = await getUserInfo('/getUserInfo/', w.name.replace('@', ''));
+                            w.propic = user_info.profile_image_url
                             mydata.winners.push(w);
                         }
                     } else if (t.content.includes("La #parola della #ghigliottina de #leredita di oggi è:")) {
