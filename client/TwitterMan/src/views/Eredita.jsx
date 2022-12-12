@@ -45,21 +45,34 @@ const EreditaScreen = ({ result, stats }) => {
     return (
         <div className='flex flex-col justify-center text-white'>
             <div className="text-center">
-                <h1 className='text-5xl text-center pt-20 pb-5'>Parola del giorno:</h1>
-                <p className='bold text-2xl'>{result.word}</p>
+                <h1 className='text-3xl text-center pt-10 pb-5'>Parola del giorno:</h1>
+                <p className='bold text-5xl'>{result.word}</p>
             </div>
             <div className="text-center flex justify-center p-5">
                 <table>
                     <tbody>
+                        <tr className="text-gray-500">
+                            <th>#</th>
+                            <th>Photo</th>
+                            <th>Username</th>
+                            <th>Time</th>
+                        </tr>
+                        
+                        
                         {
                             result.winners?.map((p) => {
                                 return (
+                                    <>
                                     <tr key={p.position}>
-                                        <td className='p-3'>{p.position}</td>
-                                        <td className='p-3'>{p.name}</td>
+                                        <td className='p-3 text-3xl'>{p.medal}</td>
+                                        <td className='p-3'><img className="rounded-full max-w-none w-12 h-12"
+                                                            src={p.propic} alt="avatar" /></td>
+                                        <td className='p-1'>{p.name}</td>
                                         <td className='p-3'>{p.time}</td>
                                         <td className='p-3'>{p.url}</td>
                                     </tr>
+                                    
+                                    </>
                                 )
                             })
                         }
@@ -86,7 +99,8 @@ const Eredita = () => {
     const [stats, setStats] = useState([{ name: "giusti", value: 0 }, { name: "sbagliati", value: 0 }]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const color = "#ffffff";
-
+    let images = [];
+    let username = [];
     const format = (myint) => {
         return myint > 9 ? myint : "0" + myint.toString()
     }
@@ -114,12 +128,15 @@ const Eredita = () => {
     }
 
     async function getStats(rightWord) {
+        let i = 0;
         if (checkNullDate(selectedDate)) {
             let giuste = 0;
             let sbagliate = 0;
             let tw = await searchTweets(`/tweet/`, '/hashtag/ghigliottina', `/date/${formatDate(selectedDate)}`);
             if (tw != null) {
                 for (let t of tw) {
+                    images[i] = t.propic;
+                    username[i] = t.username;
                     let split = t.content.split(" ");
                     let finalsplit = [];
                     for (let s of split) {
@@ -135,6 +152,7 @@ const Eredita = () => {
                             sbagliate++;
                         }
                     }
+                    i++;
                 }
             }
             return [{ name: "giusti", value: giuste }, { name: "sbagliati", value: sbagliate }]
@@ -153,13 +171,22 @@ const Eredita = () => {
                         }
                         const splitted = t.content.split("\n");
                         mydata.winners = [];
-                        for (let i = 2; i <= 4; i++) {
+                        for (let i = 2; i <= 4; i++) {  
                             let w = {};
                             let s = splitted[i].split(" ");
+                            w.medal = s[0];
                             w.position = i - 1;
                             w.name = s[1];
                             w.time = s[3];
                             w.url = "";
+                            //IMMAGINE DEL PROFILO 
+                            
+                            for(let c of username){
+                                if(s[1].includes(c)){
+                                    let index = username.indexOf(c);
+                                    w.propic = images[index];
+                                }
+                            }
                             mydata.winners.push(w);
                         }
                     } else if (t.content.includes("La #parola della #ghigliottina de #leredita di oggi è:")) {
