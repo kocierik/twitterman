@@ -7,6 +7,7 @@ import (
 	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 func bind[T any](c *gin.Context) T {
@@ -96,5 +97,32 @@ func logout(c *gin.Context) {
 	c.SetCookie("AUTHTOKEN", "null", 0, "/", utils.ServerUrl, false, false)
 	c.JSON(200, gin.H{
 		"success": true,
+	})
+}
+
+func getMailFromJwt(c *gin.Context) {
+	token, err := c.Cookie("AUTHTOKEN")
+	if !utils.CheckJWT(token) || err != nil {
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": "token not correct",
+		})
+		return
+	}
+
+	var claims utils.JwtClaims
+	_, err = jwt.ParseWithClaims(token, &claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(utils.JwtSecretKey), nil
+	})
+	if err != nil {
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": "cannot parse claims from jwt token",
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"success": true,
+		"email":   claims.Email,
 	})
 }

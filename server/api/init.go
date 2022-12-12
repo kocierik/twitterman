@@ -29,6 +29,7 @@ var endpointList = []endpoint{
 	{"/register", registerApi, "POST"},
 	{"/isLogged", isLoggedIn, "GET"},
 	{"/logout", logout, "GET"},
+	{"/getmail", getMailFromJwt, "GET"},
 }
 
 func cORSMiddleware() gin.HandlerFunc {
