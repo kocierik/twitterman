@@ -30,9 +30,6 @@ var placeField = "geo"
 var lastRequest = requestStruct{}
 
 /* Utils function for getting user information */
-
-/*
-not used
 func GetUserInfoByUsername(username string) TwitterUserStruct {
 	endpoint := utils.TwitterApi + "/users/by/username/" + username
 
@@ -44,7 +41,6 @@ func GetUserInfoByUsername(username string) TwitterUserStruct {
 
 	return result.Data
 }
-*/
 
 func GetTweetById(id string) []utils.Tweet {
 	endpoint := utils.TwitterApi + "/tweets"
@@ -106,7 +102,14 @@ func checkDates(start, end time.Time) (time.Time, time.Time, bool) {
 func GetTwsByQuery(mode, query, maxResults string, start, end time.Time) []utils.Tweet {
 	var ret []utils.Tweet
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
-	q := utils.Dict{"query": query, "max_results": maxResults}
+	q := utils.Dict{
+		"query": query, 
+		"max_results": maxResults, 
+		"expansions": expansions,
+		"tweet.fields": tweetsField,
+		"media.fields": mediaField,
+		"user.fields":  userField,
+		"place.fields": placeField}
 
 	// fmt.Println(start, end)
 	newstart, newend, shouldRequest := checkDates(start, end)

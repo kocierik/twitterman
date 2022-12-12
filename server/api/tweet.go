@@ -67,6 +67,13 @@ func getTweetById(c *gin.Context) {
 	utils.SendOkResponse(c, twRet)
 }
 
+func getTweetUserInfoByUsername(c *gin.Context) {
+	username := c.Param("username")
+	twRet := TwitterApi.GetUserInfoByUsername(username)
+
+	utils.SendOkResponse(c, twRet)
+}
+
 func getUserInfo(c *gin.Context) {
 	username := c.Param("username")
 	usr, err := database.GetUserByName(username)
