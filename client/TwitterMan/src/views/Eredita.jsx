@@ -6,7 +6,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useEffect } from 'react';
 import { PieChart, Pie, Cell } from 'recharts'
 import { SERVER_URL } from '../utils'
-import Charts from '../components/home/ChartsEredita'
+import BarGraph from '../components/chart/BarGraph'
+import WordCloud from '../components/chart/WordCloud'
 import Maps from '../components/home/Maps'
 
 const searchTweets = async (selectValue, textValue, formattedDates) => {
@@ -29,7 +30,7 @@ const searchTweets = async (selectValue, textValue, formattedDates) => {
     return final;
 }
 
-const EreditaScreen = ({ result, stats }) => {
+const EreditaScreen = ({ result, stats, tweetsData }) => {
     const cx = 180;
     const cy = 150;
     const COLORS = ['#00C49F', '#FF8042'];
@@ -46,9 +47,9 @@ const EreditaScreen = ({ result, stats }) => {
 
     return (
         <div
-        data-aos="zoom-in"
-        data-aos-duration="700"
-        className="min-h-full px-5 dark:bg-gray-900 pt-1"
+            data-aos="zoom-in"
+            data-aos-duration="700"
+            className="min-h-full px-5 dark:bg-gray-900 pt-1"
         >
             <div className='flex flex-col justify-center text-white'>
                 <div className="text-center">
@@ -73,8 +74,11 @@ const EreditaScreen = ({ result, stats }) => {
                         </tbody>
                     </table>
                 </div>
-                
-                <div className='text-center flex justify-center p-5'>
+
+                <div className="p-10 dark:bg-gray-900">
+                    <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
+                        Charts
+                    </div>
                     <PieChart width={350} height={500}>
                         <Pie label={renderLabel} data={stats} cx={cx} cy={cy} outerRadius={80} innerRadius={60}>
                             {
@@ -84,24 +88,33 @@ const EreditaScreen = ({ result, stats }) => {
                             }
                         </Pie>
                     </PieChart>
+                    <div className="flex flex-col  md:flex-row gap-5 flex-1 p-5 justify-center text-black">
+                        <div
+                            href="#"
+                            className="block flex flex-col p-6 max-w-sm  rounded-lg border border-gray-200 shadow-md  bg-gray-800 border-gray-700 "
+                        >
+                            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 text-white">
+                                BarGraph analysis
+                                <hr className="my-3 mx-auto h-1 bg-gray-100 rounded border-0  bg-gray-700" />
+                            </h5>
+                            <div className="flex flex-1 justify-center items-end">
+                                <BarGraph tweets={tweetsData} frequency={10} />
+                            </div>
+                        </div>
+                        <div
+                            href="#"
+                            className="block p-6 max-w-sm  rounded-lg border border-gray-200 shadow-md bg-gray-800   border-gray-700 "
+                        >
+                            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 text-white">
+                                Word Cloud
+                                <hr className="my-3 mx-auto h-1 bg-gray-100 rounded border-0  bg-gray-700" />
+                            </h5>
+                            <div className="flex flex-1 justify-center p-5">
+                                <WordCloud contentData={tweetsData.map((tweet) => tweet.content)} />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                {result?.length > 0 && (
-                    <div className="p-10 dark:bg-gray-900">
-                    <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
-                        Charts
-                    </div>
-                        <Charts tweetsData={result} frequency={5} />
-                    </div>
-                )}
-                {result?.length > 0 && (
-                    <div className="p-10 dark:bg-gray-900">
-                    <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
-                        TweetMaps
-                    </div>
-                    <Maps tweetsData={result} />
-                    </div>
-                )}
             </div>
         </div>
     )
@@ -111,6 +124,7 @@ const Eredita = () => {
     const [ereditaResultJson, setEreditaResultJson] = useState(null);
     const [stats, setStats] = useState([{ name: "giusti", value: 0 }, { name: "sbagliati", value: 0 }]);
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [tweetsData, setTweetsData] = useState([])
     const color = "#ffffff";
 
     const format = (myint) => {
@@ -144,6 +158,7 @@ const Eredita = () => {
             let giuste = 0;
             let sbagliate = 0;
             let tw = await searchTweets(`/tweet/`, '/hashtag/ghigliottina', `/date/${formatDate(selectedDate)}`);
+            setTweetsData(tw)
             if (tw != null) {
                 for (let t of tw) {
                     let split = t.content.split(" ");
@@ -227,9 +242,9 @@ const Eredita = () => {
     return (
         <>
             <div
-            data-aos="zoom-in"
-            data-aos-duration="700"
-            className="min-h-full px-5 dark:bg-gray-900 pt-5"
+                data-aos="zoom-in"
+                data-aos-duration="700"
+                className="min-h-full px-5 dark:bg-gray-900 pt-5"
             >
                 <div className='flex justify-center align-center pt-5'>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -248,8 +263,8 @@ const Eredita = () => {
                         />
                     </LocalizationProvider>
                 </div>
-            {ereditaResultJson != null ? <EreditaScreen result={ereditaResultJson} stats={stats} /> : <h1 className='text-5xl text-center pt-20 pb-5 text-white'>Oggi non hanno giocato all'eredita</h1>}
-            </div> 
+                {ereditaResultJson != null ? <EreditaScreen result={ereditaResultJson} stats={stats} tweetsData={tweetsData} /> : <h1 className='text-5xl text-center pt-20 pb-5 text-white'>Oggi non hanno giocato all'eredita</h1>}
+            </div>
         </>
     )
 }
