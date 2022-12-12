@@ -14,7 +14,7 @@ const Profile = ({ isLogged }) => {
   }, [])
 
   const getUserInfo = async () => {
-    await Const.getUserInfo('genovese24', setUser)
+    await Const.getUserInfo(setUser)
   }
   const getSavedUserTweets = () => {
     if (user) {

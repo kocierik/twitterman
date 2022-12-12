@@ -8,6 +8,7 @@ import (
 	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 /*
@@ -68,8 +69,21 @@ func getTweetById(c *gin.Context) {
 }
 
 func getUserInfo(c *gin.Context) {
-	username := c.Param("username")
-	usr, err := database.GetUserByName(username)
+	token, err := c.Cookie("AUTHTOKEN")
+	if !utils.CheckJWT(token) || err != nil {
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": "token not correct",
+		})
+		return
+	}
+
+	var claims utils.JwtClaims
+	_, err = jwt.ParseWithClaims(token, &claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(utils.JwtSecretKey), nil
+	})
+
+	usr, err := database.GetUserByEmail(claims.Email)
 
 	if err != nil {
 		utils.SendErrorResponse(c, "Problem fetching the user")

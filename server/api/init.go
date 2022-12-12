@@ -23,7 +23,7 @@ var endpointList = []endpoint{
 	{"/user/:username/folder/:folderId/add/:tweetId", saveTweet, "POST"},
 	{"/user/:username/folder/:folderId/:tweetId", remSavedTweet, "DELETE"},
 	{"/user/:username/folders", getFolders, "GET"},
-	{"/user/:username", getUserInfo, "GET"},
+	{"/user", getUserInfo, "GET"},
 	{"/user/:username/modify/:action", modifyUser, "POST"}, // action: delete or update
 	{"/login", loginApi, "POST"},
 	{"/register", registerApi, "POST"},

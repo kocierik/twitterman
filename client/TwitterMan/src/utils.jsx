@@ -5,7 +5,7 @@ export const TWEET_USERNAME = '/tweet/{0}/user/{1}'
 export const TWEET_ID = '/tweet/id/{0}'
 export const TWEET_LOAD = '/tweet/{0}/loadNextPage'
 export const TWEET_SAVE = '/user/{0}/folder/{1}/add/{2}'
-export const USER_INFO = '/user/{0}'
+export const USER_INFO = '/user'
 
 const stringFormat = (str, ...args) =>
   str.replace(/{(\d+)}/g, (match, number) =>
@@ -70,8 +70,10 @@ const searchTweets = async (
   }
 }
 
-const getUserInfo = async (username, setUserInfo) => {
-  let res = await fetch(stringFormat(SERVER_URL + USER_INFO, username))
+const getUserInfo = async (setUserInfo) => {
+  let res = await fetch(SERVER_URL + USER_INFO, {
+    credentials: 'include',
+  })
   res = await res.json()
   setUserInfo(res)
 }
