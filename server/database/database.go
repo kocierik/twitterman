@@ -226,7 +226,6 @@ func InitDbTest() {
 	dbname = "test"
 	client = nil
 	Connect()
-	// defer Disconnect()
 
 	// Clear database
 	for _, col := range collectionList {

@@ -25,7 +25,6 @@ const TweetCard = ({ data }) => {
       }
     )
     res = await res.json()
-    console.log(res)
   }
 
   const settingInfoDescription = [
@@ -49,9 +48,6 @@ const TweetCard = ({ data }) => {
       case 'negative':
         setSentimetIcon('🙁')
         break
-    }
-    if (data.geo.id) {
-      console.log(data.geo)
     }
   }, [data])
 

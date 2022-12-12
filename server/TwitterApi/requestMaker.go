@@ -3,6 +3,7 @@ package TwitterApi
 import (
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
 )
@@ -16,7 +17,7 @@ type requestStruct struct {
 
 func makeTwitterRequest(method, endpoint string, param utils.Dict) []byte {
 	req := newRequest(method, endpoint)
-	req.Header.Add("Authorization", "Bearer AAAAAAAAAAAAAAAAAAAAAGY9iQEAAAAA%2B9F%2FomFSQBTgpxO0M2q9rfbfhBs%3DumBmJlZ7yoZIj96NHUTgjLnTDs0t1y0Cuxr9fcQlvmAT27SJcR")
+	req.Header.Add("Authorization", "Bearer "+os.Getenv("BEARER_TOKEN"))
 
 	if param != nil {
 		q := utils.Dict{

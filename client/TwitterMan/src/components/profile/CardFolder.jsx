@@ -12,7 +12,6 @@ const CardFolder = ({ titleFolder, tweets }) => {
           Const.stringFormat(Const.SERVER_URL + Const.TWEET_ID, tweet)
         )
         res = await res.json()
-        console.log(res)
         setTweetsSaved(...tweetsSaved, res)
       })
     }
