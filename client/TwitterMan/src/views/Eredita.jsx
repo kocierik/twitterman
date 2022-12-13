@@ -166,7 +166,7 @@ const EreditaScreen = ({ result, stats, tweetsData, errorTweets }) => {
               <hr className="my-3 mx-auto h-1 bg-gray-100 rounded border-0  bg-gray-700" />
             </h5>
             <div className="flex flex-1 justify-center items-end">
-              <BarGraph tweets={tweetsData} frequency={10} />
+              <BarGraph tweets={tweetsData} frequency={60} />
             </div>
           </div>
           <div
