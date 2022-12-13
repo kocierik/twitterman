@@ -4,8 +4,9 @@ export const TWEET_HASHTAG = '/tweet/{0}/hashtag/{1}'
 export const TWEET_USERNAME = '/tweet/{0}/user/{1}'
 export const TWEET_ID = '/tweet/id/{0}'
 export const TWEET_LOAD = '/tweet/{0}/loadNextPage'
-export const TWEET_SAVE = '/user/{0}/folder/{1}/add/{2}'
+export const TWEET_SAVE = '/user/folder/{0}/add/{1}'
 export const USER_INFO = '/user'
+export const USER_DELETE = '/user/modify/delete'
 
 const stringFormat = (str, ...args) =>
   str.replace(/{(\d+)}/g, (match, number) =>

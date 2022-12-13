@@ -15,7 +15,7 @@ const SavedTweets = () => {
     }
   }
   useEffect(() => {
-    //getSavedTweets()
+    getSavedTweets()
   }, [])
 
   return (
