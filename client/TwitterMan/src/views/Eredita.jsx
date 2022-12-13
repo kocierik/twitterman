@@ -114,7 +114,7 @@ const EreditaScreen = ({ result, stats, tweetsData, errorTweets }) => {
           </div>
           <div className="pt-10 pl-4">
             <span className="pl-4">Ecco gli altri partecipanti</span>
-            <div class="overflow-y-auto h-72 relative max-w-sm mx-auto bg-gray-800 shadow-lg ring-1 ring-black/5 rounded-xl flex flex-col divide-y-4 divide-slate-400/25">
+            <div class="overflow-y-auto h-80 mx-auto bg-gray-800 shadow-lg ring-1 ring-black/5 rounded-xl flex flex-col divide-y-4 divide-slate-400/25">
               {errorTweets?.map((p) => {
                 return (
                   <div>
@@ -126,29 +126,9 @@ const EreditaScreen = ({ result, stats, tweetsData, errorTweets }) => {
                     </div>
                     <span className="text-white p-6">{p.content}</span>
                   </div>
-
                 )
               })}
             </div>
-          </div>
-        </div>
-        <div className="pt-10 pl-4">
-          <span className="pl-4">Ecco gli altri partecipanti</span>
-          <div class="overflow-y-auto h-72 relative max-w-sm mx-auto bg-gray-800 shadow-lg ring-1 ring-black/5 rounded-xl flex flex-col divide-y-4 divide-slate-400/25">
-            {errorTweets?.map((p) => {
-              return (
-                <div>
-                  <div class="flex items-center gap-4 p-4">
-                    <a href={`https://twitter.com/${p.username}`} target="_blank"><img class="w-12 h-12 rounded-full" src={p.propic} /></a>
-                    <div class="flex flex-col">
-                      <strong class="text-slate-200 text-sm font-medium"><a href={`https://twitter.com/${p.username}`} target="_blank">{p.username}</a></strong>
-                    </div>
-                  </div>
-                  <span className="text-white p-6">{p.content}</span>
-                </div>
-
-              )
-            })}
           </div>
         </div>
       </div>
