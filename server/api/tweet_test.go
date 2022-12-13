@@ -11,6 +11,16 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func sendTestReqAuth(method, url string, body io.Reader, cookie *http.Cookie) ([]byte, *httptest.ResponseRecorder) {
+	req, _ := http.NewRequest(method, url, body)
+	req.AddCookie(cookie)
+	res := httptest.NewRecorder()
+	utils.Router.ServeHTTP(res, req)
+
+	responseData, _ := ioutil.ReadAll(res.Body)
+	return responseData, res
+}
+
 func sendTestRequest(method, url string, body io.Reader) ([]byte, *httptest.ResponseRecorder) {
 	req, _ := http.NewRequest(method, url, body)
 	res := httptest.NewRecorder()

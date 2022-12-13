@@ -86,13 +86,6 @@ func getMailFromSession(c *gin.Context) string {
 	return claims.Email
 }
 
-func getTweetUserInfoByUsername(c *gin.Context) {
-	username := c.Param("username")
-	twRet := TwitterApi.GetUserInfoByUsername(username)
-
-	utils.SendOkResponse(c, twRet)
-}
-
 func getUserInfo(c *gin.Context) {
 	mail := getMailFromSession(c)
 	usr, err := database.GetUserByEmail(mail)
@@ -133,6 +126,17 @@ func remSavedTweet(c *gin.Context) {
 	id := c.Param("tweetId")
 
 	err := database.RemoveSavedTweet(mail, folder, id)
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
+}
+
+func createFolder(c *gin.Context) {
+	mail := getMailFromSession(c)
+	folder := c.Param("folderId")
+
+	err := database.CreateFolder(mail, folder)
 	if err != nil {
 		utils.SendErrorResponse(c, "Problem fetching the user")
 		return

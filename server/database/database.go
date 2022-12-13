@@ -135,7 +135,7 @@ func insertTweetIntoFolder(email string, folderName string, id string) error {
 	return nil
 }
 
-func createFolder(email string, folderName string) error {
+func CreateFolder(email string, folderName string) error {
 	folder := utils.TweetsFolder{
 		Name:   folderName,
 		Tweets: []string{},
@@ -151,7 +151,7 @@ func deleteFolder(name string, folderName string) error {
 func InsertSavedTweet(email string, folderName string, id string) error {
 	folder := find(bson.M{"email": email, "saved_folders.name": folderName}, "Users")
 	if len(bindType[[]utils.TweetsFolder](folder)) == 0 {
-		err := createFolder(email, folderName)
+		err := CreateFolder(email, folderName)
 		if err != nil {
 			return err
 		}
