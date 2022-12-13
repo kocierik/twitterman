@@ -255,16 +255,16 @@ const Eredita = () => {
             onChange={(newValue) => {
               setSelectedDate(newValue)
             }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                sx={{
-                  svg: { color },
-                  input: { color },
-                  label: { color },
-                }}
-              />
-            )}
+            // renderInput={(params) => (
+            //   <TextField
+            //     {...params}
+            //     sx={{
+            //       svg: { color },
+            //       input: { color },
+            //       label: { color },
+            //     }}
+            //   />
+            // )}
           />
         </LocalizationProvider>
       </div>

@@ -1,4 +1,4 @@
-import React,{ useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import TweetCard from '../home/TweetCard'
 import * as Const from '../../utils'
 
@@ -12,15 +12,19 @@ const CardFolder = ({ titleFolder, tweets }) => {
           Const.stringFormat(Const.SERVER_URL + Const.TWEET_ID, tweet)
         )
         res = await res.json()
-        setTweetsSaved(...tweetsSaved, res)
+        console.log('response --> ', res)
+        setTweetsSaved((last) => [...last, res[0]])
       })
     }
   }
 
   useEffect(() => {
     getTweets()
-  }, [tweets])
+  }, [])
 
+  useEffect(() => {
+    console.log(tweetsSaved)
+  }, [tweetsSaved])
   return (
     <div className="flex flex-1 sm:flex-col">
       <div className="box-border flex flex-col    m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">

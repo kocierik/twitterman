@@ -10,21 +10,21 @@ const TweetCard = ({ data }) => {
   const [sentimentIcon, setSentimetIcon] = useState('?')
 
   const saveTweet = async (tweetId) => {
-    let res = await fetch(
+    await fetch(
       Const.stringFormat(
         Const.SERVER_URL + Const.TWEET_SAVE,
-        'genovese24',
         'preferiti',
         tweetId
       ),
       {
         method: 'POST',
+        credentials: 'include',
+        body: '{}',
         headers: {
           'Content-Type': 'application/json',
         },
       }
     )
-    res = await res.json()
   }
 
   const settingInfoDescription = [

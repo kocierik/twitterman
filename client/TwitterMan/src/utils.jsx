@@ -7,6 +7,7 @@ export const TWEET_LOAD = '/tweet/{0}/loadNextPage'
 export const TWEET_SAVE = '/user/folder/{0}/add/{1}'
 export const USER_INFO = '/user'
 export const USER_DELETE = '/user/modify/delete'
+export const TWEET_FOLDER = '/user/folders/'
 
 const stringFormat = (str, ...args) =>
   str.replace(/{(\d+)}/g, (match, number) =>

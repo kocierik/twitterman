@@ -19,6 +19,7 @@ const Profile = ({ isLogged }) => {
   const getSavedUserTweets = () => {
     if (user) {
       setSavedUserTweets(user.saved)
+      console.log(user.saved)
     }
   }
 
@@ -36,7 +37,7 @@ const Profile = ({ isLogged }) => {
       let res = await fetch(url, {
         method: 'POST',
         credentials: 'include',
-        body: "{}"
+        body: '{}',
       })
       res = await res.json()
     } catch (e) {
@@ -52,7 +53,7 @@ const Profile = ({ isLogged }) => {
           <div
             id="popup-modal"
             tabIndex="-1"
-            className="fixed flex justify-center items-center top-0 left-0 right-0 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full"
+            className="fixed flex justify-center  top-0 left-0 right-0 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full"
           >
             <div className="relative w-full h-full max-w-md md:h-auto">
               <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -181,7 +182,7 @@ const Profile = ({ isLogged }) => {
                       type="button"
                       className="text-white bg-gradient-to-r ml-5 from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
                       onClick={() => {
-                        navigate('/saved')
+                        navigate('/profile')
                       }}
                     >
                       Tweets Salvati
