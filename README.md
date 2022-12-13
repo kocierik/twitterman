@@ -5,7 +5,7 @@
 To build and run the program type in the `server` directory:
 
 ```
-go get . && go run .
+go mod tidy && go run .
 ```
 
 ## Test the program
@@ -18,4 +18,4 @@ go test
 
 ## Authors
 
-Manuel Arto, Fabio Gaiba, Gabriele Genovese, Erik Koci, Andrea Napoli, Alessandro Frau
+Manuel Arto, Alessandro Frau, Fabio Gaiba, Gabriele Genovese, Erik Koci, Andrea Napoli
