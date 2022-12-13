@@ -2,6 +2,9 @@ package api
 
 import (
 	"log"
+	"regexp"
+	"strings"
+	"unicode"
 
 	"git.hjkl.gq/team7/twitterman/server/database"
 	"git.hjkl.gq/team7/twitterman/server/utils"
@@ -33,10 +36,46 @@ func registerApi(c *gin.Context) {
 	}
 	param := bind[RequestBody](c)
 
-	// TODO: Check the validity of all parameters
 	_, err := database.GetUserByEmail(param.Email)
 	if err == nil {
 		log.Fatalf("User already exist")
+	}
+
+	if !strings.Contains(param.Email, "@") {
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": "email not valid",
+		})
+		return
+	}
+
+	if len(param.Username) < 4 {
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": "username too short",
+		})
+		return
+	}
+
+	hasUpper := false
+	hasLower := false
+	hasNumber := regexp.MustCompile(`\d`).MatchString(param.Password)
+
+	for _, r := range param.Password {
+		if unicode.IsUpper(r) {
+			hasUpper = true
+		}
+		if unicode.IsLower(r) {
+			hasLower = true
+		}
+	}
+
+	if len(param.Password) < 8 || !hasUpper || !hasLower || !hasNumber {
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": "password should be at least 8 character, one",
+		})
+		return
 	}
 
 	standardFolder := utils.TweetsFolder{Name: "Preferiti", Tweets: []string{}}

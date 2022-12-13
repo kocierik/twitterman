@@ -84,6 +84,7 @@ const Home = () => {
           <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
             Charts
           </div>
+          {console.log(frequencyValue)}
           <Charts tweetsData={tweetsDataFiltered} frequency={frequencyValue} />
         </div>
       )}
