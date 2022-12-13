@@ -29,6 +29,4 @@ sonarqube-check:
     - sonar-scanner
   allow_failure: true
   only:
-    - main # or the name of your main branch
-    - test
-    - feature/save-tweets
+    - test-a
