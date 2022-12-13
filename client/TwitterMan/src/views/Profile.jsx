@@ -7,6 +7,8 @@ const Profile = ({ isLogged }) => {
   const [user, setUser] = useState()
   const [savedUserTweets, setSavedUserTweets] = useState([])
   const [showDelete, setShowDelete] = useState(false)
+  const [selectedFolder, setSelectedFolder] = useState('')
+  const [showAddFolder, setShowAddFolder] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -95,7 +97,7 @@ const Profile = ({ isLogged }) => {
                     ></path>
                   </svg>
                   <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                    Are you sure you want to delete this product?
+                    Are you sure you want to delete your account?
                   </h3>
                   <button
                     data-modal-toggle="popup-modal"
@@ -169,45 +171,107 @@ const Profile = ({ isLogged }) => {
                     {user?.email}
                   </div>
                 </div>
+                <div className="flex flex-wrap xs:justify-center sm:justify-center md:justify-center flex-column p-5 lg:justify-end">
+                  <button
+                    type="button"
+                    className="text-white bg-gradient-to-r ml-5 from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                  >
+                    Modify Account
+                  </button>
+                  <button
+                    type="button"
+                    data-modal-toggle="popup-modal"
+                    onClick={() => {
+                      setShowDelete(true)
+                      console.log(showDelete)
+                    }}
+                    className="text-white bg-gradient-to-r ml-5 from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                  >
+                    Delete Account
+                  </button>
+                </div>
+                <div className="flex flex-col    flex-1  dark:bg-gray-900 text-white  p-5">
+                  <p className="flex  justify-center text-3xl font-bold">
+                    Folders
+                  </p>
 
-                <div data-aos="zoom-in" className="flex  flex-col items-center">
-                  <div className="flex flex-wrap flex-row p-5 justify-center">
+                  <div className="flex p-5 flex-wrap  justify-center">
                     <button
                       type="button"
-                      className="text-white bg-gradient-to-r ml-5 from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                      onClick={() => setShowAddFolder(!showAddFolder)}
+                      className="text-white bg-gradient-to-r ml-5 from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
                     >
-                      Modifica informazioni
+                      Add folder
                     </button>
-                    <button
-                      type="button"
-                      className="text-white bg-gradient-to-r ml-5 from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-                      onClick={() => {
-                        navigate('/profile')
-                      }}
-                    >
-                      Tweets Salvati
-                    </button>
-                    <button
-                      type="button"
-                      data-modal-toggle="popup-modal"
-                      onClick={() => {
-                        setShowDelete(true)
-                        console.log(showDelete)
-                      }}
-                      className="text-white bg-gradient-to-r ml-5 from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
-                    >
-                      Delete Account
-                    </button>
-                  </div>
-                  <div className="w-full text-white px-4 lg:order-1">
                     {user?.saved?.map((folder, i) => {
                       return (
-                        <CardFolder
+                        <button
+                          type="button"
+                          onClick={() => setSelectedFolder(folder.name)}
                           key={i}
-                          titleFolder={folder.name}
-                          tweets={folder.tweets}
-                        />
+                          className="text-white bg-gradient-to-r ml-5 from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                        >
+                          {folder.name}
+                        </button>
                       )
+                    })}
+                    <button
+                      type="button"
+                      onClick={() => setSelectedFolder('')}
+                      className="text-white bg-gradient-to-r ml-5 from-orange-400 via-orange-500 to-orange-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                    >
+                      Clear filter
+                    </button>
+                  </div>
+                  {showAddFolder && (
+                    <div className="flex flex-1  justify-center">
+                      <input
+                        className="rounded cursor-pointer px-3 bg-gray-100 border border-gray-300  focus:outline-none  bg-gray-700  border-gray-600  "
+                        type="text"
+                      />{' '}
+                      <button
+                        type="submit"
+                        onClick={() => 'ok'}
+                        className="rounded p-1.5 text-sm font-medium text-white bg-blue-700  border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-6 h-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4.5 12.75l6 6 9-13.5"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <div data-aos="zoom-in" className="flex  flex-col items-center">
+                  <div className="w-full text-white px-4 lg:order-1">
+                    {user?.saved?.map((folder, i) => {
+                      if (selectedFolder === folder.name) {
+                        return (
+                          <CardFolder
+                            key={i}
+                            titleFolder={folder.name}
+                            tweets={folder.tweets}
+                          />
+                        )
+                      } else if (selectedFolder == '') {
+                        return (
+                          <CardFolder
+                            key={i}
+                            titleFolder={folder.name}
+                            tweets={folder.tweets}
+                          />
+                        )
+                      }
                     })}
                   </div>
                 </div>

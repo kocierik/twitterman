@@ -34,6 +34,7 @@
     "react-if": "^4.1.4",
     "react-leaflet": "^4.1.0",
     "react-router-dom": "^6.4.2",
+    "react-toastify": "^9.1.1",
     "react-wordcloud": "^1.2.7",
     "recharts": "^2.1.16",
     "tippy.js": "^6.3.7"

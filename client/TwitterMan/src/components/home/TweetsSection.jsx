@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import ModalSaveToFolder from './ModalSaveToFolder'
 import TweetCard from './TweetCard'
 
 const TweetsSection = ({ tweetsDataFiltered, loadMore, rfp, setRfp }) => {
@@ -60,10 +61,11 @@ const TweetsSection = ({ tweetsDataFiltered, loadMore, rfp, setRfp }) => {
           <ul className="flex list-style-none">
             <li>
               <a
-                className={`relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 rounded ${currentPage === 1
-                  ? 'pointer-events-none text-gray-500'
-                  : ' text-slate-200'
-                  } hover:text-gray-800 hover:bg-gray-200 focus:shadow-none`}
+                className={`relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 rounded ${
+                  currentPage === 1
+                    ? 'pointer-events-none text-gray-500'
+                    : ' text-slate-200'
+                } hover:text-gray-800 hover:bg-gray-200 focus:shadow-none`}
                 onClick={() => changePage(currentPage - 1)}
               >
                 Previous
