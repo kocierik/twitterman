@@ -21,8 +21,8 @@ const Home = () => {
       let res = await fetch(url)
       res = await res.json()
       if (res) {
-        //let sentimentRes = await Const.fetchSentiment(res)
-        setTweetsData((last) => [...last])
+        let sentimentRes = await Const.fetchSentiment(res)
+        setTweetsData((last) => [...last, ...sentimentRes])
       } else {
         alert('No more tweets to load')
       }
