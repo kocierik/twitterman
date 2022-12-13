@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import TweetCard from './TweetCard'
 
-const TweetsSection = ({ tweetsDataFiltered, loadMore, rfp, setRfp }) => {
+const TweetsSection = ({ tweetsDataFiltered, tweetsLen, loadMore, rfp, setRfp }) => {
   const [currentPage, setCurrentPage] = useState(1)
 
   const currentTweets = tweetsDataFiltered.slice(
@@ -10,10 +10,12 @@ const TweetsSection = ({ tweetsDataFiltered, loadMore, rfp, setRfp }) => {
   )
 
   const changePage = async (newPage) => {
+    let canChangePage = true
     if (tweetsDataFiltered.length / rfp < newPage) {
-      await loadMore()
+      canChangePage = await loadMore()
     }
-    setCurrentPage(newPage)
+    if (canChangePage || tweetsDataFiltered.length > rfp * (newPage-1))
+      setCurrentPage(newPage)
   }
 
   const getPageNumberItems = () => {
@@ -40,16 +42,17 @@ const TweetsSection = ({ tweetsDataFiltered, loadMore, rfp, setRfp }) => {
   }
 
   const changeRfp = (event) => {
-    setRfp(event.target.value)
-    if (currentTweets.length < rfp) loadMore()
+    let rfp = event.target.value
+    if (tweetsDataFiltered.length < rfp) loadMore()
+
+    setCurrentPage(Math.min(currentPage, Math.ceil(tweetsDataFiltered.length / rfp)))
+    setRfp(rfp)
   }
 
   return (
     <div>
       <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
-        {currentTweets?.map((tweet, i) => {
-          return <TweetCard data={tweet} key={i} />
-        })}
+        {currentTweets?.map((tweet, i) => <TweetCard data={tweet} index={tweetsDataFiltered.indexOf(tweet)} key={tweet.id} /> )}
       </div>
 
       <div className="flex justify-center align-baseline mt-5">

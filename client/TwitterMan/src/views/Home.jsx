@@ -25,10 +25,12 @@ const Home = () => {
         setTweetsData((last) => [...last, ...sentimentRes])
       } else {
         alert('No more tweets to load')
+        return false
       }
     } catch (e) {
       console.log(e)
     }
+    return true
   }
 
   const filterSentiment = () => {
@@ -72,6 +74,7 @@ const Home = () => {
         {showTweets && tweetsDataFiltered?.length ? (
           <TweetsSection
             tweetsDataFiltered={tweetsDataFiltered}
+            tweetsLen={tweetsDataFiltered.length}
             loadMore={loadMore}
             rfp={rfp}
             setRfp={setRfp}
