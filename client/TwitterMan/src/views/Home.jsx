@@ -77,7 +77,6 @@ const Home = () => {
             setRfp={setRfp}
           />
         ) : null}
-
       </div>
 
       {tweetsDataFiltered?.length > 0 && (

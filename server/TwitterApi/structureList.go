@@ -21,11 +21,6 @@ type TwitterInclude struct {
 // Token to load next page
 type TwitterMetaStruct struct {
 	NextToken string `json:"next_token,omitempty"`
-	// uncomment if needed
-	// OldestId      string `json:"oldest_id"`
-	// NewestId      string `json:"newest_id"`
-	// ResultCount   uint64 `json:"result_count"`
-	// PreviousToken string `json:"previous_token"`
 }
 
 // Structure returned from Twitter Api
