@@ -20,18 +20,8 @@ func makeTwitterRequest(method, endpoint string, param utils.Dict) []byte {
 	req.Header.Add("Authorization", "Bearer "+os.Getenv("BEARER_TOKEN"))
 
 	if param != nil {
-		q := utils.Dict{
-			"expansions":   expansions,
-			"tweet.fields": tweetsField,
-			"media.fields": mediaField,
-			"user.fields":  userField,
-			"place.fields": placeField,
-		}
-		for k, i := range param {
-			q[k] = i
-		}
 		// formo la query
-		addQueryToReq(req, q)
+		addQueryToReq(req, param)
 	}
 
 	res := doRequest(req)

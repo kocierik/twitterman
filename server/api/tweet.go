@@ -86,6 +86,13 @@ func getMailFromSession(c *gin.Context) string {
 	return claims.Email
 }
 
+func getTweetUserInfoByUsername(c *gin.Context) {
+	username := c.Param("username")
+	twRet := TwitterApi.GetUserInfoByUsername(username)
+
+	utils.SendOkResponse(c, twRet)
+}
+
 func getUserInfo(c *gin.Context) {
 	mail := getMailFromSession(c)
 	usr, err := database.GetUserByEmail(mail)
