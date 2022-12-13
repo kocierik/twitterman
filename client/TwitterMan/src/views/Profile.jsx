@@ -270,6 +270,7 @@ const Profile = ({ isLogged }) => {
                     <div className="flex flex-1  justify-center">
                       <input
                         required
+                        placeholder="Add Folder"
                         onChange={(value) => {
                           setNewFolderName(value.target.value)
                         }}
@@ -305,6 +306,7 @@ const Profile = ({ isLogged }) => {
                         onChange={(value) => {
                           setDeleteFolderName(value.target.value)
                         }}
+                        placeholder="Delete folder"
                         className="rounded cursor-pointer px-3 bg-gray-100 border border-gray-300  focus:outline-none  bg-gray-700  border-gray-600  "
                         type="text"
                       />{' '}
