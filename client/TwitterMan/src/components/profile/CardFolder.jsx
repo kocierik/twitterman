@@ -12,7 +12,6 @@ const CardFolder = ({ titleFolder, tweets }) => {
           Const.stringFormat(Const.SERVER_URL + Const.TWEET_ID, tweet)
         )
         res = await res.json()
-        console.log('response --> ', res)
         setTweetsSaved((last) => [...last, res[0]])
       })
     }
@@ -22,11 +21,8 @@ const CardFolder = ({ titleFolder, tweets }) => {
     getTweets()
   }, [])
 
-  useEffect(() => {
-    console.log(tweetsSaved)
-  }, [tweetsSaved])
   return (
-    <div className="flex flex-1 sm:flex-col">
+    <div className="flex flex-1 flex-col">
       <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
         {titleFolder}
       </div>

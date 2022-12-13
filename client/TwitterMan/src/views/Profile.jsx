@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CardFolder from '../components/profile/CardFolder'
 import * as Const from '../utils'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const Profile = ({ isLogged }) => {
   const [user, setUser] = useState()
@@ -9,11 +11,17 @@ const Profile = ({ isLogged }) => {
   const [showDelete, setShowDelete] = useState(false)
   const [selectedFolder, setSelectedFolder] = useState('')
   const [showAddFolder, setShowAddFolder] = useState(false)
+  const [newFolderName, setNewFolderName] = useState('')
   const navigate = useNavigate()
 
   useEffect(() => {
     if (!isLogged) navigate('/')
   }, [])
+
+  const createNewFolder = async () => {
+    let res = fetch(Const.SERVER_URL + '???')
+    toast.success('folder created succesfully!')
+  }
 
   const getUserInfo = async () => {
     await Const.getUserInfo(setUser)
@@ -21,7 +29,6 @@ const Profile = ({ isLogged }) => {
   const getSavedUserTweets = () => {
     if (user) {
       setSavedUserTweets(user.saved)
-      console.log(user.saved)
     }
   }
 
@@ -183,7 +190,6 @@ const Profile = ({ isLogged }) => {
                     data-modal-toggle="popup-modal"
                     onClick={() => {
                       setShowDelete(true)
-                      console.log(showDelete)
                     }}
                     className="text-white bg-gradient-to-r ml-5 from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
                   >
@@ -226,12 +232,16 @@ const Profile = ({ isLogged }) => {
                   {showAddFolder && (
                     <div className="flex flex-1  justify-center">
                       <input
+                        required
+                        onChange={(value) => {
+                          setNewFolderName(value.target.value)
+                        }}
                         className="rounded cursor-pointer px-3 bg-gray-100 border border-gray-300  focus:outline-none  bg-gray-700  border-gray-600  "
                         type="text"
                       />{' '}
                       <button
                         type="submit"
-                        onClick={() => 'ok'}
+                        onClick={async () => await createNewFolder()}
                         className="rounded p-1.5 text-sm font-medium text-white bg-blue-700  border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
                       >
                         <svg
