@@ -81,7 +81,6 @@ const EreditaScreen = ({ result, stats, tweetsData, errorTweets }) => {
                         <span className="pl-4">Ecco gli altri partecipanti</span>
                         <div class="overflow-y-auto h-72 relative max-w-sm mx-auto bg-gray-800 shadow-lg ring-1 ring-black/5 rounded-xl flex flex-col divide-y-4 divide-slate-400/25">
                             {errorTweets?.map((p) => {
-                                console.log(p)
                                 return (
                                     <div>
                                         <div class="flex items-center gap-4 p-4">
