@@ -30,7 +30,7 @@ const searchTweets = async (selectValue, textValue, formattedDates) => {
     return final;
 }
 
-const EreditaScreen = ({ result, stats, tweetsData }) => {
+const EreditaScreen = ({ result, stats, tweetsData, errorTweets }) => {
     const cx = 180;
     const cy = 150;
     const COLORS = ['#00C49F', '#FF8042'];
@@ -52,43 +52,77 @@ const EreditaScreen = ({ result, stats, tweetsData }) => {
             className="min-h-full px-5 dark:bg-gray-900 pt-1"
         >
             <div className='flex flex-col justify-center text-white'>
-                <div className="text-center">
-                    <h1 className='text-5xl text-center pt-20 pb-5'>Parola del giorno:</h1>
-                    <p className='bold text-2xl'>{result.word}</p>
+                <div className="flex flex-col  md:flex-row gap-9 flex-1 p-5 justify-center text-white">
+                    <div className="pr-3">
+                        <div className="text-center">
+                            <h1 className='text-5xl text-center pt-10 pb-5'>Parola del giorno:</h1>
+                            <p className='bold text-2xl'>{result.word}</p>
+                        </div>
+                        <div className="text-center flex justify-center p-5">
+                            <table>
+                                <tbody>
+                                    {
+                                        result.winners?.map((p) => {
+                                            return (
+                                                <tr key={p.position}>
+                                                    <td className='p-3'>{p.position}</td>
+                                                    <td className='p-3'>{p.name}</td>
+                                                    <td className='p-3'>{p.time}</td>
+                                                    <td className='p-3'>{p.url}</td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div className="pt-10 pl-4">
+                        <span className="pl-4">Ecco gli altri partecipanti</span>
+                        <div class="overflow-y-auto h-72 relative max-w-sm mx-auto bg-gray-800 shadow-lg ring-1 ring-black/5 rounded-xl flex flex-col divide-y-4 divide-slate-400/25">
+                            {errorTweets?.map((p) => {
+                                console.log(p)
+                                return (
+                                    <div>
+                                        <div class="flex items-center gap-4 p-4">
+                                            <a href={`https://twitter.com/${p.username}`} target="_blank"><img class="w-12 h-12 rounded-full" src={p.propic} /></a>
+                                            <div class="flex flex-col">
+                                                <strong class="text-slate-200 text-sm font-medium"><a href={`https://twitter.com/${p.username}`} target="_blank">{p.username}</a></strong>
+                                            </div>
+                                        </div>
+                                        <span className="text-white p-6">{p.content}</span>
+                                    </div>
+                                    
+                                )
+                            })}
+                        </div>
+                    </div>
                 </div>
-                <div className="text-center flex justify-center p-5">
-                    <table>
-                        <tbody>
-                            {
-                                result.winners?.map((p) => {
-                                    return (
-                                        <tr key={p.position}>
-                                            <td className='p-3'>{p.position}</td>
-                                            <td className='p-3'>{p.name}</td>
-                                            <td className='p-3'>{p.time}</td>
-                                            <td className='p-3'>{p.url}</td>
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </table>
-                </div>
-
                 <div className="p-10 dark:bg-gray-900">
                     <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
                         Charts
                     </div>
-                    <PieChart width={350} height={500}>
-                        <Pie label={renderLabel} data={stats} cx={cx} cy={cy} outerRadius={80} innerRadius={60}>
-                            {
-                                stats.map((_, index) => (
-                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                ))
-                            }
-                        </Pie>
-                    </PieChart>
                     <div className="flex flex-col  md:flex-row gap-5 flex-1 p-5 justify-center text-black">
+                        <div
+                            href="#"
+                            className="block flex flex-col p-6 max-w-sm  rounded-lg border border-gray-200 shadow-md  bg-gray-800 border-gray-700 "
+                        >
+                            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 text-white">
+                                Piechart
+                                <hr className="my-3 mx-auto h-1 bg-gray-100 rounded border-0  bg-gray-700" />
+                            </h5>
+                            <div className="flex flex-1 justify-center items-end">
+                                <PieChart width={350} height={300}>
+                                    <Pie label={renderLabel} data={stats} cx={cx} cy={cy} outerRadius={80} innerRadius={60}>
+                                        {
+                                            stats.map((_, index) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))
+                                        }
+                                    </Pie>
+                                </PieChart>
+                            </div>
+                        </div>
                         <div
                             href="#"
                             className="block flex flex-col p-6 max-w-sm  rounded-lg border border-gray-200 shadow-md  bg-gray-800 border-gray-700 "
@@ -125,6 +159,7 @@ const Eredita = () => {
     const [stats, setStats] = useState([{ name: "giusti", value: 0 }, { name: "sbagliati", value: 0 }]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [tweetsData, setTweetsData] = useState([])
+    const [errorTweets, setErrorTweets] = useState([])
     const color = "#ffffff";
 
     const format = (myint) => {
@@ -154,6 +189,7 @@ const Eredita = () => {
     }
 
     async function getStats(rightWord) {
+        let error = []
         if (checkNullDate(selectedDate)) {
             let giuste = 0;
             let sbagliate = 0;
@@ -173,10 +209,16 @@ const Eredita = () => {
                         if (rightWord == finalsplit[0]) {
                             giuste++;
                         } else {
+                            let w = {};
+                            w.username = t.username;
+                            w.propic = t.propic;
+                            w.content = t.content;
+                            error.push(w);
                             sbagliate++;
                         }
                     }
                 }
+                setErrorTweets(error)
             }
             return [{ name: "giusti", value: giuste }, { name: "sbagliati", value: sbagliate }]
         }
@@ -263,7 +305,7 @@ const Eredita = () => {
                         />
                     </LocalizationProvider>
                 </div>
-                {ereditaResultJson != null ? <EreditaScreen result={ereditaResultJson} stats={stats} tweetsData={tweetsData} /> : <h1 className='text-5xl text-center pt-20 pb-5 text-white'>Oggi non hanno giocato all'eredita</h1>}
+                {ereditaResultJson != null ? <EreditaScreen result={ereditaResultJson} stats={stats} tweetsData={tweetsData} errorTweets={errorTweets}/> : <h1 className='text-5xl text-center pt-20 pb-5 text-white'>Oggi non hanno giocato all'eredita</h1>}
             </div>
         </>
     )
