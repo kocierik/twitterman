@@ -23,6 +23,7 @@
     "dayjs": "^1.11.6",
     "esbuild": "^0.15.14",
     "flowbite-datepicker": "^1.2.2",
+    "js-cookie": "^3.0.1",
     "leaflet": "^1.9.3",
     "pigeon-maps": "^0.21.3",
     "react": "^18.2.0",

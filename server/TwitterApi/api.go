@@ -29,23 +29,6 @@ var placeField = "geo"
 // Last request made by this package
 var lastRequest = requestStruct{}
 
-/* Utils function for getting user information */
-
-/*
-not used
-func GetUserInfoByUsername(username string) TwitterUserStruct {
-	endpoint := utils.TwitterApi + "/users/by/username/" + username
-
-	q := utils.Dict{"user.fields": userField}
-
-	body := makeTwitterRequest("GET", endpoint, q)
-
-	result := utils.UnmarshalToJson[DataGeneric[TwitterUserStruct]](body)
-
-	return result.Data
-}
-*/
-
 func GetTweetById(id string) []utils.Tweet {
 	endpoint := utils.TwitterApi + "/tweets"
 
