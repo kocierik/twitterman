@@ -22,7 +22,7 @@ var endpointList = []endpoint{
 	{"/tweet/:results/loadNextPage", getNewPageTweets, "GET"},
 	{"/user/folder/:folderId/add/:tweetId", saveTweet, "POST"},
 	{"/user/folder/:folderId/:tweetId", remSavedTweet, "DELETE"},
-	{"/user/folder/create/:folderId", createFolder, "DELETE"},
+	{"/user/folder/create/:folderId", createFolder, "POST"},
 	{"/user/folders", getFolders, "GET"},
 	{"/user", getUserInfo, "GET"},
 	{"/user/modify/:action", modifyUser, "POST"}, // action: delete or update

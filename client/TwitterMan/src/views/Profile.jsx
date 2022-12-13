@@ -19,7 +19,16 @@ const Profile = ({ isLogged }) => {
   }, [])
 
   const createNewFolder = async () => {
-    let res = fetch(Const.SERVER_URL + '???')
+    const res = await fetch(
+      Const.stringFormat(Const.SERVER_URL + Const.CREATE_FOLDER, newFolderName),
+      {
+        method: 'POST',
+        credentials: 'include',
+        body: '{}',
+      }
+    )
+    console.log(res)
+    window.location.reload()
     toast.success('folder created succesfully!')
   }
 
@@ -202,6 +211,7 @@ const Profile = ({ isLogged }) => {
                   </p>
 
                   <div className="flex p-5 flex-wrap  justify-center">
+                    <ToastContainer />
                     <button
                       type="button"
                       onClick={() => setShowAddFolder(!showAddFolder)}
@@ -240,7 +250,7 @@ const Profile = ({ isLogged }) => {
                         type="text"
                       />{' '}
                       <button
-                        type="submit"
+                        type="button"
                         onClick={async () => await createNewFolder()}
                         className="rounded p-1.5 text-sm font-medium text-white bg-blue-700  border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
                       >
