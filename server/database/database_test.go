@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var testUsername string = "aldo"
+var testMail string = "gianni@gianni"
 var testTwtId string = "12345678987654"
 var testFolder string = "testFolder"
 
@@ -58,16 +58,17 @@ func TestInsertandGetUser(t *testing.T) {
 func TestFolderUsage(t *testing.T) {
 	InitDbTest()
 	defer Disconnect()
+	InsertUser("gianni@gianni", "gianni", "gianni123A", []utils.TweetsFolder{})
 
 	/* Test saving tweet */
-	err := InsertSavedTweet(testUsername, testFolder, testTwtId)
+	err := InsertSavedTweet(testMail, testFolder, testTwtId)
 	assert.Equal(t, err, nil)
 
 	/* delete tweet */
-	err = RemoveSavedTweet(testUsername, testFolder, testTwtId)
+	err = RemoveSavedTweet(testMail, testFolder, testTwtId)
 	assert.Equal(t, err, nil)
 
 	/* delete folder*/
-	err = deleteFolder(testUsername, testFolder)
+	err = deleteFolder(testMail, testFolder)
 	assert.Equal(t, err, nil)
 }

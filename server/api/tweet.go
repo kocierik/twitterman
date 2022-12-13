@@ -143,6 +143,17 @@ func createFolder(c *gin.Context) {
 	}
 }
 
+func deleteFolder(c *gin.Context) {
+	mail := getMailFromSession(c)
+	folder := c.Param("folderId")
+
+	err := database.DeleteFolder(mail, folder)
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
+}
+
 func getFolders(c *gin.Context) {
 	mail := getMailFromSession(c)
 	usr, err := database.GetUserByEmail(mail)

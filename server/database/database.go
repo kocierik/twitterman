@@ -143,7 +143,7 @@ func CreateFolder(email string, folderName string) error {
 	return insertMode(bson.M{"email": email}, bson.M{"$push": bson.M{"saved_folders": folder}}, "Users")
 }
 
-func deleteFolder(name string, folderName string) error {
+func DeleteFolder(name string, folderName string) error {
 	return insertMode(bson.M{"username": name}, bson.M{"$pull": bson.M{"saved_folders": folderName}}, "Users")
 }
 
