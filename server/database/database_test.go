@@ -69,6 +69,6 @@ func TestFolderUsage(t *testing.T) {
 	assert.Equal(t, err, nil)
 
 	/* delete folder*/
-	err = deleteFolder(testMail, testFolder)
+	err = DeleteFolder(testMail, testFolder)
 	assert.Equal(t, err, nil)
 }
