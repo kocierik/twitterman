@@ -9,7 +9,7 @@ export const USER_INFO = '/user'
 export const USER_DELETE = '/user/modify/delete'
 export const TWEET_FOLDER = '/user/folders/'
 export const CREATE_FOLDER = '/user/folder/create/{0}'
-
+export const DELETE_FOLDER = ''
 const stringFormat = (str, ...args) =>
   str.replace(/{(\d+)}/g, (match, number) =>
     typeof args[number] != 'undefined' ? args[number] : match
