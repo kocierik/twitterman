@@ -9,6 +9,7 @@ import TweetMaps from './views/TweetMaps'
 import SavedTweets from './views/SavedTweets'
 import Profile from './views/Profile'
 import Eredita from './views/Eredita'
+import Fantacitorio from './views/Fantacitorio'
 import { isLoggedIn } from './utils'
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
           />
           <Route path="/tweetMaps/:id" element={<TweetMaps />} />
           <Route path="/eredita" element={<Eredita />} />
+          <Route path="/fantacitorio" element={<Fantacitorio />} />
           <Route path="/saved" element={<SavedTweets />} />
           <Route path="/profile" element={<Profile isLogged={isLogged} />} />
         </Routes>
