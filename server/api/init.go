@@ -24,6 +24,7 @@ var endpointList = []endpoint{
 	// {"/getUserInfo/:username", getTweetUserInfoByUsername, "GET"},
 	{"/user/folder/:folderId/add/:tweetId", saveTweet, "POST"},
 	{"/user/folder/:folderId/:tweetId", remSavedTweet, "DELETE"},
+	{"/user/folder/delete/:folderId", deleteFolder, "DELETE"},
 	{"/user/folder/create/:folderId", createFolder, "POST"},
 	{"/user/folders", getFolders, "GET"},
 	{"/user", getUserInfo, "GET"},
