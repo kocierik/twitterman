@@ -11,14 +11,14 @@ import WordCloud from '../components/chart/WordCloud'
 import Maps from '../components/home/Maps'
 
 const getUserInfo = async (selectValue, textValue) => {
-  let final = null;
+  let final = null
   try {
     let res = await fetch(`${SERVER_URL}${selectValue}${textValue}`)
     res = await res.json()
     if (!res) {
       alert('User info not found')
     }
-    return res;
+    return res
   } catch (e) {
     console.log(e)
   }
@@ -76,7 +76,9 @@ const EreditaScreen = ({ result, stats, tweetsData, errorTweets }) => {
         <div className="flex flex-col  md:flex-row gap-9 flex-1 p-5 justify-center text-white">
           <div className="pr-3">
             <div className="text-center">
-              <h1 className="text-3xl text-center pt-10 pb-5">Parola del giorno:</h1>
+              <h1 className="text-3xl text-center pt-10 pb-5">
+                Parola del giorno:
+              </h1>
               <p className="bold text-5xl">{result.word}</p>
             </div>
             <div className="text-center flex justify-center p-5">
@@ -89,26 +91,43 @@ const EreditaScreen = ({ result, stats, tweetsData, errorTweets }) => {
                     <th>Time</th>
                   </tr>
 
-                  {
-                    result.winners?.map((p) => {
-                      return (
-                        <>
-                          <tr key={p.position}>
-                            <td className="p-3 text-3xl">{p.medal}</td>
-                            <td className="p-3">
-                              <a href={`https://twitter.com/${p.name.replace('@', '')}`} target="_blank">
-                                <img className="rounded-full max-w-none w-12 h-12" src={p.propic} alt="avatar" />
-                              </a>
-                            </td>
-                            <td className="p-1"><a href={`https://twitter.com/${p.name.replace('@', '')}`} target="_blank">{p.name}</a></td>
-                            <td className="p-3">{p.time}</td>
-                            <td className="p-3">{p.url}</td>
-                          </tr>
-
-                        </>
-                      )
-                    })
-                  }
+                  {result.winners?.map((p) => {
+                    return (
+                      <>
+                        <tr key={p.position}>
+                          <td className="p-3 text-3xl">{p.medal}</td>
+                          <td className="p-3">
+                            <a
+                              href={`https://twitter.com/${p.name.replace(
+                                '@',
+                                ''
+                              )}`}
+                              target="_blank"
+                            >
+                              <img
+                                className="rounded-full max-w-none w-12 h-12"
+                                src={p.propic}
+                                alt="avatar"
+                              />
+                            </a>
+                          </td>
+                          <td className="p-1">
+                            <a
+                              href={`https://twitter.com/${p.name.replace(
+                                '@',
+                                ''
+                              )}`}
+                              target="_blank"
+                            >
+                              {p.name}
+                            </a>
+                          </td>
+                          <td className="p-3">{p.time}</td>
+                          <td className="p-3">{p.url}</td>
+                        </tr>
+                      </>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
@@ -120,9 +139,21 @@ const EreditaScreen = ({ result, stats, tweetsData, errorTweets }) => {
                 return (
                   <div>
                     <div class="flex items-center gap-4 p-4">
-                      <a href={`https://twitter.com/${p.username}`} target="_blank"><img class="w-12 h-12 rounded-full" src={p.propic} /></a>
+                      <a
+                        href={`https://twitter.com/${p.username}`}
+                        target="_blank"
+                      >
+                        <img class="w-12 h-12 rounded-full" src={p.propic} />
+                      </a>
                       <div class="flex flex-col">
-                        <strong class="text-slate-200 text-sm font-medium"><a href={`https://twitter.com/${p.username}`} target="_blank">{p.username}</a></strong>
+                        <strong class="text-slate-200 text-sm font-medium">
+                          <a
+                            href={`https://twitter.com/${p.username}`}
+                            target="_blank"
+                          >
+                            {p.username}
+                          </a>
+                        </strong>
                       </div>
                     </div>
                     <span className="text-white p-6">{p.content}</span>
@@ -148,12 +179,20 @@ const EreditaScreen = ({ result, stats, tweetsData, errorTweets }) => {
             </h5>
             <div className="flex flex-1 justify-center items-end">
               <PieChart width={350} height={300}>
-                <Pie label={renderLabel} data={stats} cx={cx} cy={cy} outerRadius={80} innerRadius={60}>
-                  {
-                    stats.map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))
-                  }
+                <Pie
+                  label={renderLabel}
+                  data={stats}
+                  cx={cx}
+                  cy={cy}
+                  outerRadius={80}
+                  innerRadius={60}
+                >
+                  {stats.map((_, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
                 </Pie>
               </PieChart>
             </div>
@@ -179,7 +218,9 @@ const EreditaScreen = ({ result, stats, tweetsData, errorTweets }) => {
               <hr className="my-3 mx-auto h-1 bg-gray-100 rounded border-0  bg-gray-700" />
             </h5>
             <div className="flex flex-1 justify-center p-5">
-              <WordCloud contentData={tweetsData.map((tweet) => tweet.content)} />
+              <WordCloud
+                contentData={tweetsData.map((tweet) => tweet.content)}
+              />
             </div>
           </div>
         </div>
@@ -189,24 +230,25 @@ const EreditaScreen = ({ result, stats, tweetsData, errorTweets }) => {
 }
 
 const Eredita = () => {
-  const [ereditaResultJson, setEreditaResultJson] = useState(null);
+  const [ereditaResultJson, setEreditaResultJson] = useState(null)
   const [stats, setStats] = useState([
     { name: 'giusti', value: 0 },
-    { name: 'sbagliati', value: 0 }
-  ]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+    { name: 'sbagliati', value: 0 },
+  ])
+  const [selectedDate, setSelectedDate] = useState(new Date())
   const [tweetsData, setTweetsData] = useState([])
   const [errorTweets, setErrorTweets] = useState([])
-  const color = '#ffffff';
-  let images = [];
-  let username = [];
+  const color = '#ffffff'
+  let images = []
+  let username = []
   const format = (myint) => {
     return myint > 9 ? myint : '0' + myint.toString()
   }
 
   function formatDate(mydate) {
-    let formattedDate = `${mydate['$y']}-${parseInt(format(mydate['$M'])) + 1
-      }-${format(mydate['$D'])}`
+    let formattedDate = `${mydate['$y']}-${
+      parseInt(format(mydate['$M'])) + 1
+    }-${format(mydate['$D'])}`
     let start = `${formattedDate}T00:00:00.000Z`
     let end = ''
     let today = new Date()
@@ -236,8 +278,8 @@ const Eredita = () => {
   async function getStats(rightWord) {
     let error = []
     if (checkNullDate(selectedDate)) {
-      let giuste = 0;
-      let sbagliate = 0;
+      let giuste = 0
+      let sbagliate = 0
       let tw = await searchTweets(
         `/tweet`,
         '/hashtag/ghigliottina',
@@ -258,11 +300,11 @@ const Eredita = () => {
             if (rightWord == finalsplit[0]) {
               giuste++
             } else {
-              let w = {};
-              w.username = t.username;
-              w.propic = t.propic;
-              w.content = t.content;
-              error.push(w);
+              let w = {}
+              w.username = t.username
+              w.propic = t.propic
+              w.content = t.content
+              error.push(w)
               sbagliate++
             }
           }
@@ -300,13 +342,16 @@ const Eredita = () => {
             for (let i = 2; i <= 4; i++) {
               let w = {}
               let s = splitted[i].split(' ')
-              w.medal = s[0];
+              w.medal = s[0]
               w.position = i - 1
               w.name = s[1]
               w.time = s[3]
               w.url = ''
               // call endpoint for user info to retrieve user propic
-              let user_info = await getUserInfo('/getUserInfo/', w.name.replace('@', ''));
+              let user_info = await getUserInfo(
+                '/getUserInfo/',
+                w.name.replace('@', '')
+              )
               w.propic = user_info.profile_image_url
               mydata.winners.push(w)
             }
@@ -382,12 +427,18 @@ const Eredita = () => {
             />
           </LocalizationProvider>
         </div>
-        {ereditaResultJson != null ?
-          (<EreditaScreen result={ereditaResultJson} stats={stats} tweetsData={tweetsData} errorTweets={errorTweets} />)
-          : (<h1 className='text-5xl text-center pt-20 pb-5 text-white'>
+        {ereditaResultJson != null ? (
+          <EreditaScreen
+            result={ereditaResultJson}
+            stats={stats}
+            tweetsData={tweetsData}
+            errorTweets={errorTweets}
+          />
+        ) : (
+          <h1 className="text-5xl text-center pt-20 pb-5 text-white">
             Oggi non hanno giocato all'eredita
-          </h1>)
-        }
+          </h1>
+        )}
       </div>
     </>
   )

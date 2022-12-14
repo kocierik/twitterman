@@ -35,8 +35,7 @@ const SearchBar = ({
   }
   const formattedData = () => {
     let today = new Date()
-    if(!compareDates(today, endDate))
-      endDate.setHours(23, 59, 59)
+    if (!compareDates(today, endDate)) endDate.setHours(23, 59, 59)
 
     return `/date/${startDate.toISOString()}/${endDate.toISOString()}`
   }
@@ -70,9 +69,15 @@ const SearchBar = ({
     <form
       style={{ width: '100vh' }}
       className="flex mb-5"
-      onSubmit={async(event) => {
+      onSubmit={async (event) => {
         event.preventDefault()
-        Const.searchTweets(selectValue, textValue, formattedData(), setTweetsData, setTweetsDataFilter);
+        Const.searchTweets(
+          selectValue,
+          textValue,
+          formattedData(),
+          setTweetsData,
+          setTweetsDataFilter
+        )
       }}
     >
       <div id="elements">
