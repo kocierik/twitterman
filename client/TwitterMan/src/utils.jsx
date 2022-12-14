@@ -1,9 +1,9 @@
 export const SERVER_URL = 'http://localhost:8080'
-export const TWEET_KEYWORD = '/tweet/{0}/keyword/{1}'
-export const TWEET_HASHTAG = '/tweet/{0}/hashtag/{1}'
-export const TWEET_USERNAME = '/tweet/{0}/user/{1}'
+export const TWEET_KEYWORD = '/tweet/keyword/{0}'
+export const TWEET_HASHTAG = '/tweet/hashtag/{0}'
+export const TWEET_USERNAME = '/tweet/user/{0}'
 export const TWEET_ID = '/tweet/id/{0}'
-export const TWEET_LOAD = '/tweet/{0}/loadNextPage'
+export const TWEET_LOAD = '/tweet/loadNextPage'
 export const TWEET_SAVE = '/user/folder/{0}/add/{1}'
 export const USER_INFO = '/user'
 export const USER_DELETE = '/user/modify/delete'
@@ -42,14 +42,12 @@ const searchTweets = async (
   selectValue,
   textValue,
   formattedDates,
-  rfp,
   setTweetsData,
   setTweetsDataFiltered
 ) => {
   try {
     const url = stringFormat(
       SERVER_URL + selectValue,
-      rfp,
       textValue + formattedDates
     )
     let res = await fetch(url)

@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import TweetCard from './TweetCard'
 
-const TweetsSection = ({ tweetsDataFiltered, tweetsLen, loadMore, rfp, setRfp }) => {
+const TweetsSection = ({ tweetsDataFiltered, tweetsLen }) => {
   const [currentPage, setCurrentPage] = useState(1)
+  const [rfp, setRfp] = useState(15)
 
   const currentTweets = tweetsDataFiltered.slice(
     rfp * (currentPage - 1),
@@ -10,11 +11,9 @@ const TweetsSection = ({ tweetsDataFiltered, tweetsLen, loadMore, rfp, setRfp })
   )
 
   const changePage = async (newPage) => {
-    let canChangePage = true
-    if (tweetsDataFiltered.length / rfp < newPage) {
-      canChangePage = await loadMore()
-    }
-    if (canChangePage || tweetsDataFiltered.length > rfp * (newPage-1))
+    if (tweetsDataFiltered.length / rfp < newPage)
+      alert("No more tweets to show in the date range selected")
+    else
       setCurrentPage(newPage)
   }
 
@@ -43,8 +42,6 @@ const TweetsSection = ({ tweetsDataFiltered, tweetsLen, loadMore, rfp, setRfp })
 
   const changeRfp = (event) => {
     let rfp = event.target.value
-    if (tweetsDataFiltered.length < rfp) loadMore()
-
     setCurrentPage(Math.min(currentPage, Math.ceil(tweetsDataFiltered.length / rfp)))
     setRfp(rfp)
   }
@@ -52,7 +49,7 @@ const TweetsSection = ({ tweetsDataFiltered, tweetsLen, loadMore, rfp, setRfp })
   return (
     <div>
       <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
-        {currentTweets?.map((tweet, i) => <TweetCard data={tweet} index={tweetsDataFiltered.indexOf(tweet)} key={tweet.id} /> )}
+        {currentTweets?.map((tweet) => <TweetCard data={tweet} key={tweet.id} /> )}
       </div>
 
       <div className="flex justify-center align-baseline mt-5">

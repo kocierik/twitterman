@@ -13,25 +13,24 @@ const Home = () => {
   const [sentimentIcon, setSentimentIcon] = useState(null)
   const [sliderValue, setSliderValue] = useState(null)
   const [frequencyValue, setFrequencyValue] = useState(1440)
-  const [rfp, setRfp] = useState(15)
 
-  const loadMore = async () => {
-    try {
-      const url = Const.stringFormat(Const.SERVER_URL + Const.TWEET_LOAD, rfp)
-      let res = await fetch(url)
-      res = await res.json()
-      if (res) {
-        let sentimentRes = await Const.fetchSentiment(res)
-        setTweetsData((last) => [...last, ...sentimentRes])
-      } else {
-        alert('No more tweets to load')
-        return false
-      }
-    } catch (e) {
-      console.log(e)
-    }
-    return true
-  }
+  // loadMore risulta inutilizzata poichè la ricerca per range di date ritorna tutti i tweet in quel range in una solo richiesta
+
+  // const loadMore = async () => {
+  //   try {
+  //     const url = Const.stringFormat(Const.SERVER_URL + Const.TWEET_LOAD)
+  //     let res = await fetch(url)
+  //     res = await res.json()
+  //     if (res) {
+  //       let sentimentRes = await Const.fetchSentiment(res)
+  //       setTweetsData((last) => [...last, ...sentimentRes])
+  //     } else {
+  //       alert('No more tweets to load')
+  //     }
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
+  // }
 
   const filterSentiment = () => {
     if (sentimentIcon) {
@@ -65,7 +64,6 @@ const Home = () => {
             setSentimentIcon={setSentimentIcon}
             setFrequencyValue={setFrequencyValue}
             setTweetsData={setTweetsData}
-            rfp={rfp}
           />
           {tweetsDataFiltered?.length ? (
             <HideTweets showTweets={showTweets} setShowTweets={setShowTweets} />
@@ -75,9 +73,6 @@ const Home = () => {
           <TweetsSection
             tweetsDataFiltered={tweetsDataFiltered}
             tweetsLen={tweetsDataFiltered.length}
-            loadMore={loadMore}
-            rfp={rfp}
-            setRfp={setRfp}
           />
         ) : null}
       </div>
