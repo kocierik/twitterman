@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import twitterman from '../assets/twitterman.png'
 import { SERVER_URL } from '../utils'
@@ -8,6 +8,7 @@ const Register = ({setIsLogged}) => {
   const username = useRef()
   const password = useRef()
   const navigate = useNavigate()
+  const [showError, setShowError] = useState("")
 
   async function submitRegister(e) {
     e.preventDefault()
@@ -27,7 +28,7 @@ const Register = ({setIsLogged}) => {
       res = await res.json()
 
       if (!res.success) {
-        alert(res.message)
+        setShowError(res.message)
         return
       }
       setIsLogged(true);
@@ -133,6 +134,9 @@ const Register = ({setIsLogged}) => {
                   Sign In
                 </Link>
               </p>
+              {showError && (
+                <p>{showError}</p>
+              )}
             </form>
           </div>
         </div>

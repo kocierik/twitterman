@@ -5,7 +5,7 @@ import TweetCard from '../components/home/TweetCard'
 const searchTweets = async (selectValue, textValue, formattedDates) => {
     let final = null;
     try {
-        let res = await fetch(`${SERVER_URL}${selectValue}90${textValue}${formattedDates}`)
+        let res = await fetch(`${SERVER_URL}${selectValue}${textValue}${formattedDates}`)
         res = await res.json()
         if (!res.message) {
             res.forEach((tw) => {
@@ -35,7 +35,7 @@ function Fantacitorio() {
 
     async function trovaPunti() {
         let final = [];
-        let tw = await searchTweets(`/tweet/`, '/user/fanta_citorio', `/date/${formatDate()}`);
+        let tw = await searchTweets(`/tweet`, '/user/fanta_citorio', `/date/${formatDate()}`);
         for (let t of tw) {
             let splitted = t.content.split("\n")
             for (let s of splitted) {
@@ -71,7 +71,7 @@ function Fantacitorio() {
     }
 
     async function trovaSquadre(){
-        let tw = await searchTweets(`/tweet/`, '/hashtag/fantacitorio', `/date/${formatDate()}`);
+        let tw = await searchTweets(`/tweet`, '/hashtag/fantacitorio', `/date/${formatDate()}`);
         let final = [];
         for(let t of tw){
             if(t.media != null && t.media[0]!= null && t.media[0].width == 1024 && t.media[0].height == 512){

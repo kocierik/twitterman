@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react'
 import ReactWordcloud from 'react-wordcloud'
+import "tippy.js/dist/tippy.css";
+import "tippy.js/animations/scale.css";
 
 const WordCloud = ({ contentData }) => {
 

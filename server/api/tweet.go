@@ -8,6 +8,7 @@ import (
 	"git.hjkl.gq/team7/twitterman/server/utils"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 /*
@@ -26,7 +27,6 @@ example:
 */
 
 func getTweets(c *gin.Context) {
-	maxResults := c.Param("results")
 	mode := c.Param("mode")
 	query := c.Param("query")
 	start, err := time.Parse(time.RFC3339, c.Param("start"))
@@ -54,7 +54,7 @@ func getTweets(c *gin.Context) {
 	}
 
 	// fmt.Println(mode, query, maxResults, start, end)
-	twRet = TwitterApi.GetTwsByQuery(mode, query, maxResults, start, end)
+	twRet = TwitterApi.GetTwsByQuery(mode, query, start, end)
 
 	utils.SendOkResponse(c, twRet)
 }
@@ -67,9 +67,34 @@ func getTweetById(c *gin.Context) {
 	utils.SendOkResponse(c, twRet)
 }
 
-func getUserInfo(c *gin.Context) {
+func getMailFromSession(c *gin.Context) string {
+	token, err := c.Cookie("AUTHTOKEN")
+	if !utils.CheckJWT(token) || err != nil {
+		c.JSON(400, gin.H{
+			"success": false,
+			"message": "token not correct",
+		})
+		return ""
+	}
+
+	var claims utils.JwtClaims
+	_, err = jwt.ParseWithClaims(token, &claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(utils.JwtSecretKey), nil
+	})
+
+	return claims.Email
+}
+
+func getTweetUserInfoByUsername(c *gin.Context) {
 	username := c.Param("username")
-	usr, err := database.GetUserByName(username)
+	twRet := TwitterApi.GetUserInfoByUsername(username)
+
+	utils.SendOkResponse(c, twRet)
+}
+
+func getUserInfo(c *gin.Context) {
+	mail := getMailFromSession(c)
+	usr, err := database.GetUserByEmail(mail)
 
 	if err != nil {
 		utils.SendErrorResponse(c, "Problem fetching the user")
@@ -83,8 +108,7 @@ func getUserInfo(c *gin.Context) {
 Load new different tweets of the last query done
 */
 func getNewPageTweets(c *gin.Context) {
-	maxResults := c.Param("results")
-	ret := TwitterApi.GetNextTokenReq(maxResults)
+	ret := TwitterApi.GetNextTokenReq()
 
 	utils.SendOkResponse(c, ret)
 }
@@ -94,19 +118,19 @@ save tweet into folder
 /user/bob/folder/capperus/add/1245678956
 */
 func saveTweet(c *gin.Context) {
-	name := c.Param("username")
+	mail := getMailFromSession(c)
 	folder := c.Param("folderId")
 	id := c.Param("tweetId")
 
-	database.InsertSavedTweet(name, folder, id)
+	database.InsertSavedTweet(mail, folder, id)
 }
 
 func remSavedTweet(c *gin.Context) {
-	name := c.Param("username")
+	mail := getMailFromSession(c)
 	folder := c.Param("folderId")
 	id := c.Param("tweetId")
 
-	err := database.RemoveSavedTweet(name, folder, id)
+	err := database.RemoveSavedTweet(mail, folder, id)
 	if err != nil {
 		utils.SendErrorResponse(c, "Problem fetching the user")
 		return
@@ -114,8 +138,8 @@ func remSavedTweet(c *gin.Context) {
 }
 
 func getFolders(c *gin.Context) {
-	username := c.Param("username")
-	usr, err := database.GetUserByName(username)
+	mail := getMailFromSession(c)
+	usr, err := database.GetUserByEmail(mail)
 
 	if err != nil {
 		utils.SendErrorResponse(c, "Problem fetching the user")
@@ -126,7 +150,7 @@ func getFolders(c *gin.Context) {
 }
 
 func modifyUser(c *gin.Context) {
-	username := c.Param("username")
+	mail := getMailFromSession(c)
 	action := c.Param("action")
 
 	type RequestBody struct {
@@ -139,26 +163,26 @@ func modifyUser(c *gin.Context) {
 
 	switch action {
 	case "delete":
-		err := database.DeleteUser(username)
+		err := database.DeleteUser(mail)
 		if err != nil {
 			utils.SendErrorResponse(c, "Problem deleting user")
 		}
 	case "update":
 
 		if param.Email != "" {
-			err := database.ChangeField(username, "email", param.Email)
+			err := database.ChangeField(mail, "email", param.Email)
 			if err != nil {
 				utils.SendErrorResponse(c, "Problem changing email")
 			}
 		}
 		if param.Password != "" {
-			err := database.ChangeField(username, "password", param.Password)
+			err := database.ChangeField(mail, "password", param.Password)
 			if err != nil {
 				utils.SendErrorResponse(c, "Problem changing password")
 			}
 		}
 		if param.Username != "" {
-			err := database.ChangeField(username, "username", param.Username)
+			err := database.ChangeField(mail, "username", param.Username)
 			if err != nil {
 				utils.SendErrorResponse(c, "Problem changing username")
 			}

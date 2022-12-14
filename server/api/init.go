@@ -17,17 +17,18 @@ var corsEnabledURLs = []string{
 }
 
 var endpointList = []endpoint{
-	{"/tweet/:results/:mode/:query/date/:start/:end", getTweets, "GET"},
+	{"/tweet/:mode/:query/date/:start/:end", getTweets, "GET"},
 	{"/tweet/id/:query", getTweetById, "GET"},
-	{"/tweet/:results/loadNextPage", getNewPageTweets, "GET"},
-	{"/user/:username/folder/:folderId/add/:tweetId", saveTweet, "POST"},
-	{"/user/:username/folder/:folderId/:tweetId", remSavedTweet, "DELETE"},
-	{"/user/:username/folders", getFolders, "GET"},
-	{"/user/:username", getUserInfo, "GET"},
-	{"/user/:username/modify/:action", modifyUser, "POST"}, // action: delete or update
+	{"/tweet/loadNextPage", getNewPageTweets, "GET"},
+	{"/getUserInfo/:username", getTweetUserInfoByUsername, "GET"},
+	{"/user/folder/:folderId/add/:tweetId", saveTweet, "POST"},
+	{"/user/folder/:folderId/:tweetId", remSavedTweet, "DELETE"},
+	{"/user/folders", getFolders, "GET"},
+	{"/user", getUserInfo, "GET"},
+	{"/user/modify/:action", modifyUser, "POST"}, // action: delete or update
 	{"/login", loginApi, "POST"},
 	{"/register", registerApi, "POST"},
-	{"/is_logged", isLoggedIn, "GET"},
+	{"/isLogged", isLoggedIn, "GET"},
 	{"/logout", logout, "GET"},
 	{"/getmail", getMailFromJwt, "GET"},
 }
