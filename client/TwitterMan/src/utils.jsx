@@ -67,7 +67,16 @@ const searchTweets = async (
       setTweetsData(res)
       setTweetsDataFiltered(res)
     } else {
-      alert('Tweets not found')
+      toast.warn('Tweet not found', {
+        position: 'top-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      })
     }
   } catch (e) {
     console.log(e)

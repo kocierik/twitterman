@@ -16,7 +16,16 @@ const getUserInfo = async (selectValue, textValue) => {
     let res = await fetch(`${SERVER_URL}${selectValue}${textValue}`)
     res = await res.json()
     if (!res) {
-      alert('User info not found')
+      toast.warn('User not found', {
+        position: 'top-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      })
     }
     return res
   } catch (e) {

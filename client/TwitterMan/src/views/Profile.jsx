@@ -79,7 +79,7 @@ const Profile = ({ isLogged }) => {
   }
 
   const deleteFolder = async () => {
-    const res = await fetch(
+    await fetch(
       Const.stringFormat(
         Const.SERVER_URL + Const.DELETE_FOLDER,
         deleteFolderName
