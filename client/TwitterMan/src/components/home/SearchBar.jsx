@@ -17,7 +17,6 @@ const SearchBar = ({
   setSentimentIcon,
   setFrequencyValue,
   setTweetsData,
-  rfp
 }) => {
   const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
   const [selectTimeString, setSelectTimeString] = useState('days')
@@ -73,7 +72,7 @@ const SearchBar = ({
       className="flex mb-5"
       onSubmit={async(event) => {
         event.preventDefault()
-        Const.searchTweets(selectValue, textValue, formattedData(), rfp, setTweetsData, setTweetsDataFilter);
+        Const.searchTweets(selectValue, textValue, formattedData(), setTweetsData, setTweetsDataFilter);
       }}
     >
       <div id="elements">
