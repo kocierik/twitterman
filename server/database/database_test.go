@@ -33,7 +33,7 @@ func TestInsertandGetUser(t *testing.T) {
 	defer Disconnect()
 
 	// It insert the user
-	InsertUser("gianni@gianni", "gianni", "gianni", []utils.TweetsFolder{})
+	InsertUser("gianni@gianni", "gianni", "gianni123A", []utils.TweetsFolder{})
 
 	// It returns an error if the email doesn't exist
 	_, err := GetUserByEmail("no-user-with-this-email")
