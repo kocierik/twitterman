@@ -2,13 +2,15 @@ import React, { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import twitterman from '../assets/twitterman.png'
 import { SERVER_URL } from '../utils'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
-const Register = ({setIsLogged}) => {
+const Register = ({ setIsLogged }) => {
   const email = useRef()
   const username = useRef()
   const password = useRef()
   const navigate = useNavigate()
-  const [showError, setShowError] = useState("")
+  const [showError, setShowError] = useState('')
 
   async function submitRegister(e) {
     e.preventDefault()
@@ -29,9 +31,19 @@ const Register = ({setIsLogged}) => {
 
       if (!res.success) {
         setShowError(res.message)
+        toast.warn(res.message, {
+          position: 'top-center',
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: 'light',
+        })
         return
       }
-      setIsLogged(true);
+      setIsLogged(true)
       navigate('/')
     } catch (e) {
       alert(e)
@@ -56,6 +68,7 @@ const Register = ({setIsLogged}) => {
           />
           TwitterMan
         </a>
+        <ToastContainer />
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -134,9 +147,7 @@ const Register = ({setIsLogged}) => {
                   Sign In
                 </Link>
               </p>
-              {showError && (
-                <p>{showError}</p>
-              )}
+              {/* {showError && <p>{showError}</p>} */}
             </form>
           </div>
         </div>

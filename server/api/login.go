@@ -73,7 +73,7 @@ func registerApi(c *gin.Context) {
 	if len(param.Password) < 8 || !hasUpper || !hasLower || !hasNumber {
 		c.JSON(400, gin.H{
 			"success": false,
-			"message": "password should be at least 8 character, one",
+			"message": "Password should be at least 8 character and should have at least an uppercase letters and a number",
 		})
 		return
 	}
