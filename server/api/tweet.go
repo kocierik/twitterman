@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
@@ -54,9 +55,9 @@ func getTweets(c *gin.Context) {
 		query = "from:" + query
 	}
 
-	// fmt.Println(mode, query, maxResults, start, end)
+	fmt.Println(mode, query, maxResults, start, end)
 	twRet = TwitterApi.GetTwsByQuery(mode, query, maxResults, start, end)
-
+	fmt.Println(twRet)
 	utils.SendOkResponse(c, twRet)
 }
 

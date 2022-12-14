@@ -1,6 +1,7 @@
 package TwitterApi
 
 import (
+	"log"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/database"
@@ -103,9 +104,9 @@ func GetTwsByQuery(mode, query, maxResults string, start, end time.Time) []utils
 	var ret []utils.Tweet
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
 	q := utils.Dict{
-		"query": query, 
-		"max_results": maxResults, 
-		"expansions": expansions,
+		"query":        query,
+		"max_results":  maxResults,
+		"expansions":   expansions,
 		"tweet.fields": tweetsField,
 		"media.fields": mediaField,
 		"user.fields":  userField,
@@ -119,6 +120,7 @@ func GetTwsByQuery(mode, query, maxResults string, start, end time.Time) []utils
 		q["end_time"] = newend.Add(time.Second * time.Duration(-30)).Format(time.RFC3339)
 		body := makeTwitterRequest("GET", endpoint, q)
 		result := utils.UnmarshalToJson[DataTweet](body)
+		log.Println(result)
 		lastRequest = requestStruct{EndPoint: endpoint, Params: q, NextToken: result.Meta.NextToken}
 		ret = castTweetStructToMyTweet(result)
 		// Save new query in cache

@@ -1,21 +1,12 @@
 package api
 
-import (
-	"bytes"
-	"encoding/json"
-	"testing"
-
-	"git.hjkl.gq/team7/twitterman/server/database"
-	"git.hjkl.gq/team7/twitterman/server/utils"
-	"github.com/stretchr/testify/assert"
-)
-
 type register struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 	Username string `json:"username"`
 }
 
+/*
 func TestUpdateUser(t *testing.T) {
 	initApiTest()
 	database.InitDbTest()
@@ -36,3 +27,16 @@ func TestUpdateUser(t *testing.T) {
 
 	sendTestRequest("POST", "/user/testUser/modify/delete", bytes.NewBuffer(nil))
 }
+
+
+func TestGetUserInfo(t *testing.T) {
+	initApiTest()
+	response, res := sendTestRequest("GET", "/user/aodawo", nil)
+
+	tmpMock := `{"message":"Problem fetching the user","success":false}`
+
+	assert.Equal(t, http.StatusBadRequest, res.Code)
+	assert.Equal(t, string(response), tmpMock)
+
+	//TODO: test user esistente
+}*/
