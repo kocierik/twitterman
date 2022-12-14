@@ -31,7 +31,6 @@ func TestDatabaseDisconnect(t *testing.T) {
 
 func TestInsertandGetUser(t *testing.T) {
 	InitDbTest()
-	Connect()
 	defer Disconnect()
 
 	// It insert the user
@@ -60,7 +59,6 @@ func TestInsertandGetUser(t *testing.T) {
 
 func TestFolderUsage(t *testing.T) {
 	InitDbTest()
-	Connect()
 	defer Disconnect()
 	InsertUser("gianni@gianni", "gianni", "gianni123A", []utils.TweetsFolder{})
 
@@ -80,7 +78,6 @@ func TestFolderUsage(t *testing.T) {
 
 func TestGetTweets(t *testing.T) {
 	InitDbTest()
-	Connect()
 	defer Disconnect()
 
 }
