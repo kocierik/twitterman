@@ -32,6 +32,11 @@ function formatDate() {
 function Fantacitorio() {
   const [punteggi, setPunteggi] = useState([]);
   const [squadre, setSquadre] = useState([])
+  
+  const [username, setUsername] = useState("")
+  const squadreFiltered = (username ?
+    squadre.filter((tweet) => tweet.name.toLowerCase().startsWith(username.toLowerCase()))
+    : squadre)
 
   async function trovaPunti() {
     let final = [];
@@ -63,7 +68,6 @@ function Fantacitorio() {
     final = final.sort((a, b) => {
       return a.score < b.score;
     });
-    console.log(final);
     for (let i in final) {
       final[i]["position"] = parseInt(i) + 1;
     }
@@ -78,7 +82,6 @@ function Fantacitorio() {
         final.push(t)
       }
     }
-    console.log(final)
     setSquadre(final);
   }
 
@@ -122,11 +125,19 @@ function Fantacitorio() {
             </tbody>
           </table>
         </div>
-        <div className="text-center">
-          <h3 className='text-3xl text-center pt-20 pb-5'>Squadre registrate</h3>
+        <div className="text-center pt-20 pb-5">
+          <h3 className='text-3xl'>Squadre registrate</h3>
+          <input
+            type="search"
+            onChange={(e) => {
+              setUsername(e.target.value)
+            }}
+            className="my-2 p-2.5 rounded-xl indent-3 z-20 text-sm text-gray-900 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-l-gray-700  border-gray-600 placeholder-gray-400 text-white"
+            placeholder="Cerca un utente..."
+          />
         </div>
-        <div className="box-border m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2">
-          {squadre?.map((tweet) => <TweetCard data={tweet} key={tweet.id} />)}
+        <div className={`box-border m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs ${squadreFiltered.length !== 1 ? "sm:columns-2xs md:columns-2" : ""}`}>
+          {squadreFiltered?.map((tweet) => <TweetCard data={tweet} key={tweet.id} />)}
         </div>
       </div>
     </div>
