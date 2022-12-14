@@ -53,6 +53,9 @@ const Profile = ({ isLogged }) => {
     )
     console.log(res)
     window.location.reload()
+    if (email || password) {
+      await Const.logout()
+    }
     toast.success('user updated!')
   }
 
