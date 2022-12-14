@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import TweetCard from './TweetCard'
 
-const TweetsSection = ({ tweetsDataFiltered, tweetsLen }) => {
+const TweetsSection = ({ tweetsDataFiltered }) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [rfp, setRfp] = useState(15)
 

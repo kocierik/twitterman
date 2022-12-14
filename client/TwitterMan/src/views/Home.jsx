@@ -70,10 +70,7 @@ const Home = () => {
           ) : null}
         </div>
         {showTweets && tweetsDataFiltered?.length ? (
-          <TweetsSection
-            tweetsDataFiltered={tweetsDataFiltered}
-            tweetsLen={tweetsDataFiltered.length}
-          />
+          <TweetsSection tweetsDataFiltered={tweetsDataFiltered} />
         ) : null}
       </div>
 
