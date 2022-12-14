@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
@@ -66,6 +67,7 @@ func TestFolderUsage(t *testing.T) {
 
 	/* Test saving tweet */
 	err = InsertSavedTweet(dmail, testFolder, testTwtId)
+	fmt.Println(err, "siuuu")
 	assert.Equal(t, err, nil)
 
 	/* delete tweet */
