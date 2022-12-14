@@ -1,16 +1,14 @@
-# 1. Base image
-FROM python:latest
-
-WORKDIR /src
-
-# 2. Copy files
-COPY . .
-
+FROM ubuntu:latest
+RUN mkdir app
+WORKDIR /app
+COPY . /app
+RUN apt-get update
+RUN apt-get install curl -y
+RUN apt-get install python3 -y
+RUN apt-get install python3-pip -y
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
-
-RUN pip install --upgrade pip
-# 3. Install dependencies
-RUN pip install -r requirements.txt
-
-ENTRYPOINT [ "python3", "main.py" ]
+RUN pip install -U -r requirements.txt
+EXPOSE 5556
+ENTRYPOINT ["python"]
+CMD ["main.py"]

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"twitterman/utils"
@@ -115,7 +116,7 @@ func Connect() {
 		return
 	}
 	ctx = context.Background()
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	clientOptions := options.Client().ApplyURI(os.Getenv("DATABASE_URL"))
 	client, err = mongo.Connect(ctx, clientOptions)
 	utils.TestError(err, "database.Connect function, new client error")
 }
