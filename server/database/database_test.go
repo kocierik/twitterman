@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"log"
 	"testing"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
@@ -51,6 +52,7 @@ func TestInsertandGetUser(t *testing.T) {
 
 	// It returns the user if the id exist
 	userId, err := GetUserById(userEmail.ID)
+	log.Println(userEmail.ID)
 	utils.TestError(err, "Test GetUserById function error2")
 	assert.Equal(t, userEmail, userId)
 	DeleteUser("gianni@gianni")
