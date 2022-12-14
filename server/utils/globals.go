@@ -12,7 +12,7 @@ const ServerUrl = "localhost"
 const TwitterApi = "https://api.twitter.com/2"
 const ClientUrl = "http://localhost:5173"
 
-var DbUrl = os.Getenv("DATABASE_URL")
+var DbUrl = os.Getenv("DATABASE_URL_GENO")
 
 var Client *http.Client
 
