@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import TweetCard from './TweetCard'
 
 const TweetsSection = ({ tweetsDataFiltered, tweetsLen }) => {
@@ -11,7 +11,7 @@ const TweetsSection = ({ tweetsDataFiltered, tweetsLen }) => {
   )
 
   const changePage = async (newPage) => {
-    if (tweetsDataFiltered.length / rfp < newPage)
+    if (Math.ceil(tweetsDataFiltered.length / rfp) < newPage)
       alert("No more tweets to show in the date range selected")
     else
       setCurrentPage(newPage)
@@ -45,6 +45,10 @@ const TweetsSection = ({ tweetsDataFiltered, tweetsLen }) => {
     setCurrentPage(Math.min(currentPage, Math.ceil(tweetsDataFiltered.length / rfp)))
     setRfp(rfp)
   }
+
+  useEffect(() => {
+    setCurrentPage(Math.min(currentPage, Math.ceil(tweetsDataFiltered.length / rfp)))
+  }, [tweetsDataFiltered])
 
   return (
     <div>
