@@ -19,6 +19,6 @@ venv
 
 server/mongo-seed/tweets-data.json
 server/mongo-seed/user-data.json
-
+client/twitter/node_modules
 sentiment-analysis/Pipfile
 sentiment-analysis/Pipfile.lock

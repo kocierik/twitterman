@@ -93,22 +93,12 @@ func TestDeleteUser(t *testing.T) {
 	database.InsertUser("testUser@sium", "testUser", "testUser12", []utils.TweetsFolder{})
 	database.InsertUser(aldomail, aldoname, aldopsw, []utils.TweetsFolder{})
 	// Test Correct credentials
-	type login struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
-	body := login{
-		Email:    "testUser@sium",
-		Password: "testUser12",
-	}
-
-	bodyMarshaled, err := json.Marshal(body)
-	utils.TestError(err, "(api_test.go) Cannot parse bodyMarshaled1")
-
-	_, res := sendTestRequest("POST", "/login", bytes.NewBuffer(bodyMarshaled))
-	sendTestReqAuth("POST", "/user/modify/delete", bytes.NewBuffer(nil), res.Result().Cookies()[0])
+	cookie := getTestCookie("testUser@sium", "testUser12")
+	sendTestReqAuth("POST", "/user/modify/delete", bytes.NewBuffer(nil), cookie)
 	usr, _ := database.GetUserByName("testUser")
 	assert.Equal(t, usr.Username, "")
 	usr2, _ := database.GetUserByName(aldoname)
 	assert.Equal(t, usr2.Username, aldoname)
+	database.DeleteUser(aldomail)
+
 }

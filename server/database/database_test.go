@@ -33,7 +33,7 @@ func TestInsertandGetUser(t *testing.T) {
 	defer Disconnect()
 
 	// It insert the user
-	InsertUser("gianni@gianni", "gianni", "gianni", []utils.TweetsFolder{})
+	InsertUser("gianni@gianni", "gianni", "gianni123A", []utils.TweetsFolder{})
 
 	// It returns an error if the email doesn't exist
 	_, err := GetUserByEmail("no-user-with-this-email")
@@ -52,23 +52,32 @@ func TestInsertandGetUser(t *testing.T) {
 	userId, err := GetUserById(userEmail.ID)
 	utils.TestError(err, "Test GetUserById function error2")
 	assert.Equal(t, userEmail, userId)
-
 }
 
 func TestFolderUsage(t *testing.T) {
 	InitDbTest()
 	defer Disconnect()
-	InsertUser("gianni@gianni", "gianni", "gianni123A", []utils.TweetsFolder{})
+	const dname = "dummy"
+	const dmail = "dummy@dummy"
+	const dpsw = "dummyDummy1"
+	err := InsertUser(dname, dmail, dpsw, []utils.TweetsFolder{})
+	assert.Equal(t, err, nil)
 
 	/* Test saving tweet */
-	err := InsertSavedTweet(testMail, testFolder, testTwtId)
+	err = InsertSavedTweet(dmail, testFolder, testTwtId)
 	assert.Equal(t, err, nil)
 
 	/* delete tweet */
-	err = RemoveSavedTweet(testMail, testFolder, testTwtId)
+	err = RemoveSavedTweet(dmail, testFolder, testTwtId)
 	assert.Equal(t, err, nil)
 
 	/* delete folder*/
-	err = DeleteFolder(testMail, testFolder)
+	err = DeleteFolder(dmail, testFolder)
 	assert.Equal(t, err, nil)
+}
+
+func TestGetTweets(t *testing.T) {
+	InitDbTest()
+	defer Disconnect()
+
 }

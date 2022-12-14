@@ -1,8 +1,11 @@
 package api
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,6 +13,24 @@ import (
 	"git.hjkl.gq/team7/twitterman/server/utils"
 	"github.com/stretchr/testify/assert"
 )
+
+func getTestCookie(email string, password string) *http.Cookie {
+	type login struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	body := login{
+		Email:    email,
+		Password: password,
+	}
+
+	bodyMarshaled, err := json.Marshal(body)
+	utils.TestError(err, "(api_test.go) Cannot parse bodyMarshaled1")
+
+	_, res := sendTestRequest("POST", "/login", bytes.NewBuffer(bodyMarshaled))
+	return res.Result().Cookies()[0]
+
+}
 
 func sendTestReqAuth(method, url string, body io.Reader, cookie *http.Cookie) ([]byte, *httptest.ResponseRecorder) {
 	req, _ := http.NewRequest(method, url, body)
@@ -32,20 +53,20 @@ func sendTestRequest(method, url string, body io.Reader) ([]byte, *httptest.Resp
 
 func TestGetTweetById(t *testing.T) {
 	initApiTest()
-	response, res := sendTestRequest("GET", "/tweet/id/1581295611013320706", nil)
+	response, res := sendTestRequest("GET", "/tweet/id/1602802989407899648", nil)
 
 	mockResponse := `[
 		{
-			"id": "1581295611013320706",
-			"name": "team7",
-			"propic": "https://pbs.twimg.com/profile_images/1581295877624369152/p6aLdDNO_normal.jpg",
-			"timestamp": "2022-10-15T14:47:07.000Z",
-			"content": "#swetesting prova primo tweet",
-			"username": "team7test",
+			"id": "1602802989407899648",
+			"name": "",
+			"propic": "",
+			"timestamp": "",
+			"content": "Attenzione, forse i vecchi non vanno bene per test",
+			"username": "",
 			"public_metrics": {
 				"retweet_count": 0,
 				"reply_count": 0,
-				"like_count": 1,
+				"like_count": 0,
 				"quote_count": 0
 			},
 			"media": null,
@@ -66,16 +87,15 @@ func TestGetTweetById(t *testing.T) {
 
 func TestGetTweetsByHashtag(t *testing.T) {
 	initApiTest()
-	sendTestRequest("GET", "/tweet/id/1598367424365137934", nil)
-	response, res := sendTestRequest("GET", "/tweet/hashtag/estremamentespecifico/date/2022-11-25T20:39:08.913Z/2022-12-02T22:59:59.914Z", nil)
-
+	response, res := sendTestRequest("GET", "/tweet/hashtag/mannaggiaallamonetizzazione/date/2022-12-13T12:15:53.000Z/2022-12-14T00:35:36.000Z", nil)
+	log.Println(res)
 	mockResponse := `[
 		{
-			"id": "1598367424365137934",
+			"id": "1602803405940232192",
 			"name": "team7",
 			"propic": "https://pbs.twimg.com/profile_images/1581295877624369152/p6aLdDNO_normal.jpg",
-			"timestamp": "2022-12-01T17:24:24.000Z",
-			"content": "ciao pisquani\n\n#estremamentespecifico",
+			"timestamp": "2022-12-13T23:11:25.000Z",
+			"content": "Confermato, le test request si arrabbiano #mannaggiaallamonetizzazione",
 			"username": "team7test",
 			"public_metrics": {
 				"retweet_count": 0,
@@ -101,16 +121,55 @@ func TestGetTweetsByHashtag(t *testing.T) {
 
 func TestGetTweetsByUsername(t *testing.T) {
 	initApiTest()
-	sendTestRequest("GET", "/tweet/id/1598367424365137934", nil)
-	response, res := sendTestRequest("GET", "/tweet/user/team7test/date/2022-11-29T00:00:00.000Z/2022-12-30T00:00:00.000Z", nil)
+	response, res := sendTestRequest("GET", "/tweet/user/team7test/date/2022-12-13T12:15:53.000Z/2022-12-14T00:35:36.000Z", nil)
 
 	mockResponse := `[
 		{
-			"id": "1598367424365137934",
+			"id": "1602810191078215681",
 			"name": "team7",
 			"propic": "https://pbs.twimg.com/profile_images/1581295877624369152/p6aLdDNO_normal.jpg",
-			"timestamp": "2022-12-01T17:24:24.000Z",
-			"content": "ciao pisquani\n\n#estremamentespecifico",
+			"timestamp": "2022-12-13T23:38:22.000Z",
+			"content": "#oddashtag\n\ntwitter dai devo fare il progetto pls",
+			"username": "team7test",
+			"public_metrics": {
+				"retweet_count": 0,
+				"reply_count": 0,
+				"like_count": 0,
+				"quote_count": 0
+			},
+			"media": null,
+			"geo": {
+				"id": "",
+				"full_name": "",
+				"coordinates": null
+			}
+		},
+		{
+			"id": "1602803405940232192",
+			"name": "team7",
+			"propic": "https://pbs.twimg.com/profile_images/1581295877624369152/p6aLdDNO_normal.jpg",
+			"timestamp": "2022-12-13T23:11:25.000Z",
+			"content": "Confermato, le test request si arrabbiano #mannaggiaallamonetizzazione",
+			"username": "team7test",
+			"public_metrics": {
+				"retweet_count": 0,
+				"reply_count": 0,
+				"like_count": 0,
+				"quote_count": 0
+			},
+			"media": null,
+			"geo": {
+				"id": "",
+				"full_name": "",
+				"coordinates": null
+			}
+		},
+		{
+			"id": "1602802989407899648",
+			"name": "team7",
+			"propic": "https://pbs.twimg.com/profile_images/1581295877624369152/p6aLdDNO_normal.jpg",
+			"timestamp": "2022-12-13T23:09:45.000Z",
+			"content": "Attenzione, forse i vecchi non vanno bene per test",
 			"username": "team7test",
 			"public_metrics": {
 				"retweet_count": 0,
@@ -159,18 +218,6 @@ func TestInvalidMode(t *testing.T) {
 
 	assert.Equal(t, http.StatusBadRequest, res.Code)
 	assert.Equal(t, string(response), mockResponse)
-}
-
-func TestGetUserInfo(t *testing.T) {
-	initApiTest()
-	response, res := sendTestRequest("GET", "/user/aodawo", nil)
-
-	tmpMock := `{"message":"Problem fetching the user","success":false}`
-
-	assert.Equal(t, http.StatusBadRequest, res.Code)
-	assert.Equal(t, string(response), tmpMock)
-
-	//TODO: test user esistente
 }
 
 // func TestLoadMore(t *testing.T) {
