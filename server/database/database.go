@@ -90,7 +90,7 @@ func GetTweetsByKeyword(keyword string, start, end time.Time) []utils.Tweet {
 	return binded
 }
 
-func InsertUser(email, username, password string, tweetsFolder []utils.TweetsFolder) error {
+func InsertUser(email string, username string, password string, tweetsFolder []utils.TweetsFolder) error {
 	user := utils.User{
 		Email:        email,
 		Username:     username,

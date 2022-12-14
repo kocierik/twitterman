@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
@@ -186,11 +187,14 @@ func modifyUser(c *gin.Context) {
 
 		if param.Email != "" {
 			err := database.ChangeField(mail, "email", param.Email)
+			mail = param.Email
+
 			if err != nil {
 				utils.SendErrorResponse(c, "Problem changing email")
 			}
 		}
 		if param.Password != "" {
+			fmt.Println(mail)
 			err := database.ChangeField(mail, "password", param.Password)
 			if err != nil {
 				utils.SendErrorResponse(c, "Problem changing password")

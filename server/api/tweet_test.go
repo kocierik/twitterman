@@ -1,6 +1,8 @@
 package api
 
 import (
+	"bytes"
+	"encoding/json"
 	"io"
 	"io/ioutil"
 	"log"
@@ -11,6 +13,24 @@ import (
 	"git.hjkl.gq/team7/twitterman/server/utils"
 	"github.com/stretchr/testify/assert"
 )
+
+func getTestCookie(email string, password string) *http.Cookie {
+	type login struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	body := login{
+		Email:    email,
+		Password: password,
+	}
+
+	bodyMarshaled, err := json.Marshal(body)
+	utils.TestError(err, "(api_test.go) Cannot parse bodyMarshaled1")
+
+	_, res := sendTestRequest("POST", "/login", bytes.NewBuffer(bodyMarshaled))
+	return res.Result().Cookies()[0]
+
+}
 
 func sendTestReqAuth(method, url string, body io.Reader, cookie *http.Cookie) ([]byte, *httptest.ResponseRecorder) {
 	req, _ := http.NewRequest(method, url, body)
