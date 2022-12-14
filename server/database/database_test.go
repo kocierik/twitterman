@@ -58,6 +58,7 @@ func TestInsertandGetUser(t *testing.T) {
 
 func TestFolderUsage(t *testing.T) {
 	InitDbTest()
+	Connect()
 	defer Disconnect()
 	InsertUser("gianni@gianni", "gianni", "gianni123A", []utils.TweetsFolder{})
 
