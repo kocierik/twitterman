@@ -19,9 +19,8 @@ var corsEnabledURLs = []string{
 var endpointList = []endpoint{
 	{"/tweet/:mode/:query/date/:start/:end", getTweets, "GET"},
 	{"/tweet/id/:query", getTweetById, "GET"},
-	// {"/tweet/:results/loadNextPage", getNewPageTweets, "GET"},
 	{"/tweet/loadNextPage", getNewPageTweets, "GET"},
-	// {"/getUserInfo/:username", getTweetUserInfoByUsername, "GET"},
+	{"/getUserInfo/:username", getTweetUserInfoByUsername, "GET"},
 	{"/user/folder/:folderId/add/:tweetId", saveTweet, "POST"},
 	{"/user/folder/:folderId/:tweetId", remSavedTweet, "DELETE"},
 	{"/user/folder/delete/:folderId", deleteFolder, "POST"},
