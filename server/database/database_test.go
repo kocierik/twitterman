@@ -72,10 +72,14 @@ func TestFolderUsage(t *testing.T) {
 
 	/* delete tweet */
 	err = RemoveSavedTweet(dmail, testFolder, testTwtId)
+	fmt.Println(err, "siuuu 2")
+
 	assert.Equal(t, err, nil)
 
 	/* delete folder*/
 	err = DeleteFolder(dmail, testFolder)
+	fmt.Println(err, "siuuu 3")
+
 	assert.Equal(t, err, nil)
 }
 
