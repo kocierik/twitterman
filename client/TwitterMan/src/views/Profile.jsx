@@ -39,43 +39,21 @@ const Profile = ({ isLogged }) => {
   }
 
   const updateAccount = async () => {
-    if (email) {
-      const res = await fetch(
-        Const.stringFormat(Const.SERVER_URL + Const.USER_MODIFY, 'email'),
-        {
-          method: 'POST',
-          credentials: 'include',
-          body: { email: email },
-        }
-      )
-      console.log(res)
-      window.location.reload()
-      toast.success('folder created succesfully!')
-    }
-    if (password) {
-      const res = await fetch(
-        Const.stringFormat(Const.SERVER_URL + Const.USER_MODIFY, 'password'),
-        {
-          method: 'POST',
-          credentials: 'include',
-          body: { password: password },
-        }
-      )
-      console.log(res)
-      window.location.reload()
-      toast.success('folder created succesfully!')
-    }
-    if (username) {
-      const res = await fetch(
-        Const.stringFormat(Const.SERVER_URL + Const.USER_MODIFY, 'username'),
-        {
-          method: 'POST',
-          credentials: 'include',
-          body: { username: username },
-        }
-      )
-      toast.success('Profile updated succesfully!')
-    }
+    const res = await fetch(
+      Const.stringFormat(Const.SERVER_URL + Const.USER_MODIFY, 'update'),
+      {
+        method: 'POST',
+        credentials: 'include',
+        body: JSON.stringify({
+          email: email,
+          password: password,
+          username: username,
+        }),
+      }
+    )
+    console.log(res)
+    window.location.reload()
+    toast.success('user updated!')
   }
 
   const deleteFolder = async () => {
@@ -185,6 +163,7 @@ const Profile = ({ isLogged }) => {
                     >
                       <div className="flex justify-around	 "> Email:</div>
                       <input
+                        defaultValue={user?.email}
                         onChange={(value) => {
                           setEmail(value.target.value)
                         }}
@@ -195,6 +174,7 @@ const Profile = ({ isLogged }) => {
                     <div className="flex flex-1 justify-center p-5">
                       <div className="flex mr-5">Username:</div>
                       <input
+                        defaultValue={user?.username}
                         onChange={(value) => {
                           setUsername(value.target.value)
                         }}
@@ -205,6 +185,7 @@ const Profile = ({ isLogged }) => {
                     <div className="flex flex-1 justify-center p-5">
                       <div className="flex mr-5">Password:</div>
                       <input
+                        defaultValue={user?.password}
                         onChange={(value) => {
                           setPassword(value.target.value)
                         }}
