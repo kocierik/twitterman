@@ -111,4 +111,6 @@ func TestDeleteUser(t *testing.T) {
 	assert.Equal(t, usr.Username, "")
 	usr2, _ := database.GetUserByName(aldoname)
 	assert.Equal(t, usr2.Username, aldoname)
+	database.DeleteUser(aldomail)
+
 }

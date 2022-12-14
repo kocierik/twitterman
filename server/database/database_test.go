@@ -52,7 +52,7 @@ func TestInsertandGetUser(t *testing.T) {
 	userId, err := GetUserById(userEmail.ID)
 	utils.TestError(err, "Test GetUserById function error2")
 	assert.Equal(t, userEmail, userId)
-
+	DeleteUser("gianni@gianni")
 }
 
 func TestFolderUsage(t *testing.T) {
@@ -71,4 +71,5 @@ func TestFolderUsage(t *testing.T) {
 	/* delete folder*/
 	err = DeleteFolder(testMail, testFolder)
 	assert.Equal(t, err, nil)
+	DeleteUser("gianni@gianni")
 }
