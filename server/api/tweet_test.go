@@ -67,7 +67,7 @@ func TestGetTweetById(t *testing.T) {
 func TestGetTweetsByHashtag(t *testing.T) {
 	initApiTest()
 	sendTestRequest("GET", "/tweet/id/1598367424365137934", nil)
-	response, res := sendTestRequest("GET", "/tweet/15/hashtag/estremamentespecifico/date/2022-11-25T20:39:08.913Z/2022-12-02T22:59:59.914Z", nil)
+	response, res := sendTestRequest("GET", "/tweet/hashtag/estremamentespecifico/date/2022-11-25T20:39:08.913Z/2022-12-02T22:59:59.914Z", nil)
 
 	mockResponse := `[
 		{
@@ -102,7 +102,7 @@ func TestGetTweetsByHashtag(t *testing.T) {
 func TestGetTweetsByUsername(t *testing.T) {
 	initApiTest()
 	sendTestRequest("GET", "/tweet/id/1598367424365137934", nil)
-	response, res := sendTestRequest("GET", "/tweet/15/user/team7test/date/2022-11-29T00:00:00.000Z/2022-12-30T00:00:00.000Z", nil)
+	response, res := sendTestRequest("GET", "/tweet/user/team7test/date/2022-11-29T00:00:00.000Z/2022-12-30T00:00:00.000Z", nil)
 
 	mockResponse := `[
 		{
@@ -136,14 +136,14 @@ func TestGetTweetsByUsername(t *testing.T) {
 
 func TestDateTime(t *testing.T) {
 	initApiTest()
-	response, res := sendTestRequest("GET", "/tweet/15/hashtag/bella/date/2022-11-25T20:39:08.913aZ/2022-12-02T22:59:59.914Z", nil)
+	response, res := sendTestRequest("GET", "/tweet/hashtag/bella/date/2022-11-25T20:39:08.913aZ/2022-12-02T22:59:59.914Z", nil)
 
 	mockResponse := `{"message":"start date format wrong","success":false}`
 
 	assert.Equal(t, http.StatusBadRequest, res.Code)
 	assert.Equal(t, string(response), mockResponse)
 
-	response, res = sendTestRequest("GET", "/tweet/15/hashtag/bella/date/2022-11-25T20:39:08.913Z/2022-12-02T22:5A9:59.914Z", nil)
+	response, res = sendTestRequest("GET", "/tweet/hashtag/bella/date/2022-11-25T20:39:08.913Z/2022-12-02T22:5A9:59.914Z", nil)
 
 	mockResponse = `{"message":"end date format wrong","success":false}`
 
@@ -153,7 +153,7 @@ func TestDateTime(t *testing.T) {
 
 func TestInvalidMode(t *testing.T) {
 	initApiTest()
-	response, res := sendTestRequest("GET", "/tweet/15/hasahtag/bella/date/2022-11-25T20:39:08.913Z/2022-12-02T22:59:59.914Z", nil)
+	response, res := sendTestRequest("GET", "/tweet/hasahtag/bella/date/2022-11-25T20:39:08.913Z/2022-12-02T22:59:59.914Z", nil)
 
 	mockResponse := `{"message":"invalid mode: hashtag, keyword, user and id permitted","success":false}`
 
@@ -177,10 +177,10 @@ func TestGetUserInfo(t *testing.T) {
 // 	initApiTest()
 // 	var response []byte
 
-// 	_, res := sendTestRequest("GET", "/tweet/10/user/giorgiameloni/date/2022-12-03T10:11:05.787Z/2022-12-10T10:11:05.787Z", nil)
+// 	_, res := sendTestRequest("GET", "/tweet/user/giorgiameloni/date/2022-12-03T10:11:05.787Z/2022-12-10T10:11:05.787Z", nil)
 // 	assert.Equal(t, http.StatusOK, res.Code)
 
-// 	response, res = sendTestRequest("GET", "/tweet/10/loadNextPage", nil)
+// 	response, res = sendTestRequest("GET", "/tweet/loadNextPage", nil)
 
 // 	tmpMock := `[
 // 		{

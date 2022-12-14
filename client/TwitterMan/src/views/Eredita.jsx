@@ -27,8 +27,9 @@ const getUserInfo = async (selectValue, textValue) => {
 const searchTweets = async (selectValue, textValue, formattedDates) => {
   let final = null
   try {
+    console.log(`${SERVER_URL}${selectValue}${textValue}${formattedDates}`)
     let res = await fetch(
-      `${SERVER_URL}${selectValue}90${textValue}${formattedDates}`
+      `${SERVER_URL}${selectValue}${textValue}${formattedDates}`
     )
     res = await res.json()
     if (!res.message) {
@@ -280,7 +281,7 @@ const Eredita = () => {
       let giuste = 0
       let sbagliate = 0
       let tw = await searchTweets(
-        `/tweet/`,
+        `/tweet`,
         '/hashtag/ghigliottina',
         `/date/${formatDate(selectedDate)}`
       )
@@ -321,7 +322,7 @@ const Eredita = () => {
     let mydata = null
     if (checkNullDate(selectedDate)) {
       let tw = await searchTweets(
-        `/tweet/`,
+        `/tweet`,
         '/user/quizzettone',
         `/date/${formatDate(selectedDate)}`
       )

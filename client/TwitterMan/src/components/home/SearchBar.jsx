@@ -17,7 +17,6 @@ const SearchBar = ({
   setSentimentIcon,
   setFrequencyValue,
   setTweetsData,
-  rfp,
 }) => {
   const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
   const [selectTimeString, setSelectTimeString] = useState('days')
@@ -76,7 +75,6 @@ const SearchBar = ({
           selectValue,
           textValue,
           formattedData(),
-          rfp,
           setTweetsData,
           setTweetsDataFilter
         )
