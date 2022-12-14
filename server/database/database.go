@@ -90,14 +90,14 @@ func GetTweetsByKeyword(keyword string, start, end time.Time) []utils.Tweet {
 	return binded
 }
 
-func InsertUser(email, username, password string, tweetsFolder []utils.TweetsFolder) {
+func InsertUser(email, username, password string, tweetsFolder []utils.TweetsFolder) error {
 	user := utils.User{
 		Email:        email,
 		Username:     username,
 		Password:     password,
 		SavedFolders: tweetsFolder,
 	}
-	insert(user, "Users")
+	return insert(user, "Users")
 }
 
 func InsertTweetList(twts []utils.Tweet) {
@@ -194,7 +194,7 @@ func find(query interface{}, collection string) *mongo.Cursor {
 	return cursor
 }
 
-func insert[T queryTypeInterface](query T, collection string) {
+func insert[T queryTypeInterface](query T, collection string) error {
 	var updateQuery bson.M
 	switch collection {
 	case "Tweets":
@@ -204,7 +204,7 @@ func insert[T queryTypeInterface](query T, collection string) {
 	default:
 		updateQuery = bson.M{}
 	}
-	insertMode(updateQuery, bson.M{"$set": query}, collection)
+	return insertMode(updateQuery, bson.M{"$set": query}, collection)
 }
 
 func insertMode(updateQuery primitive.M, query primitive.M, collection string) error {

@@ -61,10 +61,11 @@ func TestFolderUsage(t *testing.T) {
 	const dname = "dummy"
 	const dmail = "dummy@dummy"
 	const dpsw = "dummyDummy1"
-	InsertUser(dname, dmail, dpsw, []utils.TweetsFolder{})
+	err := InsertUser(dname, dmail, dpsw, []utils.TweetsFolder{})
+	assert.Equal(t, err, nil)
 
 	/* Test saving tweet */
-	err := InsertSavedTweet(dmail, testFolder, testTwtId)
+	err = InsertSavedTweet(dmail, testFolder, testTwtId)
 	assert.Equal(t, err, nil)
 
 	/* delete tweet */
@@ -74,7 +75,6 @@ func TestFolderUsage(t *testing.T) {
 	/* delete folder*/
 	err = DeleteFolder(dmail, testFolder)
 	assert.Equal(t, err, nil)
-	//DeleteUser("gianni@gianni")
 }
 
 func TestGetTweets(t *testing.T) {
