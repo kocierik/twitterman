@@ -15,6 +15,10 @@ const Profile = ({ isLogged }) => {
   const [showDeleteFolderName, setShowDeleteFolderName] = useState(false)
   const [newFolderName, setNewFolderName] = useState('')
   const [deleteFolderName, setDeleteFolderName] = useState('')
+  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -30,9 +34,48 @@ const Profile = ({ isLogged }) => {
         body: '{}',
       }
     )
-    console.log(res)
     window.location.reload()
     toast.success('folder created succesfully!')
+  }
+
+  const updateAccount = async () => {
+    if (email) {
+      const res = await fetch(
+        Const.stringFormat(Const.SERVER_URL + Const.USER_MODIFY, 'email'),
+        {
+          method: 'POST',
+          credentials: 'include',
+          body: { email: email },
+        }
+      )
+      console.log(res)
+      window.location.reload()
+      toast.success('folder created succesfully!')
+    }
+    if (password) {
+      const res = await fetch(
+        Const.stringFormat(Const.SERVER_URL + Const.USER_MODIFY, 'password'),
+        {
+          method: 'POST',
+          credentials: 'include',
+          body: { password: password },
+        }
+      )
+      console.log(res)
+      window.location.reload()
+      toast.success('folder created succesfully!')
+    }
+    if (username) {
+      const res = await fetch(
+        Const.stringFormat(Const.SERVER_URL + Const.USER_MODIFY, 'username'),
+        {
+          method: 'POST',
+          credentials: 'include',
+          body: { username: username },
+        }
+      )
+      toast.success('Profile updated succesfully!')
+    }
   }
 
   const deleteFolder = async () => {
@@ -47,7 +90,6 @@ const Profile = ({ isLogged }) => {
         credentials: 'include',
       }
     )
-    console.log(res)
     window.location.reload()
     toast.success('folder deleted succesfully!')
   }
@@ -132,14 +174,50 @@ const Profile = ({ isLogged }) => {
                       d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     ></path>
                   </svg>
-                  <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                    Are you sure you want to delete your account?
-                  </h3>
+
+                  <div className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                    <h1 className="text-white-800 font-xl font-bold tracking-normal leading-tight mb-4">
+                      Update Profile
+                    </h1>
+                    <div
+                      style={{ justifyContent: 'space-around' }}
+                      className="flex  p-5"
+                    >
+                      <div className="flex justify-around	 "> Email:</div>
+                      <input
+                        onChange={(value) => {
+                          setEmail(value.target.value)
+                        }}
+                        className="rounded cursor-pointer px-3 bg-gray-100 border border-gray-300  focus:outline-none  bg-gray-700  border-gray-600  "
+                        type="text"
+                      />
+                    </div>
+                    <div className="flex flex-1 justify-center p-5">
+                      <div className="flex mr-5">Username:</div>
+                      <input
+                        onChange={(value) => {
+                          setUsername(value.target.value)
+                        }}
+                        className="rounded cursor-pointer px-3 bg-gray-100 border border-gray-300  focus:outline-none  bg-gray-700  border-gray-600  "
+                        type="text"
+                      />
+                    </div>
+                    <div className="flex flex-1 justify-center p-5">
+                      <div className="flex mr-5">Password:</div>
+                      <input
+                        onChange={(value) => {
+                          setPassword(value.target.value)
+                        }}
+                        className="rounded cursor-pointer px-3 bg-gray-100 border border-gray-300  focus:outline-none  bg-gray-700  border-gray-600  "
+                        type="password"
+                      />
+                    </div>
+                  </div>
                   <button
                     data-modal-toggle="popup-modal"
                     type="button"
                     className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
-                    onClick={() => deleteAccount()}
+                    onClick={async () => await updateAccount()}
                   >
                     Yes, I'm sure
                   </button>
