@@ -41,7 +41,8 @@ const Profile = ({ isLogged }) => {
         deleteFolderName
       ),
       {
-        method: 'DELETE',
+        method: 'POST',
+        body: {},
         credentials: 'include',
       }
     )
