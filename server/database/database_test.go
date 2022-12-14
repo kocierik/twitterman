@@ -30,6 +30,7 @@ func TestDatabaseDisconnect(t *testing.T) {
 
 func TestInsertandGetUser(t *testing.T) {
 	InitDbTest()
+	Connect()
 	defer Disconnect()
 
 	// It insert the user
