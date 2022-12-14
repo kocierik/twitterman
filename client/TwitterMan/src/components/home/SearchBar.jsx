@@ -116,7 +116,7 @@ const SearchBar = ({
           onChange={(e) => {
             setTextValue(e.target.value)
           }}
-          className="block p-2.5 rounded-xl	indent-3 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-l-gray-700  border-gray-600 placeholder-gray-400 text-white focus:border-blue-500"
+          className="block p-2.5 rounded-xl	indent-3 w-full z-20 text-sm text-gray-900 rounded-r-lg border-l-gray-50 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 bg-gray-700 border-l-gray-700  border-gray-600 placeholder-gray-400 text-white"
           placeholder="Search on twitterMan..."
           required
         />
