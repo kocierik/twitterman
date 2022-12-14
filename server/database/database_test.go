@@ -77,3 +77,10 @@ func TestFolderUsage(t *testing.T) {
 	assert.Equal(t, err, nil)
 	DeleteUser("gianni@gianni")
 }
+
+func TestGetTweets(t *testing.T) {
+	InitDbTest()
+	Connect()
+	defer Disconnect()
+
+}
