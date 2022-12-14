@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"testing"
+	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
 	"github.com/go-playground/assert/v2"
@@ -80,4 +81,36 @@ func TestGetTweets(t *testing.T) {
 	InitDbTest()
 	defer Disconnect()
 
+	var testTwt = utils.Tweet{
+		TwitterId: "1602802989407899648",
+		Name:      "team7",
+		Propic:    "https://pbs.twimg.com/profile_images/1581295877624369152/p6aLdDNO_normal.jpg",
+		Timestamp: "2022-12-13T23:09:45.000Z",
+		Content:   "Attenzione, forse i vecchi non vanno bene per test",
+		Username:  "team7test",
+		PublicMetrics: utils.PublicMetrics{
+			RetweetCount: 0,
+			ReplyCount:   0,
+			LikeCount:    0,
+			QuoteCount:   0,
+		},
+		Media: nil,
+		Geo: utils.GeoPosition{
+			Id:     "",
+			Name:   "",
+			Coords: nil,
+		},
+	}
+
+	var twtList = []utils.Tweet{testTwt}
+
+	InsertTweetList(twtList)
+
+	twt := GetTweetsByTwitterId("1602802989407899648")
+	assert.Equal(t, twtList, twt)
+
+	start, _ := time.Parse(time.RFC3339, "2022-12-13T23:00:45.000Z")
+	end, _ := time.Parse(time.RFC3339, "2022-12-13T23:19:45.000Z")
+	twt = GetTweetsByUsername("team7test", start, end)
+	assert.Equal(t, twtList, twt)
 }
