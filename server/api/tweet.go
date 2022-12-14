@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/TwitterApi"
@@ -28,7 +27,6 @@ example:
 */
 
 func getTweets(c *gin.Context) {
-	maxResults := c.Param("results")
 	mode := c.Param("mode")
 	query := c.Param("query")
 	start, err := time.Parse(time.RFC3339, c.Param("start"))
@@ -55,9 +53,9 @@ func getTweets(c *gin.Context) {
 		query = "from:" + query
 	}
 
-	fmt.Println(mode, query, maxResults, start, end)
-	twRet = TwitterApi.GetTwsByQuery(mode, query, maxResults, start, end)
-	fmt.Println(twRet)
+	// fmt.Println(mode, query, maxResults, start, end)
+	twRet = TwitterApi.GetTwsByQuery(mode, query, start, end)
+
 	utils.SendOkResponse(c, twRet)
 }
 
@@ -103,8 +101,7 @@ func getUserInfo(c *gin.Context) {
 Load new different tweets of the last query done
 */
 func getNewPageTweets(c *gin.Context) {
-	maxResults := c.Param("results")
-	ret := TwitterApi.GetNextTokenReq(maxResults)
+	ret := TwitterApi.GetNextTokenReq()
 
 	utils.SendOkResponse(c, ret)
 }

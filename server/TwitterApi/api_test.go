@@ -49,7 +49,7 @@ func TestRecentTweets(t *testing.T) {
 	utils.InitHttpClient()
 	end := time.Now()
 	start := end.AddDate(0, 0, -9)
-	twRet := GetTwsByQuery("hashtag", "#worldcup", "15", start, end)
+	twRet := GetTwsByQuery("hashtag", "#worldcup", start, end)
 
 	assert.NotEqual(t, twRet, nil)
 }
@@ -60,7 +60,7 @@ func TestGetTwsByHashtag(t *testing.T) {
 	utils.InitHttpClient()
 	start, _ := time.Parse(time.RFC3339, "2022-11-26T00:00:00.000Z")
 	end, _ := time.Parse(time.RFC3339, "2022-12-03T00:00:00.000Z")
-	twRet := GetTwsByQuery("hashtag", "#estremamentespecifico", "15", start, end)
+	twRet := GetTwsByQuery("hashtag", "#estremamentespecifico", start, end)
 
 	mockResponse := `[
 		{
@@ -96,7 +96,7 @@ func TestGetTwsByKeyword(t *testing.T) {
 	utils.InitHttpClient()
 	start, _ := time.Parse(time.RFC3339, "2022-11-26T00:00:00.000Z")
 	end, _ := time.Parse(time.RFC3339, "2022-12-03T00:00:00.000Z")
-	twRet := GetTwsByQuery("keyword", "estremamentespecifico", "15", start, end)
+	twRet := GetTwsByQuery("keyword", "estremamentespecifico", start, end)
 
 	mockResponse := `[
 		{
@@ -132,7 +132,7 @@ func TestGetTwsByUsername(t *testing.T) {
 	utils.InitHttpClient()
 	start, _ := time.Parse(time.RFC3339, "2022-11-19T00:00:00.000Z")
 	end, _ := time.Parse(time.RFC3339, "2022-11-19T16:00:00.000Z")
-	twRet := GetTwsByQuery("user", "from:team7test", "15", start, end)
+	twRet := GetTwsByQuery("user", "from:team7test", start, end)
 
 	mockResponse := `[
 		{
@@ -252,9 +252,9 @@ func TestCaster(t *testing.T) {
 
 // 	start, _ := time.Parse(time.RFC3339, "2022-12-03T10:00:00.000Z")
 // 	end, _ := time.Parse(time.RFC3339, "2022-12-10T00:00:00.000Z")
-// 	response := GetTwsByQuery("user", "from:giorgiameloni", "10", start, end)
+// 	response := GetTwsByQuery("user", "from:giorgiameloni", start, end)
 
-// 	response = GetNextTokenReq("10")
+// 	response = GetNextTokenReq()
 
 // 	tmpMock := `[
 // 		{
