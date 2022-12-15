@@ -27,7 +27,6 @@ const getUserInfo = async (selectValue, textValue) => {
 const searchTweets = async (selectValue, textValue, formattedDates) => {
   let final = null
   try {
-    console.log(`${SERVER_URL}${selectValue}${textValue}${formattedDates}`)
     let res = await fetch(
       `${SERVER_URL}${selectValue}${textValue}${formattedDates}`
     )
@@ -51,6 +50,7 @@ const EreditaScreen = ({ result, stats, tweetsData, errorTweets }) => {
   const cx = 180
   const cy = 150
   const COLORS = ['#00C49F', '#FF8042']
+  const [frequency, setFrequency] = useState(5)
 
   const renderLabel = ({ x, y, name, value }) => {
     return (
@@ -203,10 +203,19 @@ const EreditaScreen = ({ result, stats, tweetsData, errorTweets }) => {
           >
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 text-white">
               BarGraph analysis
-              <hr className="my-3 mx-auto h-1 bg-gray-100 rounded border-0  bg-gray-700" />
+              <hr className="my-1 mx-auto h-1 bg-gray-100 rounded border-0  bg-gray-700" />
             </h5>
-            <div className="flex flex-1 justify-center items-end">
-              <BarGraph tweets={tweetsData} frequency={60} />
+            <div className="items-end">
+              <input
+                defaultValue={frequency}
+                min={1}
+                onChange={(e) => {
+                  setFrequency(e.target.value)
+                }}
+                className="rounded-xl cursor-pointer mb-2 py-2 px-4 bg-gray-100 border border-gray-300 focus:outline-none bg-gray-700 text-white border-gray-600 w-24 "
+                type={'number'}
+              />
+              <BarGraph tweets={tweetsData} frequency={frequency} />
             </div>
           </div>
           <div
