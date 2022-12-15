@@ -1,3 +1,6 @@
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 export const SERVER_URL = 'http://localhost:8080'
 export const TWEET_KEYWORD = '/tweet/keyword/{0}'
 export const TWEET_HASHTAG = '/tweet/hashtag/{0}'
@@ -67,7 +70,7 @@ const searchTweets = async (
       setTweetsData(res)
       setTweetsDataFiltered(res)
     } else {
-      toast.warn('Tweet not found', {
+      toast.warn('Tweets not found', {
         position: 'top-center',
         autoClose: 2000,
         hideProgressBar: true,
