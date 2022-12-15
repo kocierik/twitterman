@@ -149,6 +149,8 @@ func TestSession(t *testing.T) {
 	// test logout
 	out, _ := sendTestReqAuth("GET", "/isLogged", bytes.NewBuffer(nil), cookie)
 	assert.Equal(t, `{"success":true}`, string(out))
+	out, _ = sendTestReqAuth("GET", "/getmail", bytes.NewBuffer(nil), cookie)
+	assert.Equal(t, `{"email":"aldo@aldo","success":true}`, string(out))
 	out, _ = sendTestReqAuth("GET", "/logout", bytes.NewBuffer(nil), cookie)
 	assert.Equal(t, `{"success":true}`, string(out))
 	out, _ = sendTestRequest("GET", "/isLogged", bytes.NewBuffer(nil))
