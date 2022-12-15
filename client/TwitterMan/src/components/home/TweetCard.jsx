@@ -64,7 +64,7 @@ const TweetCard = ({ data, folderName }) => {
         data.id
       ),
       {
-        method: 'DELETE',
+        method: 'POST',
         credentials: 'include',
       }
     )
@@ -78,6 +78,7 @@ const TweetCard = ({ data, folderName }) => {
       progress: false,
       theme: 'light',
     })
+    window.location.reload()
   }
 
   const getUserFolderTweets = async () => {
