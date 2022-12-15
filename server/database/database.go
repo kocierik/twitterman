@@ -130,14 +130,15 @@ func CreateFolder(email string, folderName string) error {
 		Name:   folderName,
 		Tweets: []string{},
 	}
-	fmt.Println(bson.M{"$push": bson.M{"saved_folders": folder}})
 	return insertMode(bson.M{"email": email}, bson.M{"$push": bson.M{"saved_folders": folder}}, "Users")
 }
 
 func DeleteFolder(email string, folderName string) error {
-	query := bson.M{"saved_folder": bson.M{"name": folderName}}
+	query := bson.M{"saved_folders": bson.M{"name": folderName}}
 	fmt.Println(email, folderName)
-	return insertMode(bson.M{"email": email}, bson.M{"$pull": query}, "Users")
+	err := insertMode(bson.M{"email": email}, bson.M{"$pull": query}, "Users")
+	fmt.Println(err)
+	return err
 }
 
 /* add tweet into the folder of said user, if the folder doesn't exists create it*/

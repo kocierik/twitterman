@@ -2,8 +2,8 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"testing"
-	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
 	"github.com/go-playground/assert/v2"
@@ -69,8 +69,10 @@ func TestFolderUsage(t *testing.T) {
 	const dname = "dummy"
 	const dmail = "dummy@dummy"
 	const dpsw = "dummyDummy1"
-	err := InsertUser(dname, dmail, dpsw, []utils.TweetsFolder{})
+	err := InsertUser(dmail, dname, dpsw, []utils.TweetsFolder{})
 	assert.Equal(t, err, nil)
+
+	usr, err := GetUserByEmail(dmail)
 
 	/* Test saving tweet */
 	err = InsertSavedTweet(dmail, testFolder, testTwtId)
@@ -83,8 +85,13 @@ func TestFolderUsage(t *testing.T) {
 	/* delete folder*/
 	err = DeleteFolder(dmail, testFolder)
 	assert.Equal(t, err, nil)
+
+	usr, err = GetUserByEmail(dmail)
+	fmt.Println(usr)
+	assert.Equal(t, 0, len(usr.SavedFolders))
 }
 
+/*
 func TestGetTweets(t *testing.T) {
 	InitDbTest()
 	defer Disconnect()
@@ -126,3 +133,4 @@ func TestGetTweets(t *testing.T) {
 	twt = GetTweetsByKeyword("vecchi non vanno", start, end)
 	assert.Equal(t, twtList, twt)
 }
+*/
