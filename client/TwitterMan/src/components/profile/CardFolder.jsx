@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import TweetCard from '../home/TweetCard'
 import * as Const from '../../utils'
+import Charts from '../home/Charts'
 
 const CardFolder = ({ titleFolder, tweets }) => {
   const [tweetsSaved, setTweetsSaved] = useState([])
@@ -34,6 +35,13 @@ const CardFolder = ({ titleFolder, tweets }) => {
           return <TweetCard key={i} data={tweet} folderName={titleFolder} />
         })}
       </div>
+
+      {tweetsSaved?.length > 0 && <div className="p-4 dark:bg-gray-900">
+          <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
+            {titleFolder}'s Charts
+          </div>
+          <Charts tweetsData={tweetsSaved} frequency={1440} />
+        </div>}
     </div>
   )
 }
