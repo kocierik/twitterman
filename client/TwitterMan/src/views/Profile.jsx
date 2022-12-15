@@ -26,7 +26,7 @@ const Profile = ({ isLogged }) => {
   }, [])
 
   const createNewFolder = async () => {
-    const res = await fetch(
+    await fetch(
       Const.stringFormat(Const.SERVER_URL + Const.CREATE_FOLDER, newFolderName),
       {
         method: 'POST',
@@ -34,7 +34,7 @@ const Profile = ({ isLogged }) => {
         body: '{}',
       }
     )
-    window.location.reload()
+    getUserInfo()
     toast.success('folder created succesfully!')
   }
 
@@ -51,11 +51,7 @@ const Profile = ({ isLogged }) => {
         }),
       }
     )
-    console.log(res)
-    window.location.reload()
-    if (email || password) {
-      await Const.logout()
-    }
+    getUserInfo()
     toast.success('user updated!')
   }
 
@@ -78,6 +74,7 @@ const Profile = ({ isLogged }) => {
   const getUserInfo = async () => {
     await Const.getUserInfo(setUser)
   }
+
   const getSavedUserTweets = () => {
     if (user) {
       setSavedUserTweets(user.saved)

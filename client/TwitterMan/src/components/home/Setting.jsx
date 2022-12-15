@@ -17,7 +17,6 @@ const Setting = ({ settingInfoDesk }) => {
           >
             <span className="sr-only">Open dropdown</span>
             <svg
-              // style={{ transform: 'rotate(90deg)' }}
               className="w-6 h-6"
               aria-hidden="true"
               fill="currentColor"
@@ -38,25 +37,26 @@ const Setting = ({ settingInfoDesk }) => {
             tabIndex={-1}
           >
             {settingInfoDesk?.map((item, i) => {
-              return (
-                <span
-                  key={i}
-                  className="block border-b border-gray-100 px-4 py-2 text-sm text-gray-700"
-                  role="menuitem"
-                  tabIndex={-1}
-                  id="user-menu-item-0"
-                >
-                  <button
-                    className="flex flex-1"
-                    onClick={() => {
-                      item.setting()
-                      setIsOpen(!isOpen)
-                    }}
+              if (item.show)
+                return (
+                  <span
+                    key={i}
+                    className="block border-b border-gray-100 px-4 py-2 text-sm text-gray-700"
+                    role="menuitem"
+                    tabIndex={-1}
+                    id="user-menu-item-0"
                   >
-                    {item.name}
-                  </button>
-                </span>
-              )
+                    <button
+                      className="flex flex-1"
+                      onClick={() => {
+                        item.setting()
+                        setIsOpen(!isOpen)
+                      }}
+                    >
+                      {item.name}
+                    </button>
+                  </span>
+                )
             })}
           </div>
         )}
