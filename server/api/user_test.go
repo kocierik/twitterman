@@ -80,4 +80,7 @@ func TestSavingTweets(t *testing.T) {
 	assert.Equal(t, 1, len(usr.SavedFolders))
 	fmt.Println(response)
 
+	response, _ = sendTestReqAuth("GET", "/user/folders", nil, cookie)
+	assert.Equal(t, "[\n    {\n        \"name\": \"rosalinda\",\n        \"tweets\": []\n    }\n]", string(response))
+
 }
