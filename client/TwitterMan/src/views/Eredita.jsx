@@ -212,19 +212,10 @@ const EreditaScreen = ({ result, stats, tweetsData, errorTweets }) => {
           >
             <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 text-white">
               BarGraph analysis
-              <hr className="my-1 mx-auto h-1 bg-gray-100 rounded border-0  bg-gray-700" />
+              <hr className="my-4 mx-auto h-1 bg-gray-100 rounded border-0  bg-gray-700" />
             </h5>
-            <div className="items-end">
-              <input
-                defaultValue={frequency}
-                min={1}
-                onChange={(e) => {
-                  setFrequency(e.target.value)
-                }}
-                className="rounded-xl cursor-pointer mb-2 py-2 px-4 bg-gray-100 border border-gray-300 focus:outline-none bg-gray-700 text-white border-gray-600 w-24 "
-                type={'number'}
-              />
-              <BarGraph tweets={tweetsData} frequency={frequency} />
+            <div className="mt-3 items-end">
+              <BarGraph tweets={tweetsData} frequency={5} />
             </div>
           </div>
           <div

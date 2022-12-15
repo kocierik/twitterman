@@ -56,9 +56,8 @@ Dentro `api` ci sono tutte le funzioni che vanno richiamate all'esterno del pacc
 3. `GetTwsById`
 4. `GetTwsByHashtag`
 5. `GetTwsByKeyword`
-6. `GetTwCount` => TODO: Scrivere cosa fa questa cosa
 7. `GetTwsByUsername`
-8. `GetNextTokenReq`=> TODO: Scrivere cosa fa questa cosa
+8. `GetNextTokenReq`
 
 ## Api
 
