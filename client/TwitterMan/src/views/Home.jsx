@@ -5,6 +5,8 @@ import TweetsSection from '../components/home/TweetsSection'
 import Charts from '../components/home/Charts'
 import HideTweets from '../components/home/HideTweets'
 import * as Const from '../utils'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const Home = () => {
   const [tweetsData, setTweetsData] = useState([])
@@ -22,8 +24,6 @@ const Home = () => {
       if (res) {
         let sentimentRes = await Const.fetchSentiment(res)
         setTweetsData((last) => [...last, ...sentimentRes])
-      } else {
-        alert('No more tweets to load')
       }
     } catch (e) {
       console.log(e)
@@ -68,7 +68,10 @@ const Home = () => {
           ) : null}
         </div>
         {showTweets && tweetsDataFiltered?.length ? (
-          <TweetsSection tweetsDataFiltered={tweetsDataFiltered} loadMore={loadMore} />
+          <TweetsSection
+            tweetsDataFiltered={tweetsDataFiltered}
+            loadMore={loadMore}
+          />
         ) : null}
       </div>
 
@@ -80,6 +83,7 @@ const Home = () => {
           <Charts tweetsData={tweetsDataFiltered} frequency={frequencyValue} />
         </div>
       )}
+      <ToastContainer />
       {tweetsDataFiltered?.length > 0 && (
         <div className="p-10 dark:bg-gray-900">
           <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
