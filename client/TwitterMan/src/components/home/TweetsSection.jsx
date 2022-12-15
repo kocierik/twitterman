@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import TweetCard from './TweetCard'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const TweetsSection = ({ tweetsDataFiltered }) => {
   const [currentPage, setCurrentPage] = useState(1)
@@ -11,11 +13,19 @@ const TweetsSection = ({ tweetsDataFiltered }) => {
   )
 
   const changePage = async (newPage) => {
-    if (Math.ceil(tweetsDataFiltered.length / rfp) < newPage)
-      alert('No more tweets to show in the date range selected')
-    else setCurrentPage(newPage)
+    if (Math.ceil(tweetsDataFiltered.length / rfp) < newPage) {
+      toast.warn('No more tweets to show in the date range selected', {
+        position: 'top-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      })
+    } else setCurrentPage(newPage)
   }
-
   const getPageNumberItems = () => {
     let items = []
     for (
