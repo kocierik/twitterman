@@ -171,7 +171,6 @@ const TweetCard = ({ data, folderName }) => {
                 )
               })}
             </select>
-            <ToastContainer />
             {selectFolder ? (
               <button
                 type="submit"
@@ -218,6 +217,7 @@ const TweetCard = ({ data, folderName }) => {
           </>
         )}
       </div>
+
       <p className="text-sm text-slate-200"> {data.content} </p>
       <div>
         {data.media?.map((img, i) => {
