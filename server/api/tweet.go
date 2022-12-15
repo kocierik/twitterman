@@ -85,13 +85,6 @@ func getMailFromSession(c *gin.Context) string {
 	return claims.Email
 }
 
-func getTweetUserInfoByUsername(c *gin.Context) {
-	username := c.Param("username")
-	twRet := TwitterApi.GetUserInfoByUsername(username)
-
-	utils.SendOkResponse(c, twRet)
-}
-
 func getUserInfo(c *gin.Context) {
 	mail := getMailFromSession(c)
 	usr, err := database.GetUserByEmail(mail)
@@ -125,6 +118,13 @@ func saveTweet(c *gin.Context) {
 	database.InsertSavedTweet(mail, folder, id)
 }
 
+func getTweetUserInfoByUsername(c *gin.Context) {
+	username := c.Param("username")
+	twRet := TwitterApi.GetUserInfoByUsername(username)
+
+	utils.SendOkResponse(c, twRet)
+}
+
 func remSavedTweet(c *gin.Context) {
 	mail := getMailFromSession(c)
 	folder := c.Param("folderId")
@@ -135,6 +135,29 @@ func remSavedTweet(c *gin.Context) {
 		utils.SendErrorResponse(c, "Problem fetching the user")
 		return
 	}
+}
+
+func createFolder(c *gin.Context) {
+	mail := getMailFromSession(c)
+	folder := c.Param("folderId")
+
+	err := database.CreateFolder(mail, folder)
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
+}
+
+func deleteFolder(c *gin.Context) {
+	mail := getMailFromSession(c)
+	folder := c.Param("folderId")
+
+	err := database.DeleteFolder(mail, folder)
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem deleting the folder")
+		return
+	}
+	utils.SendOkResponse(c, utils.Dict{"message": "ok"})
 }
 
 func getFolders(c *gin.Context) {
@@ -171,6 +194,12 @@ func modifyUser(c *gin.Context) {
 
 		if param.Email != "" {
 			err := database.ChangeField(mail, "email", param.Email)
+			mail = param.Email
+
+			if myjwt, err := utils.GenerateJWT(param.Email); err == nil {
+				c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false) // todo: http onlty set to true when on production
+			}
+
 			if err != nil {
 				utils.SendErrorResponse(c, "Problem changing email")
 			}

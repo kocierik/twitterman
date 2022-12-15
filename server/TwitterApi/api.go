@@ -102,8 +102,8 @@ func GetTwsByQuery(mode, query string, start, end time.Time) []utils.Tweet {
 	var ret []utils.Tweet
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
 	q := utils.Dict{
-		"query": query, 
-		"expansions": expansions,
+		"query":        query,
+		"expansions":   expansions,
 		"tweet.fields": tweetsField,
 		"media.fields": mediaField,
 		"user.fields":  userField,

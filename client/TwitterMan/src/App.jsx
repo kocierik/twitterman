@@ -29,8 +29,14 @@ function App() {
         <Navbar isLogged={isLogged} />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login isLogged={isLogged} setIsLogged={setIsLogged} />} />
-          <Route path="/register" element={<Register setIsLogged={setIsLogged} />} />
+          <Route
+            path="/login"
+            element={<Login isLogged={isLogged} setIsLogged={setIsLogged} />}
+          />
+          <Route
+            path="/register"
+            element={<Register setIsLogged={setIsLogged} />}
+          />
           <Route path="/tweetMaps/:id" element={<TweetMaps />} />
           <Route path="/eredita" element={<Eredita />} />
           <Route path="/fantacitorio" element={<Fantacitorio />} />

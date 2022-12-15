@@ -1,42 +1,110 @@
-import React, { useState } from 'react'
-import { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as Const from '../../utils'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 import Setting from './Setting'
 
-const TweetCard = ({ data }) => {
+const TweetCard = ({ data, folderName }) => {
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
   const [sentimentIcon, setSentimetIcon] = useState('?')
+  const [showBtnSaveTweet, setShowBtnSaveTweet] = useState(false)
+  const [userInfo, setUserInfo] = useState([])
+  const [selectFolder, setSelectFolder] = useState('')
 
   const saveTweet = async (tweetId) => {
-    let res = await fetch(
+    if (selectFolder) {
+      await fetch(
+        Const.stringFormat(
+          Const.SERVER_URL + Const.TWEET_SAVE,
+          selectFolder,
+          tweetId
+        ),
+        {
+          method: 'POST',
+          credentials: 'include',
+          body: '{}',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+      toast.success('Tweet saved!', {
+        position: 'top-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: false,
+        theme: 'light',
+      })
+    } else {
+      toast.warn('Select a folder', {
+        position: 'top-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      })
+    }
+    setSelectFolder('')
+  }
+
+  const removeTweetFavorite = async () => {
+    await fetch(
       Const.stringFormat(
-        Const.SERVER_URL + Const.TWEET_SAVE,
-        'genovese24',
-        'preferiti',
-        tweetId
+        Const.SERVER_URL + Const.REMOVE_TWEET,
+        folderName,
+        data.id
       ),
       {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        method: 'DELETE',
+        credentials: 'include',
       }
     )
-    res = await res.json()
+    toast.success('Tweet removed!', {
+      position: 'top-center',
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: false,
+      theme: 'light',
+    })
   }
+
+  const getUserFolderTweets = async () => {
+    await Const.getUserInfo(setUserInfo)
+  }
+
+  useEffect(() => {
+    getUserFolderTweets()
+  }, [])
 
   const settingInfoDescription = [
     {
-      name: 'Maps',
-      setting: () => navigate(`/tweetMaps/${data.id}`),
+      name: 'Save tweet',
+      show: folderName === '',
+      setting: async () => {
+        setShowBtnSaveTweet(true)
+      },
     },
     {
-      name: 'Save tweet',
-      setting: async () => await saveTweet(data.id),
+      name: 'Remove from favorite',
+      show: folderName !== '',
+      setting: async () => {
+        removeTweetFavorite()
+      },
     },
   ]
+
   useEffect(() => {
     switch (data.sentiment) {
       case 'positive':
@@ -87,7 +155,69 @@ const TweetCard = ({ data }) => {
           </div>
         )}
       </div>
-
+      <div className="flex flex-1 flex-row">
+        {showBtnSaveTweet && (
+          <>
+            <select
+              onChange={(value) => setSelectFolder(value?.target?.value)}
+              className="flex mb-5 flex-1 duration-300 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2 "
+            >
+              <option value=""></option>
+              {userInfo?.saved?.map((folder, i) => {
+                return (
+                  <option key={i} value={folder.name}>
+                    {folder.name}
+                  </option>
+                )
+              })}
+            </select>
+            <ToastContainer />
+            {selectFolder ? (
+              <button
+                type="submit"
+                onClick={async () => await saveTweet(data.id)}
+                className="p-1 text-sm mb-5 font-medium text-white bg-blue-700  rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4.5 12.75l6 6 9-13.5"
+                  />
+                </svg>
+              </button>
+            ) : (
+              <button
+                type="submit"
+                onClick={() => setShowBtnSaveTweet(false)}
+                className="p-1 text-sm mb-5 font-medium text-white bg-blue-700  rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+          </>
+        )}
+      </div>
       <p className="text-sm text-slate-200"> {data.content} </p>
       <div>
         {data.media?.map((img, i) => {

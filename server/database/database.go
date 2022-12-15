@@ -90,30 +90,19 @@ func GetTweetsByKeyword(keyword string, start, end time.Time) []utils.Tweet {
 	return binded
 }
 
-func InsertUser(email, username, password string, tweetsFolder []utils.TweetsFolder) {
+func InsertUser(email string, username string, password string, tweetsFolder []utils.TweetsFolder) error {
 	user := utils.User{
 		Email:        email,
 		Username:     username,
 		Password:     password,
 		SavedFolders: tweetsFolder,
 	}
-	insert(user, "Users")
+	return insert(user, "Users")
 }
 
 func InsertTweetList(twts []utils.Tweet) {
 	for _, t := range twts {
 		insert(t, "Tweets")
-	}
-}
-
-func GetUserByName(name string) (utils.User, error) {
-	query := bson.M{"username": name}
-	res := find(query, "Users")
-	binded := bindType[[]utils.User](res)
-	if len(binded) == 0 {
-		return nullUser, errors.New("No user with such username")
-	} else {
-		return binded[0], nil
 	}
 }
 
@@ -135,7 +124,7 @@ func insertTweetIntoFolder(email string, folderName string, id string) error {
 	return nil
 }
 
-func createFolder(email string, folderName string) error {
+func CreateFolder(email string, folderName string) error {
 	folder := utils.TweetsFolder{
 		Name:   folderName,
 		Tweets: []string{},
@@ -143,15 +132,17 @@ func createFolder(email string, folderName string) error {
 	return insertMode(bson.M{"email": email}, bson.M{"$push": bson.M{"saved_folders": folder}}, "Users")
 }
 
-func deleteFolder(name string, folderName string) error {
-	return insertMode(bson.M{"username": name}, bson.M{"$pull": bson.M{"saved_folders": folderName}}, "Users")
+func DeleteFolder(email string, folderName string) error {
+	query := bson.M{"saved_folders": bson.M{"name": folderName}}
+	err := insertMode(bson.M{"email": email}, bson.M{"$pull": query}, "Users")
+	return err
 }
 
 /* add tweet into the folder of said user, if the folder doesn't exists create it*/
 func InsertSavedTweet(email string, folderName string, id string) error {
 	folder := find(bson.M{"email": email, "saved_folders.name": folderName}, "Users")
 	if len(bindType[[]utils.TweetsFolder](folder)) == 0 {
-		err := createFolder(email, folderName)
+		err := CreateFolder(email, folderName)
 		if err != nil {
 			return err
 		}
@@ -194,7 +185,7 @@ func find(query interface{}, collection string) *mongo.Cursor {
 	return cursor
 }
 
-func insert[T queryTypeInterface](query T, collection string) {
+func insert[T queryTypeInterface](query T, collection string) error {
 	var updateQuery bson.M
 	switch collection {
 	case "Tweets":
@@ -204,7 +195,7 @@ func insert[T queryTypeInterface](query T, collection string) {
 	default:
 		updateQuery = bson.M{}
 	}
-	insertMode(updateQuery, bson.M{"$set": query}, collection)
+	return insertMode(updateQuery, bson.M{"$set": query}, collection)
 }
 
 func insertMode(updateQuery primitive.M, query primitive.M, collection string) error {
@@ -218,7 +209,7 @@ func insertMode(updateQuery primitive.M, query primitive.M, collection string) e
 func delete(query primitive.M, collection string) error {
 	col := client.Database(dbname).Collection(collection)
 	_, err := col.DeleteOne(ctx, query)
-	utils.TestError(err, "insert function")
+	utils.TestError(err, "delete function")
 	return err
 }
 

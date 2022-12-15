@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"regexp"
 	"strings"
 	"unicode"
@@ -38,7 +37,8 @@ func registerApi(c *gin.Context) {
 
 	_, err := database.GetUserByEmail(param.Email)
 	if err == nil {
-		log.Fatalf("User already exist")
+		utils.SendErrorResponse(c, "Email already registered")
+		return
 	}
 
 	if !strings.Contains(param.Email, "@") {
@@ -73,7 +73,7 @@ func registerApi(c *gin.Context) {
 	if len(param.Password) < 8 || !hasUpper || !hasLower || !hasNumber {
 		c.JSON(400, gin.H{
 			"success": false,
-			"message": "password should be at least 8 character, one",
+			"message": "Password should be at least 8 character and should have at least an uppercase letters and a number",
 		})
 		return
 	}

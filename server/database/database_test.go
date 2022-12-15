@@ -4,10 +4,12 @@ import (
 	"context"
 	"testing"
 
+	"git.hjkl.gq/team7/twitterman/server/utils"
 	"github.com/go-playground/assert/v2"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var testUsername string = "aldo"
+var testMail string = "gianni@gianni"
 var testTwtId string = "12345678987654"
 var testFolder string = "testFolder"
 
@@ -27,45 +29,106 @@ func TestDatabaseDisconnect(t *testing.T) {
 }
 
 func TestInsertandGetUser(t *testing.T) {
-	// InitDbTest()
+	InitDbTest()
+	defer Disconnect()
 
-	// // It insert the user
-	// InsertUser("gianni@gianni", "gianni", "gianni", []utils.TweetsFolder{})
+	// It insert the user
+	InsertUser("gianni@gianni", "gianni", "gianni123A", []utils.TweetsFolder{})
 
-	// // It returns an error if the email doesn't exist
-	// _, err := GetUserByEmail("no-user-with-this-email")
-	// assert.NotEqual(t, err, nil)
+	// It returns an error if the email doesn't exist
+	_, err := GetUserByEmail("no-user-with-this-email")
+	assert.NotEqual(t, err, nil)
 
-	// // It returns the user if the mail does exist
-	// userEmail, err := GetUserByEmail("gianni@gianni")
-	// utils.TestError(err, "Test GetUserByEmail function error1")
-	// assert.Equal(t, userEmail.Email, "gianni@gianni")
+	// It returns the user if the mail does exist
+	userEmail, err := GetUserByEmail("gianni@gianni")
+	utils.TestError(err, "Test GetUserByEmail function error1")
+	assert.Equal(t, userEmail.Email, "gianni@gianni")
 
-	// // It returns an error if the ID doesn't exist
-	// _, err = GetUserById(primitive.NewObjectID())
-	// assert.NotEqual(t, err, nil)
+	// It returns an error if the ID doesn't exist
+	_, err = GetUserById(primitive.NewObjectID())
+	assert.NotEqual(t, err, nil)
 
-	// // It returns the user if the id exist
-	// userId, err := GetUserById(userEmail.ID)
-	// utils.TestError(err, "Test GetUserById function error2")
-	// assert.Equal(t, userEmail, userId)
+	// It returns the user if the id exist
+	userId, err := GetUserById(userEmail.ID)
+	utils.TestError(err, "Test GetUserById function error2")
+	assert.Equal(t, userEmail, userId)
 
-	// Disconnect()
+	ChangeField("gianni@gianni", "password", "1234gjfnbdL")
+	usr, err := GetUserByEmail("gianni@gianni")
+	utils.TestError(err, "Test changefield failed")
+	assert.Equal(t, "1234gjfnbdL", usr.Password)
+
+	err = DeleteUser("gianni@gianni")
+	assert.Equal(t, err, nil)
 }
 
 func TestFolderUsage(t *testing.T) {
 	InitDbTest()
 	defer Disconnect()
+	const dname = "dummy"
+	const dmail = "dummy@dummy"
+	const dpsw = "dummyDummy1"
+	err := InsertUser(dmail, dname, dpsw, []utils.TweetsFolder{})
+	assert.Equal(t, err, nil)
+
+	usr, err := GetUserByEmail(dmail)
 
 	/* Test saving tweet */
-	err := InsertSavedTweet(testUsername, testFolder, testTwtId)
+	err = InsertSavedTweet(dmail, testFolder, testTwtId)
 	assert.Equal(t, err, nil)
 
 	/* delete tweet */
-	err = RemoveSavedTweet(testUsername, testFolder, testTwtId)
+	err = RemoveSavedTweet(dmail, testFolder, testTwtId)
 	assert.Equal(t, err, nil)
 
 	/* delete folder*/
-	err = deleteFolder(testUsername, testFolder)
+	err = DeleteFolder(dmail, testFolder)
 	assert.Equal(t, err, nil)
+
+	usr, err = GetUserByEmail(dmail)
+	assert.Equal(t, 0, len(usr.SavedFolders))
 }
+
+/*
+func TestGetTweets(t *testing.T) {
+	InitDbTest()
+	defer Disconnect()
+
+	var testTwt = utils.Tweet{
+		TwitterId: "1602802989407899648",
+		Name:      "team7",
+		Propic:    "https://pbs.twimg.com/profile_images/1581295877624369152/p6aLdDNO_normal.jpg",
+		Timestamp: "2022-12-13T23:09:45.000Z",
+		Content:   "Attenzione, forse i vecchi non vanno bene per test",
+		Username:  "team7test",
+		PublicMetrics: utils.PublicMetrics{
+			RetweetCount: 0,
+			ReplyCount:   0,
+			LikeCount:    0,
+			QuoteCount:   0,
+		},
+		Media: nil,
+		Geo: utils.GeoPosition{
+			Id:     "",
+			Name:   "",
+			Coords: nil,
+		},
+	}
+
+	var twtList = []utils.Tweet{testTwt}
+
+	InsertTweetList(twtList)
+
+	twt := GetTweetsByTwitterId("1602802989407899648")
+	assert.Equal(t, twtList, twt)
+
+	start, _ := time.Parse(time.RFC3339, "2022-12-13T23:00:45.000Z")
+	end, _ := time.Parse(time.RFC3339, "2022-12-13T23:19:45.000Z")
+
+	twt = GetTweetsByUsername("team7test", start, end)
+	assert.Equal(t, twtList, twt)
+
+	twt = GetTweetsByKeyword("vecchi non vanno", start, end)
+	assert.Equal(t, twtList, twt)
+}
+*/

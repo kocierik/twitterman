@@ -12,11 +12,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const aldomail = "aldo@aldo"
+const aldoname = "aldo"
+const aldopsw = "Aldo1234"
+
 func TestLoginApi(t *testing.T) {
 	database.InitDbTest()
 	initApiTest()
 	// Insert user to database
-	database.InsertUser("aldo@aldo", "aldo", "aldo", []utils.TweetsFolder{})
+	database.InsertUser(aldomail, aldoname, aldopsw, []utils.TweetsFolder{})
 
 	// Test Correct credentials
 	type login struct {
@@ -24,8 +28,8 @@ func TestLoginApi(t *testing.T) {
 		Password string `json:"password"`
 	}
 	body := login{
-		Email:    "aldo@aldo",
-		Password: "aldo",
+		Email:    aldomail,
+		Password: aldopsw,
 	}
 
 	bodyMarshaled, err := json.Marshal(body)
@@ -40,7 +44,7 @@ func TestLoginApi(t *testing.T) {
 	// Test incorrect credentials
 	body = login{
 		Email:    "notamail@outneh",
-		Password: "notapsw",
+		Password: "notapsw1W",
 	}
 
 	bodyMarshaled, err = json.Marshal(body)
@@ -66,14 +70,14 @@ func TestRegisterApi(t *testing.T) {
 		Username string `json:"username"`
 	}
 	body := register{
-		Email:    "aldo@aldo",
-		Password: "aldo",
-		Username: "aldo",
+		Email:    aldomail,
+		Password: aldopsw,
+		Username: aldoname,
 	}
 	bodyMarshaled, err := json.Marshal(body)
 	utils.TestError(err, "(api_test.go) Cannot parse bodyMarshaled1")
 	out, _ := sendTestRequest("POST", "/register", bytes.NewBuffer(bodyMarshaled))
-	usr, err := database.GetUserByEmail("aldo@aldo")
+	usr, err := database.GetUserByEmail(aldomail)
 	utils.TestError(err, "(api_test.go) Cannot parse bodyMarshaled1")
 	assert.Equal(t, body.Email, usr.Email)
 	assert.Equal(t, body.Password, usr.Password)
@@ -86,11 +90,15 @@ func TestDeleteUser(t *testing.T) {
 	initApiTest()
 	// Insert user to database
 	database.InitDbTest()
-	database.InsertUser("testUser@sium", "testUser", "testUser", []utils.TweetsFolder{})
-	database.InsertUser("aldo@aldo", "aldo", "aldo", []utils.TweetsFolder{})
-	sendTestRequest("POST", "/user/testUser/modify/delete", bytes.NewBuffer(nil))
-	usr, _ := database.GetUserByName("testUser")
+	database.InsertUser("testUser@sium", "testUser", "testUser12", []utils.TweetsFolder{})
+	database.InsertUser(aldomail, aldoname, aldopsw, []utils.TweetsFolder{})
+	// Test Correct credentials
+	cookie := getTestCookie("testUser@sium", "testUser12")
+	sendTestReqAuth("POST", "/user/modify/delete", bytes.NewBuffer(nil), cookie)
+	usr, _ := database.GetUserByEmail("testUser@sium")
 	assert.Equal(t, usr.Username, "")
-	usr2, _ := database.GetUserByName("aldo")
-	assert.Equal(t, usr2.Username, "aldo")
+	usr2, _ := database.GetUserByEmail(aldomail)
+	assert.Equal(t, usr2.Username, aldoname)
+	database.DeleteUser(aldomail)
+
 }

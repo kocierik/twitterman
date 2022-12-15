@@ -7,6 +7,11 @@ export const TWEET_LOAD = '/tweet/loadNextPage'
 export const TWEET_SAVE = '/user/folder/{0}/add/{1}'
 export const USER_INFO = '/user'
 export const USER_DELETE = '/user/modify/delete'
+export const USER_MODIFY = '/user/modify/{0}'
+export const TWEET_FOLDER = '/user/folders/'
+export const CREATE_FOLDER = '/user/folder/create/{0}'
+export const DELETE_FOLDER = '/user/folder/delete/{0}'
+export const REMOVE_TWEET = '/user/folder/{0}/{1}'
 
 const stringFormat = (str, ...args) =>
   str.replace(/{(\d+)}/g, (match, number) =>
@@ -62,7 +67,16 @@ const searchTweets = async (
       setTweetsData(res)
       setTweetsDataFiltered(res)
     } else {
-      alert('Tweets not found')
+      toast.warn('Tweet not found', {
+        position: 'top-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      })
     }
   } catch (e) {
     console.log(e)
