@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as Const from '../../utils'
 import { ToastContainer, toast } from 'react-toastify'
@@ -7,15 +6,13 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import Setting from './Setting'
 
-const TweetCard = ({ data }) => {
+const TweetCard = ({ data, folderName }) => {
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
   const [sentimentIcon, setSentimetIcon] = useState('?')
   const [showBtnSaveTweet, setShowBtnSaveTweet] = useState(false)
-  const [showBtnRemoveTweet, setShowBtnRemoveTweet] = useState(false)
   const [userInfo, setUserInfo] = useState([])
   const [selectFolder, setSelectFolder] = useState('')
-  const [selectRemoveTweet, setSelectRemoveTweet] = useState('')
 
   const saveTweet = async (tweetId) => {
     if (selectFolder) {
@@ -59,42 +56,28 @@ const TweetCard = ({ data }) => {
     setSelectFolder('')
   }
 
-  const removeTweetFavorite = async (tweetId) => {
-    if (selectRemoveTweet) {
-      await fetch(
-        Const.stringFormat(
-          Const.SERVER_URL + Const.REMOVE_TWEET,
-          selectRemoveTweet,
-          tweetId
-        ),
-        {
-          method: 'DELETE',
-          credentials: 'include',
-        }
-      )
-      toast.success('Tweet removed!', {
-        position: 'top-center',
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: false,
-        theme: 'light',
-      })
-    } else {
-      toast.warn('Select a folder', {
-        position: 'top-center',
-        autoClose: 2000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: 'light',
-      })
-      setSelectRemoveTweet('')
-    }
+  const removeTweetFavorite = async () => {
+    await fetch(
+      Const.stringFormat(
+        Const.SERVER_URL + Const.REMOVE_TWEET,
+        folderName,
+        data.id
+      ),
+      {
+        method: 'DELETE',
+        credentials: 'include',
+      }
+    )
+    toast.success('Tweet removed!', {
+      position: 'top-center',
+      autoClose: 2000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: false,
+      theme: 'light',
+    })
   }
 
   const getUserFolderTweets = async () => {
@@ -107,24 +90,21 @@ const TweetCard = ({ data }) => {
 
   const settingInfoDescription = [
     {
-      name: 'Maps',
-      setting: () => navigate(`/tweetMaps/${data.id}`),
-    },
-    {
       name: 'Save tweet',
+      show: folderName === '',
       setting: async () => {
         setShowBtnSaveTweet(true)
-        // await saveTweet(data.id)
       },
     },
     {
       name: 'Remove from favorite',
+      show: folderName !== '',
       setting: async () => {
-        setShowBtnRemoveTweet(true)
-        // await saveTweet(data.id)
+        removeTweetFavorite()
       },
     },
   ]
+
   useEffect(() => {
     switch (data.sentiment) {
       case 'positive':
@@ -217,67 +197,6 @@ const TweetCard = ({ data }) => {
               <button
                 type="submit"
                 onClick={() => setShowBtnSaveTweet(false)}
-                className="p-1 text-sm mb-5 font-medium text-white bg-blue-700  rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            )}
-          </>
-        )}
-        {showBtnRemoveTweet && (
-          <>
-            <select
-              onChange={(value) => setSelectRemoveTweet(value?.target?.value)}
-              className="flex mb-5 flex-1 duration-300 text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2 "
-            >
-              <option value=""></option>
-              {userInfo?.saved?.map((folder, i) => {
-                return (
-                  <option key={i} value={folder.name}>
-                    {folder.name}
-                  </option>
-                )
-              })}
-            </select>
-            <ToastContainer />
-            {selectRemoveTweet ? (
-              <button
-                type="submit"
-                onClick={async () => await removeTweetFavorite(data.id)}
-                className="p-1 text-sm mb-5 font-medium text-white bg-blue-700  rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M4.5 12.75l6 6 9-13.5"
-                  />
-                </svg>
-              </button>
-            ) : (
-              <button
-                type="submit"
-                onClick={() => setSelectRemoveTweet(false)}
                 className="p-1 text-sm mb-5 font-medium text-white bg-blue-700  rounded-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
               >
                 <svg

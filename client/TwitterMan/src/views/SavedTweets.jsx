@@ -26,7 +26,7 @@ const SavedTweets = () => {
       </div>
       <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
         {savedTweets?.map((tweet, i) => {
-          return <TweetCard data={tweet} key={i} />
+          return <TweetCard data={tweet} key={i} folderName={""}/>
         })}
       </div>
     </div>

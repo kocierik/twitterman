@@ -3,7 +3,7 @@ import TweetCard from './TweetCard'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-const TweetsSection = ({ tweetsDataFiltered }) => {
+const TweetsSection = ({ tweetsDataFiltered, loadMore}) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [rfp, setRfp] = useState(15)
 
@@ -67,7 +67,7 @@ const TweetsSection = ({ tweetsDataFiltered }) => {
     <div>
       <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
         {currentTweets?.map((tweet) => (
-          <TweetCard data={tweet} key={tweet.id} />
+          <TweetCard data={tweet} key={tweet.id} folderName={""} />
         ))}
       </div>
 
@@ -93,7 +93,10 @@ const TweetsSection = ({ tweetsDataFiltered }) => {
             <li>
               <a
                 className="relative block py-1.5 px-3 rounded border-0 bg-transparent outline-none transition-all duration-300 text-slate-200 hover:text-gray-800 hover:bg-gray-200 focus:shadow-none"
-                onClick={() => changePage(currentPage + 1)}
+                onClick={() => {
+                  loadMore()
+                  changePage(currentPage + 1)
+                }}
               >
                 Next
               </a>

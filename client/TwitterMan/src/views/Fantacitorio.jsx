@@ -178,7 +178,7 @@ function Fantacitorio() {
           }`}
         >
           {squadreFiltered?.map((tweet) => (
-            <TweetCard data={tweet} key={tweet.id} />
+            <TweetCard data={tweet} key={tweet.id} folderName={""} />
           ))}
         </div>
       </div>

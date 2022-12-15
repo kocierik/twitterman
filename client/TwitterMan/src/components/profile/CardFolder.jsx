@@ -11,8 +11,11 @@ const CardFolder = ({ titleFolder, tweets }) => {
         let res = await fetch(
           Const.stringFormat(Const.SERVER_URL + Const.TWEET_ID, tweet)
         )
-        res = await res.json()
-        setTweetsSaved((last) => [...last, res[0]])
+        if (res) {
+          res = await res.json()
+          res = await Const.fetchSentiment(res)
+          setTweetsSaved((last) => [...last, res[0]])
+        }
       })
     }
   }
@@ -28,7 +31,7 @@ const CardFolder = ({ titleFolder, tweets }) => {
       </div>
       <div className="box-border  m-auto max-w-[75rem] 3xl:max-w-[120rem] columns-1xs sm:columns-2xs md:columns-2 lg:columns-3 xl:columns-3 2xl:columns-3 3xl:columns-5">
         {tweetsSaved?.map((tweet, i) => {
-          return <TweetCard key={i} data={tweet} />
+          return <TweetCard key={i} data={tweet} folderName={titleFolder} />
         })}
       </div>
     </div>
