@@ -95,9 +95,9 @@ func TestDeleteUser(t *testing.T) {
 	// Test Correct credentials
 	cookie := getTestCookie("testUser@sium", "testUser12")
 	sendTestReqAuth("POST", "/user/modify/delete", bytes.NewBuffer(nil), cookie)
-	usr, _ := database.GetUserByName("testUser")
+	usr, _ := database.GetUserByEmail("testUser@sium")
 	assert.Equal(t, usr.Username, "")
-	usr2, _ := database.GetUserByName(aldoname)
+	usr2, _ := database.GetUserByEmail(aldomail)
 	assert.Equal(t, usr2.Username, aldoname)
 	database.DeleteUser(aldomail)
 

@@ -107,17 +107,6 @@ func InsertTweetList(twts []utils.Tweet) {
 	}
 }
 
-func GetUserByName(name string) (utils.User, error) {
-	query := bson.M{"username": name}
-	res := find(query, "Users")
-	binded := bindType[[]utils.User](res)
-	if len(binded) == 0 {
-		return nullUser, errors.New("No user with such username")
-	} else {
-		return binded[0], nil
-	}
-}
-
 func ChangeField(email string, field string, content string) error {
 	query := bson.M{field: content}
 	updateQ := bson.M{"email": email}
@@ -222,7 +211,7 @@ func insertMode(updateQuery primitive.M, query primitive.M, collection string) e
 func delete(query primitive.M, collection string) error {
 	col := client.Database(dbname).Collection(collection)
 	_, err := col.DeleteOne(ctx, query)
-	utils.TestError(err, "insert function")
+	utils.TestError(err, "delete function")
 	return err
 }
 

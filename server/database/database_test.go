@@ -53,6 +53,14 @@ func TestInsertandGetUser(t *testing.T) {
 	userId, err := GetUserById(userEmail.ID)
 	utils.TestError(err, "Test GetUserById function error2")
 	assert.Equal(t, userEmail, userId)
+
+	ChangeField("gianni@gianni", "password", "1234gjfnbdL")
+	usr, err := GetUserByEmail("gianni@gianni")
+	utils.TestError(err, "Test changefield failed")
+	assert.Equal(t, "1234gjfnbdL", usr.Password)
+
+	err = DeleteUser("gianni@gianni")
+	assert.Equal(t, err, nil)
 }
 
 func TestFolderUsage(t *testing.T) {
@@ -111,6 +119,10 @@ func TestGetTweets(t *testing.T) {
 
 	start, _ := time.Parse(time.RFC3339, "2022-12-13T23:00:45.000Z")
 	end, _ := time.Parse(time.RFC3339, "2022-12-13T23:19:45.000Z")
+
 	twt = GetTweetsByUsername("team7test", start, end)
+	assert.Equal(t, twtList, twt)
+
+	twt = GetTweetsByKeyword("vecchi non vanno", start, end)
 	assert.Equal(t, twtList, twt)
 }

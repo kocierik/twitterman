@@ -40,9 +40,9 @@ func TestUpdateUser(t *testing.T) {
 	cookie := getTestCookie(testUser.Email, testUser.Password)
 	sendTestReqAuth("POST", "/user/modify/update", bytes.NewBuffer(bodyMarshaled), cookie)
 
-	usr, _ := database.GetUserByName("testUser")
+	usr, _ := database.GetUserByEmail("porca@paletta")
 	fmt.Println(usr.Password, usr.Email)
-	assert.Equal(t, body.Email, usr.Email)
+	assert.Equal(t, body.Username, usr.Username)
 	assert.Equal(t, body.Password, usr.Password)
 }
 
