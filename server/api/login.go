@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"regexp"
 	"strings"
 	"unicode"
@@ -38,7 +37,8 @@ func registerApi(c *gin.Context) {
 
 	_, err := database.GetUserByEmail(param.Email)
 	if err == nil {
-		log.Fatalf("User already exist")
+		utils.SendErrorResponse(c, "Email already registered")
+		return
 	}
 
 	if !strings.Contains(param.Email, "@") {

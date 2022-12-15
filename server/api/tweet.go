@@ -197,6 +197,10 @@ func modifyUser(c *gin.Context) {
 			err := database.ChangeField(mail, "email", param.Email)
 			mail = param.Email
 
+			if myjwt, err := utils.GenerateJWT(param.Email); err == nil {
+				c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false) // todo: http onlty set to true when on production
+			}
+
 			if err != nil {
 				utils.SendErrorResponse(c, "Problem changing email")
 			}
