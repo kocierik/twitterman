@@ -2,6 +2,9 @@ import React, { useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import twitterman from '../assets/twitterman.png'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 const SERVER_URL = 'http://localhost:8080'
 
 const Login = ({ isLogged, setIsLogged }) => {
@@ -30,7 +33,16 @@ const Login = ({ isLogged, setIsLogged }) => {
       setIsLogged(true)
       navigate('/')
     } catch (e) {
-      alert(e)
+      toast.warn('Mail or password wrong!', {
+        position: 'top-center',
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: 'light',
+      })
     }
   }
 
@@ -109,6 +121,7 @@ const Login = ({ isLogged, setIsLogged }) => {
               >
                 Sign in
               </button>
+              <ToastContainer />
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Don't have an account yet?{' '}
                 <Link
