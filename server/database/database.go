@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
@@ -140,11 +141,14 @@ func CreateFolder(email string, folderName string) error {
 		Name:   folderName,
 		Tweets: []string{},
 	}
+	fmt.Println(bson.M{"$push": bson.M{"saved_folders": folder}})
 	return insertMode(bson.M{"email": email}, bson.M{"$push": bson.M{"saved_folders": folder}}, "Users")
 }
 
-func DeleteFolder(name string, folderName string) error {
-	return insertMode(bson.M{"username": name}, bson.M{"$pull": bson.M{"saved_folders": folderName}}, "Users")
+func DeleteFolder(email string, folderName string) error {
+	query := bson.M{"saved_folder": bson.M{"name": folderName}}
+	fmt.Println(email, folderName)
+	return insertMode(bson.M{"email": email}, bson.M{"$pull": query}, "Users")
 }
 
 /* add tweet into the folder of said user, if the folder doesn't exists create it*/

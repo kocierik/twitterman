@@ -155,7 +155,7 @@ func deleteFolder(c *gin.Context) {
 
 	err := database.DeleteFolder(mail, folder)
 	if err != nil {
-		utils.SendErrorResponse(c, "Problem fetching the user")
+		utils.SendErrorResponse(c, "Problem deleting the folder")
 		return
 	}
 	utils.SendOkResponse(c, utils.Dict{"message": "ok"})
