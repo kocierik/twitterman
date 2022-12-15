@@ -34,4 +34,5 @@ def get_sentiment():
     return 'Content-Type not supported!'
 
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0", port=5556)
+    # run app in debug mode on port 5556
+    app.run(debug=True, port=5556)
