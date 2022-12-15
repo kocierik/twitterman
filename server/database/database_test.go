@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"testing"
+	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
 	"github.com/go-playground/assert/v2"
@@ -89,7 +90,6 @@ func TestFolderUsage(t *testing.T) {
 	assert.Equal(t, 0, len(usr.SavedFolders))
 }
 
-/*
 func TestGetTweets(t *testing.T) {
 	InitDbTest()
 	defer Disconnect()
@@ -131,4 +131,3 @@ func TestGetTweets(t *testing.T) {
 	twt = GetTweetsByKeyword("vecchi non vanno", start, end)
 	assert.Equal(t, twtList, twt)
 }
-*/

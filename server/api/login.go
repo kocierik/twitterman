@@ -81,7 +81,7 @@ func registerApi(c *gin.Context) {
 	standardFolder := utils.TweetsFolder{Name: "Preferiti", Tweets: []string{}}
 	database.InsertUser(param.Email, param.Username, param.Password, []utils.TweetsFolder{standardFolder})
 	if myjwt, err := utils.GenerateJWT(param.Email); err == nil {
-		c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false) // todo: http onlty set to true when on production
+		c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false)
 		c.JSON(200, gin.H{
 			"success": true,
 		})
@@ -101,7 +101,7 @@ func loginApi(c *gin.Context) {
 	param := bind[RequestBody](c)
 	if isUser(param.Email, param.Password) {
 		if myjwt, err := utils.GenerateJWT(param.Email); err == nil {
-			c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false) // todo: http onlty set to true when on production
+			c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false)
 			c.JSON(200, gin.H{
 				"success": true,
 			})

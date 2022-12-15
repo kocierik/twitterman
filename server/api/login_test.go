@@ -12,6 +12,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type login struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 const aldomail = "aldo@aldo"
 const aldoname = "aldo"
 const aldopsw = "Aldo1234"
@@ -23,10 +28,6 @@ func TestLoginApi(t *testing.T) {
 	database.InsertUser(aldomail, aldoname, aldopsw, []utils.TweetsFolder{})
 
 	// Test Correct credentials
-	type login struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
 	body := login{
 		Email:    aldomail,
 		Password: aldopsw,
@@ -83,7 +84,41 @@ func TestRegisterApi(t *testing.T) {
 	assert.Equal(t, body.Password, usr.Password)
 	assert.Equal(t, body.Username, usr.Username)
 	assert.Equal(t, `{"success":true}`, string(out))
-	// TODO: Test with invalid register fields
+
+	out, _ = sendTestRequest("POST", "/register", bytes.NewBuffer(bodyMarshaled))
+	assert.Equal(t, `{"message":"Email already registered","success":false}`, string(out))
+
+	body = register{
+		Email:    "not an email",
+		Password: aldopsw,
+		Username: aldoname,
+	}
+
+	bodyMarshaled, err = json.Marshal(body)
+	utils.TestError(err, "(api_test.go) Cannot parse bodyMarshaled1")
+	out, _ = sendTestRequest("POST", "/register", bytes.NewBuffer(bodyMarshaled))
+	assert.Equal(t, `{"message":"email not valid","success":false}`, string(out))
+
+	body = register{
+		Email:    "random@uno",
+		Password: "shrtpsw",
+		Username: aldoname,
+	}
+	bodyMarshaled, err = json.Marshal(body)
+	utils.TestError(err, "(api_test.go) Cannot parse bodyMarshaled1")
+	out, _ = sendTestRequest("POST", "/register", bytes.NewBuffer(bodyMarshaled))
+	assert.Equal(t, `{"message":"Password should be at least 8 character and should have at least an uppercase letters and a number","success":false}`, string(out))
+
+	body = register{
+		Email:    "random@uno",
+		Password: aldopsw,
+		Username: "no",
+	}
+	bodyMarshaled, err = json.Marshal(body)
+	utils.TestError(err, "(api_test.go) Cannot parse bodyMarshaled1")
+	out, _ = sendTestRequest("POST", "/register", bytes.NewBuffer(bodyMarshaled))
+	assert.Equal(t, `{"message":"username too short","success":false}`, string(out))
+
 }
 
 func TestDeleteUser(t *testing.T) {
@@ -100,5 +135,33 @@ func TestDeleteUser(t *testing.T) {
 	usr2, _ := database.GetUserByEmail(aldomail)
 	assert.Equal(t, usr2.Username, aldoname)
 	database.DeleteUser(aldomail)
+
+}
+
+func TestSession(t *testing.T) {
+	initApiTest()
+	database.InitDbTest()
+	defer database.Disconnect()
+
+	database.InsertUser(aldomail, aldoname, aldopsw, []utils.TweetsFolder{})
+	cookie := getTestCookie(aldomail, aldopsw)
+
+	// test logout
+	out, _ := sendTestReqAuth("GET", "/isLogged", bytes.NewBuffer(nil), cookie)
+	assert.Equal(t, `{"success":true}`, string(out))
+
+	out, _ = sendTestReqAuth("GET", "/getmail", bytes.NewBuffer(nil), cookie)
+	assert.Equal(t, `{"email":"aldo@aldo","success":true}`, string(out))
+
+	tmpVal := cookie.Value
+	cookie.Value = "fvasbf"
+	out, _ = sendTestReqAuth("GET", "/getmail", bytes.NewBuffer(nil), cookie)
+	assert.Equal(t, `{"message":"token not correct","success":false}`, string(out))
+	cookie.Value = tmpVal
+
+	out, _ = sendTestReqAuth("GET", "/logout", bytes.NewBuffer(nil), cookie)
+	assert.Equal(t, `{"success":true}`, string(out))
+	out, _ = sendTestRequest("GET", "/isLogged", bytes.NewBuffer(nil))
+	assert.Equal(t, `{"message":"jwt is not correct","success":false}`, string(out))
 
 }

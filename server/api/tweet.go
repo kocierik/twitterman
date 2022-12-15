@@ -11,6 +11,8 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
+const userError = "Problem fetching the user"
+
 /*
 Get 10 tweets with a defined mode and a query.
 Possible mode:
@@ -90,7 +92,7 @@ func getUserInfo(c *gin.Context) {
 	usr, err := database.GetUserByEmail(mail)
 
 	if err != nil {
-		utils.SendErrorResponse(c, "Problem fetching the user")
+		utils.SendErrorResponse(c, userError)
 		return
 	}
 
@@ -132,7 +134,7 @@ func remSavedTweet(c *gin.Context) {
 
 	err := database.RemoveSavedTweet(mail, folder, id)
 	if err != nil {
-		utils.SendErrorResponse(c, "Problem fetching the user")
+		utils.SendErrorResponse(c, "Problem fetching the user during tweet removal")
 		return
 	}
 }
@@ -143,7 +145,7 @@ func createFolder(c *gin.Context) {
 
 	err := database.CreateFolder(mail, folder)
 	if err != nil {
-		utils.SendErrorResponse(c, "Problem fetching the user")
+		utils.SendErrorResponse(c, "Problem fetching the user during folder creation")
 		return
 	}
 }
@@ -165,22 +167,22 @@ func getFolders(c *gin.Context) {
 	usr, err := database.GetUserByEmail(mail)
 
 	if err != nil {
-		utils.SendErrorResponse(c, "Problem fetching the user")
+		utils.SendErrorResponse(c, "Problem fetching the user during folder fetching")
 		return
 	}
 
 	utils.SendOkResponse(c, usr.SavedFolders)
 }
 
+type RequestBody struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Username string `json:"username"`
+}
+
 func modifyUser(c *gin.Context) {
 	mail := getMailFromSession(c)
 	action := c.Param("action")
-
-	type RequestBody struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-		Username string `json:"username"`
-	}
 
 	param := bind[RequestBody](c)
 
@@ -191,32 +193,39 @@ func modifyUser(c *gin.Context) {
 			utils.SendErrorResponse(c, "Problem deleting user")
 		}
 	case "update":
-
-		if param.Email != "" {
-			err := database.ChangeField(mail, "email", param.Email)
-			mail = param.Email
-
-			if myjwt, err := utils.GenerateJWT(param.Email); err == nil {
-				c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false) // todo: http onlty set to true when on production
-			}
-
-			if err != nil {
-				utils.SendErrorResponse(c, "Problem changing email")
-			}
-		}
-		if param.Password != "" {
-			err := database.ChangeField(mail, "password", param.Password)
-			if err != nil {
-				utils.SendErrorResponse(c, "Problem changing password")
-			}
-		}
-		if param.Username != "" {
-			err := database.ChangeField(mail, "username", param.Username)
-			if err != nil {
-				utils.SendErrorResponse(c, "Problem changing username")
-			}
-		}
+		updateUser(c, mail, &param)
 	}
 
 	utils.SendOkResponse(c, nil)
+}
+
+func updateUser(c *gin.Context, mail string, param *RequestBody) {
+	if param.Email != "" {
+		err := database.ChangeField(mail, "email", param.Email)
+		if err != nil {
+			utils.SendErrorResponse(c, "Problem changing email")
+		}
+		mail = param.Email
+
+		setJwtCookie(c, mail)
+	}
+	if param.Password != "" {
+		err := database.ChangeField(mail, "password", param.Password)
+		if err != nil {
+			utils.SendErrorResponse(c, "Problem changing password")
+		}
+	}
+	if param.Username != "" {
+		err := database.ChangeField(mail, "username", param.Username)
+		if err != nil {
+			utils.SendErrorResponse(c, "Problem changing username")
+		}
+	}
+	return
+}
+
+func setJwtCookie(c *gin.Context, data string) {
+	if myjwt, err := utils.GenerateJWT(data); err == nil {
+		c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false)
+	}
 }

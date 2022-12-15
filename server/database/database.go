@@ -13,6 +13,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+const savedFolderConst = "saved_folders.name"
+const goFormatDate = "2006-01-02T15:04:05Z"
+
 var client *mongo.Client
 var ctx context.Context
 var dbname string = "twitterman"
@@ -67,8 +70,8 @@ func GetTweetsByTwitterId(id string) []utils.Tweet {
 }
 
 func GetTweetsByUsername(username string, start, end time.Time) []utils.Tweet {
-	sstart := start.Format("2006-01-02T15:04:05Z")
-	eend := end.Format("2006-01-02T15:04:05Z")
+	sstart := start.Format(goFormatDate)
+	eend := end.Format(goFormatDate)
 	myDict := bson.M{
 		"username":  primitive.Regex{Pattern: username, Options: "i"},
 		"timestamp": bson.M{"$gte": sstart, "$lte": eend},
@@ -79,8 +82,8 @@ func GetTweetsByUsername(username string, start, end time.Time) []utils.Tweet {
 }
 
 func GetTweetsByKeyword(keyword string, start, end time.Time) []utils.Tweet {
-	sstart := start.Format("2006-01-02T15:04:05Z")
-	eend := end.Format("2006-01-02T15:04:05Z")
+	sstart := start.Format(goFormatDate)
+	eend := end.Format(goFormatDate)
 	myDict := bson.M{
 		"content":   primitive.Regex{Pattern: keyword, Options: "i"},
 		"timestamp": bson.M{"$gte": sstart, "$lte": eend},
@@ -114,12 +117,12 @@ func ChangeField(email string, field string, content string) error {
 
 /* finds the correct saved folder of a user and push the tweet id*/
 func insertTweetIntoFolder(email string, folderName string, id string) error {
-	duplicate := find(bson.M{"email": email, "saved_folders.name": folderName, "saved_folders.tweets": id}, "Users")
+	duplicate := find(bson.M{"email": email, savedFolderConst: folderName, "saved_folders.tweets": id}, "Users")
 	if len(bindType[[]utils.TweetsFolder](duplicate)) > 0 {
 		return errors.New("Duplicate tweet")
 	}
 	query := bson.M{"saved_folders.$.tweets": id}
-	updateQ := bson.M{"email": email, "saved_folders.name": folderName}
+	updateQ := bson.M{"email": email, savedFolderConst: folderName}
 	insertMode(updateQ, bson.M{"$push": query}, "Users")
 	return nil
 }
@@ -140,7 +143,7 @@ func DeleteFolder(email string, folderName string) error {
 
 /* add tweet into the folder of said user, if the folder doesn't exists create it*/
 func InsertSavedTweet(email string, folderName string, id string) error {
-	folder := find(bson.M{"email": email, "saved_folders.name": folderName}, "Users")
+	folder := find(bson.M{"email": email, savedFolderConst: folderName}, "Users")
 	if len(bindType[[]utils.TweetsFolder](folder)) == 0 {
 		err := CreateFolder(email, folderName)
 		if err != nil {
@@ -152,7 +155,7 @@ func InsertSavedTweet(email string, folderName string, id string) error {
 
 func RemoveSavedTweet(email string, folderName string, id string) error {
 	query := bson.M{"saved_folders.$.tweets": id}
-	updateQ := bson.M{"email": email, "saved_folders.name": folderName}
+	updateQ := bson.M{"email": email, savedFolderConst: folderName}
 	return insertMode(updateQ, bson.M{"$pull": query}, "Users")
 }
 

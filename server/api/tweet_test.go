@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"git.hjkl.gq/team7/twitterman/server/database"
 	"git.hjkl.gq/team7/twitterman/server/utils"
 	"github.com/stretchr/testify/assert"
 )
@@ -52,6 +53,9 @@ func sendTestRequest(method, url string, body io.Reader) ([]byte, *httptest.Resp
 
 func TestGetTweetById(t *testing.T) {
 	initApiTest()
+	database.InitDbTest()
+	defer database.Disconnect()
+
 	response, res := sendTestRequest("GET", "/tweet/id/1602802989407899648", nil)
 
 	mockResponse := `[
@@ -86,6 +90,9 @@ func TestGetTweetById(t *testing.T) {
 
 func TestGetTweetsByHashtag(t *testing.T) {
 	initApiTest()
+	database.InitDbTest()
+	defer database.Disconnect()
+
 	response, res := sendTestRequest("GET", "/tweet/hashtag/mannaggiaallamonetizzazione/date/2022-12-13T12:15:53.000Z/2022-12-14T00:35:36.000Z", nil)
 	mockResponse := `[
 		{
@@ -119,6 +126,9 @@ func TestGetTweetsByHashtag(t *testing.T) {
 
 func TestGetTweetsByUsername(t *testing.T) {
 	initApiTest()
+	database.InitDbTest()
+	defer database.Disconnect()
+
 	response, res := sendTestRequest("GET", "/tweet/user/team7test/date/2022-12-13T12:15:53.000Z/2022-12-14T00:35:36.000Z", nil)
 
 	mockResponse := `[
@@ -193,6 +203,9 @@ func TestGetTweetsByUsername(t *testing.T) {
 
 func TestDateTime(t *testing.T) {
 	initApiTest()
+	database.InitDbTest()
+	defer database.Disconnect()
+
 	response, res := sendTestRequest("GET", "/tweet/hashtag/bella/date/2022-11-25T20:39:08.913aZ/2022-12-02T22:59:59.914Z", nil)
 
 	mockResponse := `{"message":"start date format wrong","success":false}`
@@ -210,6 +223,9 @@ func TestDateTime(t *testing.T) {
 
 func TestInvalidMode(t *testing.T) {
 	initApiTest()
+	database.InitDbTest()
+	defer database.Disconnect()
+
 	response, res := sendTestRequest("GET", "/tweet/hasahtag/bella/date/2022-11-25T20:39:08.913Z/2022-12-02T22:59:59.914Z", nil)
 
 	mockResponse := `{"message":"invalid mode: hashtag, keyword, user and id permitted","success":false}`

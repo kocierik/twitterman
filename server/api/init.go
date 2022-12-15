@@ -22,7 +22,7 @@ var endpointList = []endpoint{
 	{"/tweet/loadNextPage", getNewPageTweets, "GET"},
 	{"/getUserInfo/:username", getTweetUserInfoByUsername, "GET"},
 	{"/user/folder/:folderId/add/:tweetId", saveTweet, "POST"},
-	{"/user/folder/:folderId/:tweetId", remSavedTweet, "DELETE"},
+	{"/user/folder/:folderId/:tweetId", remSavedTweet, "POST"},
 	{"/user/folder/delete/:folderId", deleteFolder, "POST"},
 	{"/user/folder/create/:folderId", createFolder, "POST"},
 	{"/user/folders", getFolders, "GET"},
