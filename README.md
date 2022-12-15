@@ -5,7 +5,7 @@
 To build and run the program type in the `server` directory:
 
 ```
-go get . && go run .
+go mod tidy && go run .
 ```
 
 ## Test the program
@@ -14,6 +14,14 @@ To test the program type in the directory with some `*_test.go*` file:
 
 ```
 go test
+```
+
+## Run docker
+
+To run dockerfile:
+
+```
+docker compose up --build
 ```
 
 ## Authors
