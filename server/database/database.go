@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
@@ -135,9 +134,7 @@ func CreateFolder(email string, folderName string) error {
 
 func DeleteFolder(email string, folderName string) error {
 	query := bson.M{"saved_folders": bson.M{"name": folderName}}
-	fmt.Println(email, folderName)
 	err := insertMode(bson.M{"email": email}, bson.M{"$pull": query}, "Users")
-	fmt.Println(err)
 	return err
 }
 

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -88,7 +87,6 @@ func TestGetTweetById(t *testing.T) {
 func TestGetTweetsByHashtag(t *testing.T) {
 	initApiTest()
 	response, res := sendTestRequest("GET", "/tweet/hashtag/mannaggiaallamonetizzazione/date/2022-12-13T12:15:53.000Z/2022-12-14T00:35:36.000Z", nil)
-	log.Println(res)
 	mockResponse := `[
 		{
 			"id": "1602803405940232192",

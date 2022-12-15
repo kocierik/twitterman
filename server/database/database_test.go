@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"git.hjkl.gq/team7/twitterman/server/utils"
@@ -87,7 +86,6 @@ func TestFolderUsage(t *testing.T) {
 	assert.Equal(t, err, nil)
 
 	usr, err = GetUserByEmail(dmail)
-	fmt.Println(usr)
 	assert.Equal(t, 0, len(usr.SavedFolders))
 }
 

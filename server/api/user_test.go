@@ -3,7 +3,6 @@ package api
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	"git.hjkl.gq/team7/twitterman/server/database"
@@ -41,7 +40,6 @@ func TestUpdateUser(t *testing.T) {
 	sendTestReqAuth("POST", "/user/modify/update", bytes.NewBuffer(bodyMarshaled), cookie)
 
 	usr, _ := database.GetUserByEmail("porca@paletta")
-	fmt.Println(usr.Password, usr.Email)
 	assert.Equal(t, body.Username, usr.Username)
 	assert.Equal(t, body.Password, usr.Password)
 }

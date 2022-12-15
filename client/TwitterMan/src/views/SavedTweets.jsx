@@ -10,7 +10,6 @@ const SavedTweets = () => {
       let res = await fetch(url)
       res = await res.json()
       setSavedTweets(res)
-      console.log(res)
     } catch (e) {
       console.log(e)
     }
