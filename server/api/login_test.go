@@ -83,7 +83,41 @@ func TestRegisterApi(t *testing.T) {
 	assert.Equal(t, body.Password, usr.Password)
 	assert.Equal(t, body.Username, usr.Username)
 	assert.Equal(t, `{"success":true}`, string(out))
-	// TODO: Test with invalid register fields
+
+	out, _ = sendTestRequest("POST", "/register", bytes.NewBuffer(bodyMarshaled))
+	assert.Equal(t, `{"message":"Email already registered","success":false}`, string(out))
+
+	body = register{
+		Email:    "not an email",
+		Password: aldopsw,
+		Username: aldoname,
+	}
+
+	bodyMarshaled, err = json.Marshal(body)
+	utils.TestError(err, "(api_test.go) Cannot parse bodyMarshaled1")
+	out, _ = sendTestRequest("POST", "/register", bytes.NewBuffer(bodyMarshaled))
+	assert.Equal(t, `{"message":"email not valid","success":false}`, string(out))
+
+	body = register{
+		Email:    "random@uno",
+		Password: "shrtpsw",
+		Username: aldoname,
+	}
+	bodyMarshaled, err = json.Marshal(body)
+	utils.TestError(err, "(api_test.go) Cannot parse bodyMarshaled1")
+	out, _ = sendTestRequest("POST", "/register", bytes.NewBuffer(bodyMarshaled))
+	assert.Equal(t, `{"message":"Password should be at least 8 character and should have at least an uppercase letters and a number","success":false}`, string(out))
+
+	body = register{
+		Email:    "random@uno",
+		Password: aldopsw,
+		Username: "no",
+	}
+	bodyMarshaled, err = json.Marshal(body)
+	utils.TestError(err, "(api_test.go) Cannot parse bodyMarshaled1")
+	out, _ = sendTestRequest("POST", "/register", bytes.NewBuffer(bodyMarshaled))
+	assert.Equal(t, `{"message":"username too short","success":false}`, string(out))
+
 }
 
 func TestDeleteUser(t *testing.T) {
