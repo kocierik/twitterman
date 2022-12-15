@@ -1,9 +1,10 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import twitterman from '../assets/twitterman.png'
 import {SERVER_URL} from '../utils'
-const Login = () => {
+
+const Login = ({isLogged, setIsLogged}) => {
   const navigate = useNavigate()
   const email = useRef()
   const password = useRef()
@@ -26,12 +27,18 @@ const Login = () => {
       if (!res.success) {
         throw res.message
       }
-      // TODO: handle when you are logged in on the frontend.
+      setIsLogged(true);
       navigate('/')
     } catch (e) {
       alert(e)
     }
   }
+
+  useEffect(()=>{
+    if(isLogged){
+      navigate('/')
+    }
+  }, [])
 
   return (
     <section

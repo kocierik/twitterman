@@ -11,12 +11,13 @@ const calculateDate = (isStartDate) => {
 
 const SearchBar = ({
   setTweetsDataFilter,
-  searchTweets,
   sliderValue,
   setSliderValue,
   sentimentIcon,
   setSentimentIcon,
   setFrequencyValue,
+  setTweetsData,
+  rfp
 }) => {
   const [selectValue, setSelectValue] = useState(Const.TWEET_USERNAME)
   const [selectTimeString, setSelectTimeString] = useState('days')
@@ -70,9 +71,9 @@ const SearchBar = ({
     <form
       style={{ width: '100vh' }}
       className="flex mb-5"
-      onSubmit={(event) => {
+      onSubmit={async(event) => {
         event.preventDefault()
-        searchTweets(selectValue, textValue, formattedData())
+        Const.searchTweets(selectValue, textValue, formattedData(), rfp, setTweetsData, setTweetsDataFilter);
       }}
     >
       <div id="elements">

@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"twitterman/TwitterApi"
+	"twitterman/database"
 	"twitterman/utils"
 
 	"github.com/gin-gonic/gin"
@@ -23,19 +24,20 @@ example:
   - tweet/user/elonmusk
   - tweet/keyword/mondo
 */
+
 func getTweets(c *gin.Context) {
-	max_results := c.Param("results")
+	maxResults := c.Param("results")
 	mode := c.Param("mode")
 	query := c.Param("query")
 	start, err := time.Parse(time.RFC3339, c.Param("start"))
 	if err != nil {
-		utils.SendErrorResponse(c)
-		return // TODO
+		utils.SendErrorResponse(c, "start date format wrong")
+		return
 	}
 	end, err := time.Parse(time.RFC3339, c.Param("end"))
 	if err != nil {
-		utils.SendErrorResponse(c)
-		return // TODO
+		utils.SendErrorResponse(c, "end date format wrong")
+		return
 	}
 	var twRet any
 
@@ -51,7 +53,8 @@ func getTweets(c *gin.Context) {
 		query = "from:" + query
 	}
 
-	twRet = TwitterApi.GetTwsByQuery(mode, query, max_results, start, end)
+	// fmt.Println(mode, query, maxResults, start, end)
+	twRet = TwitterApi.GetTwsByQuery(mode, query, maxResults, start, end)
 
 	utils.SendOkResponse(c, twRet)
 }
@@ -59,27 +62,108 @@ func getTweets(c *gin.Context) {
 /* get a tweet by id */
 func getTweetById(c *gin.Context) {
 	query := c.Param("query")
-	twRet := TwitterApi.GetTweetInfoById(query)
+	twRet := TwitterApi.GetTweetById(query)
 
 	utils.SendOkResponse(c, twRet)
 }
 
-/*
-Get user info (id,name,username,profile_image_url)
-*/
 func getUserInfo(c *gin.Context) {
 	username := c.Param("username")
-	usr := TwitterApi.GetUserInfoByUsername(username)
+	usr, err := database.GetUserByName(username)
+
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
 
 	utils.SendOkResponse(c, usr)
 }
 
 /*
-Load 10 new different tweets of the last query done
+Load new different tweets of the last query done
 */
 func getNewPageTweets(c *gin.Context) {
-	max_results := c.Param("results")
-	ret := TwitterApi.GetNextTokenReq(max_results)
+	maxResults := c.Param("results")
+	ret := TwitterApi.GetNextTokenReq(maxResults)
 
 	utils.SendOkResponse(c, ret)
+}
+
+/*
+save tweet into folder
+/user/bob/folder/capperus/add/1245678956
+*/
+func saveTweet(c *gin.Context) {
+	name := c.Param("username")
+	folder := c.Param("folderId")
+	id := c.Param("tweetId")
+
+	database.InsertSavedTweet(name, folder, id)
+}
+
+func remSavedTweet(c *gin.Context) {
+	name := c.Param("username")
+	folder := c.Param("folderId")
+	id := c.Param("tweetId")
+
+	err := database.RemoveSavedTweet(name, folder, id)
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
+}
+
+func getFolders(c *gin.Context) {
+	username := c.Param("username")
+	usr, err := database.GetUserByName(username)
+
+	if err != nil {
+		utils.SendErrorResponse(c, "Problem fetching the user")
+		return
+	}
+
+	utils.SendOkResponse(c, usr.SavedFolders)
+}
+
+func modifyUser(c *gin.Context) {
+	username := c.Param("username")
+	action := c.Param("action")
+
+	type RequestBody struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+		Username string `json:"username"`
+	}
+
+	param := bind[RequestBody](c)
+
+	switch action {
+	case "delete":
+		err := database.DeleteUser(username)
+		if err != nil {
+			utils.SendErrorResponse(c, "Problem deleting user")
+		}
+	case "update":
+
+		if param.Email != "" {
+			err := database.ChangeField(username, "email", param.Email)
+			if err != nil {
+				utils.SendErrorResponse(c, "Problem changing email")
+			}
+		}
+		if param.Password != "" {
+			err := database.ChangeField(username, "password", param.Password)
+			if err != nil {
+				utils.SendErrorResponse(c, "Problem changing password")
+			}
+		}
+		if param.Username != "" {
+			err := database.ChangeField(username, "username", param.Username)
+			if err != nil {
+				utils.SendErrorResponse(c, "Problem changing username")
+			}
+		}
+	}
+
+	utils.SendOkResponse(c, nil)
 }

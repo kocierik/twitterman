@@ -17,3 +17,9 @@ data
 create-env.sh
 venv
 client/node_modules
+
+server/mongo-seed/tweets-data.json
+server/mongo-seed/user-data.json
+
+sentiment-analysis/Pipfile
+sentiment-analysis/Pipfile.lock

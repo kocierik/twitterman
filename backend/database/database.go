@@ -3,9 +3,6 @@ package database
 import (
 	"context"
 	"errors"
-	"fmt"
-	"log"
-	"os"
 	"time"
 
 	"twitterman/utils"
@@ -22,7 +19,7 @@ var dbname string = "twitterman"
 
 var collectionList [2]string = [2]string{"Users", "Tweets"}
 
-var nullUser = utils.User{ID: primitive.ObjectID{}, Email: "", Username: "", Password: "", SavedTweetsId: []string{}}
+var nullUser = utils.User{ID: primitive.ObjectID{}, Email: "", Username: "", Password: "", SavedFolders: []utils.TweetsFolder{}}
 
 type queryTypeInterface interface {
 	GetKey() string
@@ -72,7 +69,6 @@ func GetTweetsByTwitterId(id string) []utils.Tweet {
 func GetTweetsByUsername(username string, start, end time.Time) []utils.Tweet {
 	sstart := start.Format("2006-01-02T15:04:05Z")
 	eend := end.Format("2006-01-02T15:04:05Z")
-	fmt.Println(sstart, eend)
 	myDict := bson.M{
 		"username":  primitive.Regex{Pattern: username, Options: "i"},
 		"timestamp": bson.M{"$gte": sstart, "$lte": eend},
@@ -94,12 +90,12 @@ func GetTweetsByKeyword(keyword string, start, end time.Time) []utils.Tweet {
 	return binded
 }
 
-func InsertUser(email, username, password string, tweets []string) {
+func InsertUser(email, username, password string, tweetsFolder []utils.TweetsFolder) {
 	user := utils.User{
-		Email:         email,
-		Username:      username,
-		Password:      password,
-		SavedTweetsId: tweets,
+		Email:        email,
+		Username:     username,
+		Password:     password,
+		SavedFolders: tweetsFolder,
 	}
 	insert(user, "Users")
 }
@@ -110,13 +106,77 @@ func InsertTweetList(twts []utils.Tweet) {
 	}
 }
 
+func GetUserByName(name string) (utils.User, error) {
+	query := bson.M{"username": name}
+	res := find(query, "Users")
+	binded := bindType[[]utils.User](res)
+	if len(binded) == 0 {
+		return nullUser, errors.New("No user with such username")
+	} else {
+		return binded[0], nil
+	}
+}
+
+func ChangeField(username string, field string, content string) error {
+	query := bson.M{field: content}
+	updateQ := bson.M{"username": username}
+	return insertMode(updateQ, bson.M{"$set": query}, "Users")
+}
+
+/* finds the correct saved folder of a user and push the tweet id*/
+func insertTweetIntoFolder(name string, folderName string, id string) error {
+	duplicate := find(bson.M{"username": name, "saved_folders.name": folderName, "saved_folders.tweets": id}, "Users")
+	if len(bindType[[]utils.TweetsFolder](duplicate)) > 0 {
+		return errors.New("Duplicate tweet")
+	}
+	query := bson.M{"saved_folders.$.tweets": id}
+	updateQ := bson.M{"username": name, "saved_folders.name": folderName}
+	insertMode(updateQ, bson.M{"$push": query}, "Users")
+	return nil
+}
+
+func createFolder(name string, folderName string) error {
+	folder := utils.TweetsFolder{
+		Name:   folderName,
+		Tweets: []string{},
+	}
+	return insertMode(bson.M{"username": name}, bson.M{"$push": bson.M{"saved_folders": folder}}, "Users")
+}
+
+func deleteFolder(name string, folderName string) error {
+	return insertMode(bson.M{"username": name}, bson.M{"$pull": bson.M{"saved_folders": folderName}}, "Users")
+}
+
+/* add tweet into the folder of said user, if the folder doesn't exists create it*/
+func InsertSavedTweet(name string, folderName string, id string) error {
+	folder := find(bson.M{"username": name, "saved_folders.name": folderName}, "Users")
+	if len(bindType[[]utils.TweetsFolder](folder)) == 0 {
+		err := createFolder(name, folderName)
+		if err != nil {
+			return err
+		}
+	}
+	return insertTweetIntoFolder(name, folderName, id)
+}
+
+func RemoveSavedTweet(name string, folderName string, id string) error {
+	query := bson.M{"saved_folders.$.tweets": id}
+	updateQ := bson.M{"username": name, "saved_folders.name": folderName}
+	return insertMode(updateQ, bson.M{"$pull": query}, "Users")
+}
+
+func DeleteUser(username string) error {
+	query := bson.M{"username": username}
+	return delete(query, "Users")
+}
+
 func Connect() {
 	var err error
 	if client != nil && client.Ping(ctx, nil) == nil {
 		return
 	}
 	ctx = context.Background()
-	clientOptions := options.Client().ApplyURI(os.Getenv("DATABASE_URL"))
+	clientOptions := options.Client().ApplyURI(utils.DbUrl)
 	client, err = mongo.Connect(ctx, clientOptions)
 	utils.TestError(err, "database.Connect function, new client error")
 }
@@ -127,7 +187,7 @@ func Disconnect() {
 }
 
 func find(query interface{}, collection string) *mongo.Cursor {
-	log.Println(dbname, collection, query)
+	// log.Println(dbname, collection, query)
 	col := client.Database(dbname).Collection(collection)
 	cursor, err := col.Find(ctx, query)
 	utils.TestError(err, "find function")
@@ -144,10 +204,22 @@ func insert[T queryTypeInterface](query T, collection string) {
 	default:
 		updateQuery = bson.M{}
 	}
+	insertMode(updateQuery, bson.M{"$set": query}, collection)
+}
+
+func insertMode(updateQuery primitive.M, query primitive.M, collection string) error {
 	mytrue := true
 	col := client.Database(dbname).Collection(collection)
-	_, err := col.UpdateOne(ctx, updateQuery, bson.M{"$set": query}, &options.UpdateOptions{Upsert: &mytrue})
+	_, err := col.UpdateOne(ctx, updateQuery, query, &options.UpdateOptions{Upsert: &mytrue})
 	utils.TestError(err, "insert function")
+	return err
+}
+
+func delete(query primitive.M, collection string) error {
+	col := client.Database(dbname).Collection(collection)
+	_, err := col.DeleteOne(ctx, query)
+	utils.TestError(err, "insert function")
+	return err
 }
 
 func InitDbTest() {

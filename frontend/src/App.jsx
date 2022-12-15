@@ -6,21 +6,35 @@ import Login from '../src/views/Login'
 import Register from '../src/views/Register'
 import Footer from './components/Footer'
 import TweetMaps from './views/TweetMaps'
+import Eredita from './views/Eredita'
+import { useEffect, useState } from 'react'
+import { isLoggedIn } from './utils'
 
 function App() {
-  return (
-    <>
-      <div className="h-full dark:bg-gray-900">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/tweetMaps/:id" element={<TweetMaps />} />
-        </Routes>
-        <Footer />
-      </div>
-    </>
-  )
-}
+  const [isLogged, setIsLogged] = useState(false)
+
+    async function init() {
+      setIsLogged(await isLoggedIn());
+    }
+
+    useEffect(() => {
+      init()
+    }, [])
+
+    return (
+      <>
+        <div className="h-full dark:bg-gray-900">
+          <Navbar isLogged={isLogged} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login isLogged={isLogged} setIsLogged={setIsLogged} />} />
+            <Route path="/register" element={<Register setIsLogged={setIsLogged} />} />
+            <Route path="/tweetMaps/:id" element={<TweetMaps />} />
+            <Route path="/eredita" element={<Eredita />} />
+          </Routes>
+          <Footer />
+        </div>
+      </>
+    )
+  }
 export default App

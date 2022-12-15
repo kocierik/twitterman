@@ -15,51 +15,16 @@ const Home = () => {
   const [frequencyValue, setFrequencyValue] = useState(1440)
   const [rfp, setRfp] = useState(15)
 
-  const fetchSentiment = async (tweets) => {
-    let tweetsWithSentiment = []
+  const loadMore = async () => {
     try {
-      var data = []
-      for (const k in tweets) {
-        data.push({ text: tweets[k].content })
-      }
-      let res = await fetch(Const.SENTIMENT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-      res = await res.json()
-      tweetsWithSentiment = tweets?.map((v, k) => {
-        v.sentiment = res['sentiments'][k]
-        return v
-      })
-    } catch (e) {
-      alert(e)
-    }
-    return tweetsWithSentiment
-  }
-
-  const searchTweets = async (selectValue, textValue, formattedDates) => {
-    try {
-      const url = Const.stringFormat(
-        Const.SERVER_URL + selectValue,
-        rfp,
-        textValue + formattedDates
-      )
+      const url = Const.stringFormat(Const.SERVER_URL + Const.TWEET_LOAD, rfp)
       let res = await fetch(url)
       res = await res.json()
       if (res) {
-        res.forEach((tw) => {
-          var s = tw.content + ' '
-          tw.content = s.replace(/(http|https)(.*?)( )/g, '')
-        })
-
-        res = await fetchSentiment(res)
-        setTweetsData(res)
-        setTweetsDataFiltered(res)
+        let sentimentRes = await Const.fetchSentiment(res)
+        setTweetsData((last) => [...last, ...sentimentRes])
       } else {
-        alert('Tweets not found')
+        alert('No more tweets to load')
       }
     } catch (e) {
       console.log(e)
@@ -81,22 +46,6 @@ const Home = () => {
     filterSentiment()
   }, [tweetsData, sentimentIcon])
 
-  const loadMore = async () => {
-    try {
-      const url = Const.stringFormat(Const.SERVER_URL + Const.TWEET_LOAD, rfp)
-      let res = await fetch(url)
-      res = await res.json()
-      if (res) {
-        let sentimentRes = await fetchSentiment(res)
-        setTweetsData((last) => [...last, ...sentimentRes])
-      } else {
-        alert('No more tweets to load')
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
   return (
     <>
       <div
@@ -108,14 +57,15 @@ const Home = () => {
           <SearchBar
             // tweetsData={tweetsData}
             setTweetsDataFilter={setTweetsDataFiltered}
-            searchTweets={searchTweets}
             sliderValue={sliderValue}
             setSliderValue={setSliderValue}
             sentimentIcon={sentimentIcon}
             setSentimentIcon={setSentimentIcon}
             setFrequencyValue={setFrequencyValue}
+            setTweetsData={setTweetsData}
+            rfp={rfp}
           />
-          {tweetsData?.length ? (
+          {tweetsDataFiltered?.length ? (
             <HideTweets showTweets={showTweets} setShowTweets={setShowTweets} />
           ) : null}
         </div>
@@ -139,7 +89,7 @@ const Home = () => {
           <Charts tweetsData={tweetsDataFiltered} frequency={frequencyValue} />
         </div>
       )}
-      {tweetsData?.length > 0 && (
+      {tweetsDataFiltered?.length > 0 && (
         <div className="p-10 dark:bg-gray-900">
           <div className="flex italic flex-1 italic dark:bg-gray-900 text-white justify-center text-3xl font-bold p-5">
             TweetMaps

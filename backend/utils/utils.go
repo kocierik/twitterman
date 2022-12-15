@@ -2,12 +2,22 @@ package utils
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 )
+
+type JwtClaims struct {
+	jwt.RegisteredClaims
+	Email      string
+	Authorized string
+}
+
+var JwtSecretKey = "WjYZ2B349qN8BhTkCy4G"
 
 func UnmarshalToJson[T any](response []byte) T {
 	var result T
@@ -24,10 +34,39 @@ func TestError(err error, msg string) {
 }
 
 func IsLoggedIn(c *gin.Context) bool {
-	// TODO: handle jwt cookie from request
-	return true
+	if cookie, err := c.Request.Cookie("AUTHTOKEN"); err == nil {
+		return CheckJWT(cookie.Value)
+	} else {
+		return false
+	}
+
 }
 
 func InitHttpClient() {
 	Client = &http.Client{Timeout: 10 * time.Second}
+}
+
+func CheckJWT(mytoken string) bool {
+	var claims JwtClaims
+	token, err := jwt.ParseWithClaims(mytoken, &claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(JwtSecretKey), nil
+	})
+	if err != nil {
+		return false
+	}
+	return token.Valid
+}
+
+func GenerateJWT(email string) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, JwtClaims{
+		RegisteredClaims: jwt.RegisteredClaims{},
+		Email:            email,
+	})
+
+	signedString, err := token.SignedString([]byte(JwtSecretKey))
+
+	if err != nil {
+		return "", errors.New("error creating jwt")
+	}
+	return signedString, nil
 }

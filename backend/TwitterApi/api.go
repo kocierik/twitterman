@@ -32,6 +32,8 @@ var lastRequest = requestStruct{}
 
 /* Utils function for getting user information */
 
+/*
+not used
 func GetUserInfoByUsername(username string) TwitterUserStruct {
 	endpoint := utils.TwitterApi + "/users/by/username/" + username
 
@@ -43,8 +45,9 @@ func GetUserInfoByUsername(username string) TwitterUserStruct {
 
 	return result.Data
 }
+*/
 
-func GetTweetInfoById(id string) []utils.Tweet {
+func GetTweetById(id string) []utils.Tweet {
 	endpoint := utils.TwitterApi + "/tweets"
 
 	q := baseQuery("ids", id)
@@ -62,10 +65,10 @@ func GetTweetInfoById(id string) []utils.Tweet {
 }
 
 // Get next page of last req
-func GetNextTokenReq(max_results string) []utils.Tweet {
+func GetNextTokenReq(maxResults string) []utils.Tweet {
 	if !cmp.Equal(lastRequest, requestStruct{}) && lastRequest.NextToken != "" {
 		lastRequest.Params["next_token"] = lastRequest.NextToken
-		lastRequest.Params["max_results"] = max_results
+		lastRequest.Params["max_results"] = maxResults
 
 		body := makeTwitterRequest("GET", lastRequest.EndPoint, lastRequest.Params)
 
@@ -85,15 +88,15 @@ func GetNextTokenReq(max_results string) []utils.Tweet {
 
 func checkDates(start, end time.Time) (time.Time, time.Time, bool) {
 	now := time.Now()
-	week_before := now.AddDate(0, 0, -7)
+	weekBefore := now.AddDate(0, 0, -7)
 	shouldRequest := true
 
 	//if end date is before
-	if end.Before(week_before) {
+	if end.Before(weekBefore) {
 		shouldRequest = false
 	} else {
-		if start.Before(week_before) {
-			start = week_before
+		if start.Before(weekBefore) {
+			start = weekBefore
 		}
 	}
 
@@ -101,10 +104,10 @@ func checkDates(start, end time.Time) (time.Time, time.Time, bool) {
 }
 
 // Get recent tweets by query
-func GetTwsByQuery(mode, query, max_results string, start, end time.Time) []utils.Tweet {
+func GetTwsByQuery(mode, query, maxResults string, start, end time.Time) []utils.Tweet {
 	var ret []utils.Tweet
 	endpoint := utils.TwitterApi + "/tweets/search/recent"
-	q := utils.Dict{"query": query, "max_results": max_results}
+	q := utils.Dict{"query": query, "max_results": maxResults}
 
 	// fmt.Println(start, end)
 	newstart, newend, shouldRequest := checkDates(start, end)
@@ -132,7 +135,9 @@ func GetTwsByQuery(mode, query, max_results string, start, end time.Time) []util
 	return ret
 }
 
+/*
 // Get recent tweets count by query
+not needed
 func GetTwCount(query, granularity string) DataGeneric[[]tweetCount] {
 	endpoint := utils.TwitterApi + "/tweets/counts/recent"
 
@@ -144,3 +149,5 @@ func GetTwCount(query, granularity string) DataGeneric[[]tweetCount] {
 
 	return result
 }
+
+*/

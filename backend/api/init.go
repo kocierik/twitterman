@@ -20,9 +20,15 @@ var endpointList = []endpoint{
 	{"/tweet/:results/:mode/:query/date/:start/:end", getTweets, "GET"},
 	{"/tweet/id/:query", getTweetById, "GET"},
 	{"/tweet/:results/loadNextPage", getNewPageTweets, "GET"},
+	{"/user/:username/folder/:folderId/add/:tweetId", saveTweet, "POST"},
+	{"/user/:username/folder/:folderId/:tweetId", remSavedTweet, "DELETE"},
+	{"/user/:username/folders", getFolders, "GET"},
 	{"/user/:username", getUserInfo, "GET"},
+	{"/user/:username/modify/:action", modifyUser, "POST"}, // action: delete or update
 	{"/login", loginApi, "POST"},
 	{"/register", registerApi, "POST"},
+	{"/is_logged", isLoggedIn, "GET"},
+	{"/logout", logout, "GET"},
 }
 
 func cORSMiddleware() gin.HandlerFunc {
@@ -65,19 +71,10 @@ func initApiTest() {
 	InitApi()
 }
 
-// Check if the granularity is valid
-func isGranularityCorrect(c *gin.Context, granularity string) bool {
-	if (granularity != "day") && (granularity != "hour") && (granularity != "minute") {
-		utils.SendOkResponse(c, utils.Dict{"message": "Invalid granularity"})
-		return false
-	}
-	return true
-}
-
 // Check if the mode is valid
 func isModeCorrect(c *gin.Context, mode string) bool {
 	if (mode != "id") && (mode != "hashtag") && (mode != "keyword") && (mode != "user") {
-		utils.SendOkResponse(c, utils.Dict{"message": "Invalid mode"})
+		utils.SendErrorResponse(c, "invalid mode: hashtag, keyword, user and id permitted")
 		return false
 	}
 	return true
