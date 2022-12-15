@@ -12,6 +12,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type login struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 const aldomail = "aldo@aldo"
 const aldoname = "aldo"
 const aldopsw = "Aldo1234"
@@ -23,10 +28,6 @@ func TestLoginApi(t *testing.T) {
 	database.InsertUser(aldomail, aldoname, aldopsw, []utils.TweetsFolder{})
 
 	// Test Correct credentials
-	type login struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
 	body := login{
 		Email:    aldomail,
 		Password: aldopsw,
@@ -134,5 +135,23 @@ func TestDeleteUser(t *testing.T) {
 	usr2, _ := database.GetUserByEmail(aldomail)
 	assert.Equal(t, usr2.Username, aldoname)
 	database.DeleteUser(aldomail)
+
+}
+
+func TestSession(t *testing.T) {
+	initApiTest()
+	database.InitDbTest()
+	defer database.Disconnect()
+
+	database.InsertUser(aldomail, aldoname, aldopsw, []utils.TweetsFolder{})
+	cookie := getTestCookie(aldomail, aldopsw)
+
+	// test logout
+	out, _ := sendTestReqAuth("GET", "/isLogged", bytes.NewBuffer(nil), cookie)
+	assert.Equal(t, `{"success":true}`, string(out))
+	out, _ = sendTestReqAuth("GET", "/logout", bytes.NewBuffer(nil), cookie)
+	assert.Equal(t, `{"success":true}`, string(out))
+	out, _ = sendTestRequest("GET", "/isLogged", bytes.NewBuffer(nil))
+	assert.Equal(t, `{"message":"jwt is not correct","success":false}`, string(out))
 
 }
