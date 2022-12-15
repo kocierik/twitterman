@@ -4,7 +4,7 @@ stages:
 
 golang-check:
   stage: test
-  image: golang:latest
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   script:
     - go vet $(go list ./... | grep -wv utils)
     - GIN_MODE=release go test -v -coverprofile=coverage.out git.hjkl.gq/team7/twitterman/server/database git.hjkl.gq/team7/twitterman/server/api git.hjkl.gq/team7/twitterman/server/TwitterApi

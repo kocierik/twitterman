@@ -16,6 +16,14 @@ To test the program type in the directory with some `*_test.go*` file:
 go test
 ```
 
+## Run docker
+
+To run dockerfile:
+
+```
+docker compose up --build
+```
+
 ## Authors
 
 Manuel Arto, Alessandro Frau, Fabio Gaiba, Gabriele Genovese, Erik Koci, Andrea Napoli

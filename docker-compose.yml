@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  twitterman-mongo:
+    restart: always
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+  twitterman-backend:
+    depends_on:
+      - 'twitterman-mongo'
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    command: docker build . 
+    ports:
+      - '8080:8080'
+    environment:
+      - DATABASE_URL=mongodb://twitterman-mongo:27017
+      - SENTIMENT_URL=http://twitterman-sentiment:5556
+      - FRONT_URL=http://0.0.0.0:5137
+  twitterman-sentiment:
+    build:
+      context: sentiment-analysis
+      dockerfile: Dockerfile
+    ports:
+      - '5556:5556'
+  twitterman-frontend:
+    depends_on:
+      - 'twitterman-backend'
+      - 'twitterman-sentiment'
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - '5137:80'
+    # Cambiare  SERVER_URL e SENTIMENT_URL in utils.jsx !!!!!!!!!!
+    # environment:
+    #   - SENTIMENT_URL=http://twitterman-sentiment:5556
+    #   - SERVER_URL=http://twitterman-backend:8080
