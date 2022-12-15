@@ -18,6 +18,7 @@ services:
     environment:
       - DATABASE_URL=mongodb://twitterman-mongo:27017
       - SENTIMENT_URL=http://twitterman-sentiment:5556
+      - FRONT_URL=http://0.0.0.0:5137
   twitterman-sentiment:
     build:
       context: sentiment-analysis
@@ -32,7 +33,7 @@ services:
       context: frontend
       dockerfile: Dockerfile
     ports:
-      - '5137:5137'
+      - '5137:80'
     # Cambiare  SERVER_URL e SENTIMENT_URL in utils.jsx !!!!!!!!!!
     # environment:
     #   - SENTIMENT_URL=http://twitterman-sentiment:5556

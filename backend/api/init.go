@@ -13,7 +13,7 @@ type endpoint struct {
 }
 
 var corsEnabledURLs = []string{
-	utils.SentimentUrl,
+	utils.FrontendUrl,
 }
 
 var endpointList = []endpoint{

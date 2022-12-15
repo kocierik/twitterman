@@ -13,6 +13,7 @@ const TwitterApi string = "https://api.twitter.com/2"
 
 var DbUrl = os.Getenv("DATABASE_URL")
 var SentimentUrl = os.Getenv("SENTIMENT_URL")
+var FrontendUrl = os.Getenv("FRONT_URL")
 
 var Client *http.Client
 
