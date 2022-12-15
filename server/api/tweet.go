@@ -132,7 +132,7 @@ func remSavedTweet(c *gin.Context) {
 
 	err := database.RemoveSavedTweet(mail, folder, id)
 	if err != nil {
-		utils.SendErrorResponse(c, "Problem fetching the user")
+		utils.SendErrorResponse(c, "Problem fetching the user during tweet removal")
 		return
 	}
 }
@@ -143,7 +143,7 @@ func createFolder(c *gin.Context) {
 
 	err := database.CreateFolder(mail, folder)
 	if err != nil {
-		utils.SendErrorResponse(c, "Problem fetching the user")
+		utils.SendErrorResponse(c, "Problem fetching the user during folder creation")
 		return
 	}
 }
@@ -165,7 +165,7 @@ func getFolders(c *gin.Context) {
 	usr, err := database.GetUserByEmail(mail)
 
 	if err != nil {
-		utils.SendErrorResponse(c, "Problem fetching the user")
+		utils.SendErrorResponse(c, "Problem fetching the user during folder fetching")
 		return
 	}
 
@@ -197,7 +197,7 @@ func modifyUser(c *gin.Context) {
 			mail = param.Email
 
 			if myjwt, err := utils.GenerateJWT(param.Email); err == nil {
-				c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false) // todo: http onlty set to true when on production
+				c.SetCookie("AUTHTOKEN", myjwt, 3600, "/", utils.ServerUrl, false, false)
 			}
 
 			if err != nil {

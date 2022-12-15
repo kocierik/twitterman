@@ -17,7 +17,7 @@ type JwtClaims struct {
 	Authorized string
 }
 
-var JwtSecretKey = "WjYZ2B349qN8BhTkCy4G" // TODO: renderla variabile ambientale maybe
+var JwtSecretKey = "WjYZ2B349qN8BhTkCy4G"
 
 func UnmarshalToJson[T any](response []byte) T {
 	var result T
